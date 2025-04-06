@@ -1,46 +1,44 @@
 <resources>
     <string name="app_name">CS-360 Weight Tracker</string>
-    <string name="title_home">Welcome</string>
-    <string name="title_login">Login</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="weight">Weight</string>
-    <string name="submit">Submit</string>
+
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="register_a_new_account">Register a new account</string>
-    <string name="sms_notifications">SMS Notifications</string>
-    <string name="in_app_notifications">In-App Notifications</string>
-    <string name="save_changes">Save Changes</string>
+    <string name="weight">Weight</string>
+    <string name="date">Recorded Date</string>
+
+    <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="first_name">First Name</string>
-    <string name="last_name">Last Name</string>
+    <string name="submit">Submit</string>
     <string name="back_to_login_page">Back to Login Page</string>
     <string name="register_your_account">Register Your Account</string>
     <string name="logged_in">Logged In</string>
+    <string name="enter_your_current_weight">Enter your current weight</string>
+
+    <!-- Titles -->
     <string name="title_registration">Registration</string>
     <string name="title_addweight">Add Weight</string>
-    <string name="enter_your_current_weight">Enter your current weight</string>
+    <string name="title_login">Login</string>
+    <string name="title_notifications">Notifications</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="settings">Settings</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_goal">Goal</string>
-    <string name="date">Recorded Date</string>
+
+    <string name="weight_lost">Weight Lost:</string>
+    <string name="weight_loss">Weight Loss %:</string>
+    <string name="recorded_weights">Recorded Weights</string>
+    <string name="your_current_goal">Your Current Goal</string>
+    <string name="weight_in_lbs">Weight in lbs.</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="customize_settings">Customize Your Settings</string>
     <string name="sms_summary">Enable/Disable SMS Notifications</string>
     <string name="in_app_summary">Enable/Disable In-App Notifications</string>
     <string name="notifications">Notification Settings</string>
+    <string name="sms_notifications">SMS Notifications</string>
+    <string name="in_app_notifications">In-App Notifications</string>
+
 </resources>

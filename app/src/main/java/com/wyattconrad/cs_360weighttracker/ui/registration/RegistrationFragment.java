@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,9 +28,15 @@ public class RegistrationFragment extends Fragment {
         binding = FragmentRegistrationBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textTitle;
-        registrationViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        // Set the click listener for the register button
+        binding.registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                register();
+            }
+        });
 
+        // Set the click listener for the login link
         binding.loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,7 +53,8 @@ public class RegistrationFragment extends Fragment {
         binding = null;
     }
 
-    public void login() {
-        binding.textTitle.setText(R.string.register_your_account);
+    public void register() {
+        //TODO: Register user
+
     }
 }

@@ -53,7 +53,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Weight Lost:"
+                    android:text="@string/weight_lost"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"/>
 
@@ -62,7 +62,7 @@
                     android:id="@+id/weightLost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5 lbs."
+                    android:text="9 lbs."
                     android:textColor="@android:color/white"
                     android:textSize="48sp"
                     android:textStyle="bold"/>
@@ -89,7 +89,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Weight Loss %:"
+                    android:text="@string/weight_loss"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"/>
 
@@ -98,7 +98,7 @@
                     android:id="@+id/weightLossPercentage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5%"
+                    android:text="6%"
                     android:textColor="@android:color/white"
                     android:textSize="48sp"
                     android:textStyle="bold"/>
@@ -117,7 +117,7 @@
         android:id="@+id/recorded_weights_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recorded Weights"
+        android:text="@string/recorded_weights"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textAlignment="center"

@@ -1,24 +1,26 @@
 package com.wyattconrad.cs_360weighttracker.ui.registration;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class RegistrationViewModel extends ViewModel {
+import com.wyattconrad.cs_360weighttracker.repo.UserRepository;
 
-    private final MutableLiveData<String> mText;
+public class RegistrationViewModel extends AndroidViewModel {
 
-    public RegistrationViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("Please Register Your Account");
+    private final UserRepository userRepository;
+
+    public RegistrationViewModel(@NonNull Application application) {
+        super(application);
+        userRepository = new UserRepository(application);
     }
 
-    public LiveData<String> getText() {
-        return mText;
-    }
-
-    public void login() {
-        mText.setValue("Logged In");
+    public void register() {
+        //TODO: Register user
     }
 
 }

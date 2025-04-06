@@ -11,40 +11,37 @@
         android:id="@+id/goal_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Your Current Goal"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:paddingTop="20dp"
+        style="@style/HeaderText"
+        android:text="@string/your_current_goal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <EditText
         android:id="@+id/goal_value"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textAlignment="center"
-        android:textSize="24sp"
+        style="@style/EditGoal"
         android:text="135"
-        android:hint="Weight in lbs."
+        android:hint="@string/weight_in_lbs"
         android:enabled="false"
+        android:inputType="numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/edit_btn"
         app:layout_constraintTop_toBottomOf="@id/goal_text"
-        app:layout_constraintWidth_percent="0.6" />
+        />
 
     <Button
         android:id="@+id/edit_btn"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Edit"
+        android:text="@string/edit"
+        android:paddingHorizontal="8dp"
         app:layout_constraintStart_toEndOf="@id/goal_value"
         app:layout_constraintBottom_toBottomOf="@id/goal_value"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.3" />
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
