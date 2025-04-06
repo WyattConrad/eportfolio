@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <!-- Home Fragment -->
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.wyattconrad.cs_360weighttracker.ui.home.HomeFragment"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_login"
+            app:destination="@id/navigation_login" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_notifications"
+            app:destination="@id/navigation_notifications" />
+    </fragment>
+
+    <!-- Login Fragment -->
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.wyattconrad.cs_360weighttracker.ui.login.LoginFragment"
+        android:label="@string/title_login"
+        tools:layout="@layout/fragment_login" />
+
+    <!-- Registration Fragment -->
+    <fragment
+        android:id="@+id/navigation_registration"
+        android:name="com.wyattconrad.cs_360weighttracker.ui.registration.RegistrationFragment"
+        android:label="@string/title_registration"
+        tools:layout="@layout/fragment_registration" />
+
+    <!-- Add Weight Fragment -->
+    <fragment
+        android:id="@+id/navigation_addweight"
+        android:name="com.wyattconrad.cs_360weighttracker.ui.addweight.AddWeightFragment"
+        android:label="@string/title_addweight"
+        tools:layout="@layout/fragment_add_weight" />
+
+    <!-- Notifications Fragment -->
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.wyattconrad.cs_360weighttracker.ui.notifications.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" />
+
+    <!-- Goal Fragment -->
+    <fragment
+        android:id="@+id/navigation_goal"
+        android:name="com.wyattconrad.cs_360weighttracker.ui.goal.GoalFragment"
+        android:label="@string/title_goal"
+        tools:layout="@layout/fragment_goal" />
+
+</navigation>

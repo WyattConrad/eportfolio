@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Home Icon -->
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="Home" />
+
+    <!-- Goal Icon -->
+    <item
+        android:id="@+id/navigation_goal"
+        android:icon="@drawable/goal"
+        android:title="@string/title_goal" />
+
+    <!-- Login Icon -->
+    <item
+        android:id="@+id/navigation_login"
+        android:icon="@drawable/baseline_login_24"
+        android:title="@string/title_login" />
+
+</menu>

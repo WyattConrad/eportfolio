@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green_blue">#FF0267C1</color>
+    <color name="french_blue">#FF0075C4</color>
+    <color name="gamboge">#FFEFA00B</color>
+    <color name="syracuse_red_orange">#FFD65108</color>
+    <color name="seal_brown">#FF591F0A</color>
+    <color name="grey">#FFD3D3D3</color>
+</resources>

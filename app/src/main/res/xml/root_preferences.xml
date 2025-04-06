@@ -1,0 +1,17 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/notifications">
+        <SwitchPreferenceCompat
+            app:key="sms"
+            app:title="@string/sms_notifications"
+            app:summary="@string/sms_summary"
+            app:defaultValue="false" />
+
+        <SwitchPreferenceCompat
+            app:key="in_app"
+            app:title="@string/in_app_notifications"
+            app:summary="@string/in_app_summary"
+            app:defaultValue="true" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
