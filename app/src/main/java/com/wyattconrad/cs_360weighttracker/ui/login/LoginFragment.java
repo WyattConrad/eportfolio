@@ -1,7 +1,5 @@
 package com.wyattconrad.cs_360weighttracker.ui.login;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -19,9 +16,6 @@ import androidx.navigation.Navigation;
 
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentLoginBinding;
-import com.wyattconrad.cs_360weighttracker.ui.registration.RegistrationFragment;
-
-import java.util.Objects;
 
 public class LoginFragment extends Fragment {
 

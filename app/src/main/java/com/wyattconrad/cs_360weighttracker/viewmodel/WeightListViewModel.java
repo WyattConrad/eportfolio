@@ -2,7 +2,6 @@ package com.wyattconrad.cs_360weighttracker.viewmodel;
 
 import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.LiveData;
 
 import com.wyattconrad.cs_360weighttracker.model.Weight;

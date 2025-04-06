@@ -5,9 +5,7 @@ import androidx.lifecycle.LiveData;
 import com.wyattconrad.cs_360weighttracker.model.Goal;
 import com.wyattconrad.cs_360weighttracker.model.User;
 import com.wyattconrad.cs_360weighttracker.model.Weight;
-import java.time.LocalDateTime;
 import java.util.List;
-import android.util.Log;
 
 public class WeightRepository {
     private final WeightDao weightDao;

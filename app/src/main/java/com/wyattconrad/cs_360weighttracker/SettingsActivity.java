@@ -1,7 +1,5 @@
 package com.wyattconrad.cs_360weighttracker;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;

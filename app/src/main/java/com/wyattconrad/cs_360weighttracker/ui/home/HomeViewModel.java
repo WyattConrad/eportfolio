@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.wyattconrad.cs_360weighttracker.model.Goal;
 import com.wyattconrad.cs_360weighttracker.repo.GoalRepository;
 import com.wyattconrad.cs_360weighttracker.repo.UserRepository;
 

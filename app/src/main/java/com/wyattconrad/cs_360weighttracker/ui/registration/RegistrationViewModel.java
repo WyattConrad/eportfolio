@@ -1,13 +1,8 @@
 package com.wyattconrad.cs_360weighttracker.ui.registration;
 
 import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
 import com.wyattconrad.cs_360weighttracker.repo.UserRepository;
 
 public class RegistrationViewModel extends AndroidViewModel {
