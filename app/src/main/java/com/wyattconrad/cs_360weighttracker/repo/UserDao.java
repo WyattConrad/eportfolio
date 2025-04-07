@@ -17,8 +17,11 @@ public interface UserDao {
     @Query("SELECT * FROM user")
     LiveData<List<User>> getAllUsers();
 
-    @Query("SELECT EXISTS (SELECT 1 FROM user WHERE username = :username AND password = :password)")
-    LiveData<Boolean> login(String username, String password);
+    @Query("SELECT EXISTS (SELECT 1 FROM user WHERE username = :username)")
+    LiveData<Boolean> userExists(String username);
+
+    @Query("SELECT * FROM user WHERE username = :username AND password = :password LIMIT 1")
+    LiveData<User> login(String username, String password);
 
     @Query("SELECT id FROM user WHERE username = :username")
     LiveData<Long> getUserId(String username);

@@ -7,12 +7,12 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.wyattconrad.cs_360weighttracker.model.User;
 import com.wyattconrad.cs_360weighttracker.repo.UserRepository;
 
 public class LoginViewModel extends AndroidViewModel {
 
     private final MutableLiveData<String> mText;
-    private LiveData<Boolean> loginResult = new MutableLiveData<Boolean>();;
     private final UserRepository userRepository;
 
     public LoginViewModel(@NonNull Application application) {
@@ -26,12 +26,9 @@ public class LoginViewModel extends AndroidViewModel {
         return mText;
     }
 
-    public LiveData<Boolean> getLoginResult() {
-        return loginResult;
-    }
 
-    public void login(String username, String password) {
-        loginResult = userRepository.login(username, password);
+    public LiveData<User> login(String username, String password) {
+        return userRepository.login(username, password);
     }
 
     public LiveData<Long> getUserId(String username) {

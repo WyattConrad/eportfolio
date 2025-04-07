@@ -53,7 +53,7 @@ public class WeightRepository {
         return weightDao.getWeightById(id);
     }
 
-    public LiveData<Goal> getGoalByUserId(long userid) {
+    public LiveData<Double> getGoalByUserId(long userid) {
         return goalDao.getGoalByUserId(userid);
     }
 
