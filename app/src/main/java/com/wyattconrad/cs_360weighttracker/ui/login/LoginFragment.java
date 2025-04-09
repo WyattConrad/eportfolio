@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentLoginBinding;
 
@@ -23,6 +25,7 @@ public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
     private SharedPreferences sharedPreferences;
+    private BottomNavigationView bottomNavigationView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -31,6 +34,8 @@ public class LoginFragment extends Fragment {
 
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        bottomNavigationView = requireActivity().findViewById(R.id.nav_view);
 
         final TextView textView = binding.textDashboard;
         loginViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
@@ -55,6 +60,12 @@ public class LoginFragment extends Fragment {
 
                         Log.d("LoginFragment", "User ID saved to SharedPreferences: " + userIdFromPrefs);
                         Log.d("LoginFragment", "User First Name saved to SharedPreferences: " + userFirstNameFromPrefs);
+
+                        // Change the bottom navigation login menu item to logout
+                        MenuItem loginItem = bottomNavigationView.getMenu().findItem(R.id.navigation_login);
+                        MenuItem logoutItem = bottomNavigationView.getMenu().findItem(R.id.navigation_logout);
+                        loginItem.setVisible(false);
+                        logoutItem.setVisible(true);
 
                         // User logged in successfully, proceed to next screen or update UI
                         NavController navController = Navigation.findNavController(requireView());

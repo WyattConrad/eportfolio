@@ -40,5 +40,10 @@
     <string name="notifications">Notification Settings</string>
     <string name="sms_notifications">SMS Notifications</string>
     <string name="in_app_notifications">In-App Notifications</string>
+    <string name="weight_to_goal">Left To Goal:</string>
+    <string name="lbs">lbs.</string>
+    <string name="title_logout">Logout</string>
+    <string name="confirm_logout">Are you sure you want to Logout?</string>
+    <string name="logout">Logout</string>
 
 </resources>

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="8dp"
-    android:weightSum="2">
+    android:weightSum="3">
 
     <!-- This layout is used to display the weights in the recyclerview -->
     <!-- Weight Text -->

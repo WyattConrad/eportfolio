@@ -50,17 +50,25 @@
                 android:layout_height="wrap_content"
                 android:text="@string/weight_lost"
                 android:textColor="@android:color/white"
-                android:textSize="12sp"/>
+                android:textSize="20sp"/>
 
             <!-- Weight Lost Amount -->
             <TextView
                 android:id="@+id/weightLost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="9 lbs."
                 android:textColor="@android:color/white"
                 android:textSize="48sp"
                 android:textStyle="bold"/>
+
+            <!-- lbs. -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbs"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
         </LinearLayout>
 
         <!-- Spacer in the middle -->
@@ -80,23 +88,31 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <!-- Weight Loss Percentage Header Text -->
+            <!-- Weight To Goal Header Text -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/weight_loss"
+                android:text="@string/weight_to_goal"
                 android:textColor="@android:color/white"
-                android:textSize="12sp"/>
+                android:textSize="20sp"/>
 
-            <!-- Weight Loss Percentage -->
+            <!-- Weight To Goal -->
             <TextView
-                android:id="@+id/weightLossPercentage"
+                android:id="@+id/weightToGoal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="6%"
                 android:textColor="@android:color/white"
                 android:textSize="48sp"
                 android:textStyle="bold"/>
+
+            <!-- lbs. -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbs"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
         </LinearLayout>
 
         <!-- Spacer at the end of the layout -->
@@ -115,6 +131,7 @@
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textAlignment="center"
+        android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/weightLossArea"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -124,12 +141,16 @@
     <!-- Weight List Recycler View Used -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listArea"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recorded_weights_btn"
-        android:layout_margin="16dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="120dp" />
 
     <!-- Floating Action Button (FAB) To Add New Weight -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton

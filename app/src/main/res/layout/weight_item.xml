@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:padding="8dp"
-    android:weightSum="2">
+    android:paddingVertical="8dp"
+    android:weightSum="3">
 
     <!-- This layout is used to display the weights in the recyclerview -->
     <!-- Weight Text -->
@@ -36,6 +36,8 @@
         android:contentDescription="@string/delete"
         android:id="@+id/deleteButton"
         app:tint="@color/syracuse_red_orange"
+        android:gravity="center"
+        android:layout_weight="1"
         android:background="@android:color/transparent"
         />
 

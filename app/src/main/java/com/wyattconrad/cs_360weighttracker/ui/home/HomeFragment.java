@@ -2,12 +2,15 @@ package com.wyattconrad.cs_360weighttracker.ui.home;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -22,13 +25,17 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.adapter.WeightAdapter;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentHomeBinding;
+import com.wyattconrad.cs_360weighttracker.model.Weight;
 import com.wyattconrad.cs_360weighttracker.viewmodel.WeightListViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -39,13 +46,25 @@ public class HomeFragment extends Fragment {
     private WeightAdapter adapter;
     private RecyclerView recyclerView;
     private TextView textView;
+    private TextView weightLost;
+    private TextView weightToGoal;
     private TextView goalText;
+    private Double goalValue;
     private long userId;
     private String userFirstName;
 
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        // Inflate the layout for this fragment
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
 
         // Initialize the home and weightlist view models
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -57,22 +76,24 @@ public class HomeFragment extends Fragment {
 
         if (userId == -1) {
             // Navigate to the login page
-            NavController navController = Navigation.findNavController(requireView());
+            NavController navController = Navigation.findNavController(view);
             navController.navigate(R.id.navigation_login);
-        } else {
-            // Get the user's first name from SharedPreferences
-            userFirstName = sharedPreferences.getString("user_first_name", "");
-            requireActivity().setTitle(userFirstName);
-            // Update the action bar title with the user's first name
-            requireActivity().setTitle("Welcome " + userFirstName);
         }
 
-        // Inflate the layout for this fragment
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+
+        // Get the user's first name from SharedPreferences
+        userFirstName = sharedPreferences.getString("user_first_name", "");
+        requireActivity().setTitle(userFirstName);
+        // Update the action bar title with the user's first name
+        requireActivity().setTitle("Welcome " + userFirstName);
+
 
         // Get the goal text view from the layout
         goalText = binding.goalText;
+        // Get the weight lost text view from the layout
+        weightLost = binding.weightLost;
+        // Get the weight loss percentage text view from the layout
+        weightToGoal = binding.weightToGoal;
 
         if (userId == -1) {
             // Observe the greeting text from the view model
@@ -84,13 +105,11 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Set up the adapter for the recycler view
-        adapter = new WeightAdapter();
+        adapter = new WeightAdapter(new Application());
         recyclerView.setAdapter(adapter);
 
         // Get the user's weights from the view model
-        if (userId != -1) {
-            weightListViewModel.getWeightByUserId(userId);
-        }
+        weightListViewModel.getWeightByUserId(userId);
 
         // Observe the goal text from the view model
         observeGoalText(userId);
@@ -100,6 +119,8 @@ public class HomeFragment extends Fragment {
             // Update the adapter with the user's weights
             if (weights != null && !weights.isEmpty()) {
                 adapter.setWeightList(weights);
+                calculateWeightLoss(weights);
+                calculateWeightToGoal(weights);
             }
             // If no weights are found, set the adapter to an empty list
             else {
@@ -108,10 +129,39 @@ public class HomeFragment extends Fragment {
         });
 
         // Set up the FAB click listener
-        setFABClickListener(root);
+        setFABClickListener(view);
 
-        // Return the root view
-        return root;
+    }
+
+    private void calculateWeightToGoal(List<Weight> weights) {
+        // Get the last weight from the list
+        Weight last = weights.get(0);
+        // Calculate the weight left to reach the goal
+        double factor = Math.pow(10, 2);
+        double weightLeft = Math.round((last.getWeight() - goalValue) * factor) / factor;
+
+        // Update the weight loss percentage text view
+        weightToGoal.setText(String.valueOf(weightLeft));
+
+        // Create an alert dialog if the user has reached their goal
+        if (weightLeft <= 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setTitle("Congratulations!");
+            builder.setMessage("You have reached your goal weight!<br/>Please consider setting a new goal.");
+            builder.setPositiveButton("OK", null);
+            AlertDialog dialog = builder.create();
+        }
+
+    }
+
+    private void calculateWeightLoss(List<Weight> weights) {
+        // Get the first and last weights from the list
+        Weight last = weights.get(0);
+        Weight first = weights.get(weights.size() - 1);
+
+        double factor = Math.pow(10, 2);
+        double weightLostValue = Math.round((first.getWeight() - last.getWeight()) * factor) / factor;
+        weightLost.setText(String.valueOf(weightLostValue));
     }
 
     @Override
@@ -153,10 +203,12 @@ public class HomeFragment extends Fragment {
                 // If no goal weight is found, set the text to "No goal set"
                 if (goalWeight == 0.0) {
                     goalText.setText("No goal set");
+                    goalValue = 0.0;
                 }
                 // Update the goal text view with the goal weight
                 else {
                     goalText.setText("Your Goal Weight Is: " + goalWeight + " lbs");
+                    goalValue = goalWeight;
                 }
             }
         });
@@ -172,13 +224,6 @@ public class HomeFragment extends Fragment {
                 requireActivity().setTitle(userFirstName);
             }
         });
-    }
-
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // Not Implemented Yet
     }
 
     @Override

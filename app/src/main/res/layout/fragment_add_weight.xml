@@ -31,6 +31,7 @@
         app:suffixText=" lbs.">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/weightEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="22sp"
@@ -39,12 +40,14 @@
 
     <!-- Submit Button -->
     <Button
+        android:id="@+id/addWeightBtn"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="@string/submit"
         android:textSize="20sp"
         android:layout_marginTop="20dp"
         android:gravity="center"
+        android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/weightEntry"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

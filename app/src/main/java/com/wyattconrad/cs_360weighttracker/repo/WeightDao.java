@@ -17,8 +17,16 @@ public interface WeightDao {
     @Query("SELECT * FROM weight WHERE id = :id")
     LiveData<Weight> getWeightById(int id);
 
+    // Get the first recorded weight for a userId
+    @Query("SELECT * FROM weight WHERE user_id = :userId ORDER BY date_time_logged ASC LIMIT 1")
+    LiveData<Weight> getFirstWeightByUserId(long userId);
+
+    // Get the last recorded weight for a userId
+    @Query("SELECT * FROM weight WHERE user_id = :userId ORDER BY date_time_logged DESC LIMIT 1")
+    LiveData<Weight> getLastWeightByUserId(long userId);
+
     @Insert
-    void insertWeight(Weight weight);
+    long insertWeight(Weight weight);
 
     @Update
     void updateWeight(Weight weight);

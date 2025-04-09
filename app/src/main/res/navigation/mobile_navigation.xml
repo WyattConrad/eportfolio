@@ -15,8 +15,8 @@
             android:id="@+id/action_navigation_home_to_navigation_login"
             app:destination="@id/navigation_login" />
         <action
-            android:id="@+id/action_navigation_home_to_navigation_notifications"
-            app:destination="@id/navigation_notifications" />
+            android:id="@+id/action_navigation_home_to_navigation_logout"
+            app:destination="@id/navigation_logout" />
     </fragment>
 
     <!-- Login Fragment -->
@@ -25,6 +25,13 @@
         android:name="com.wyattconrad.cs_360weighttracker.ui.login.LoginFragment"
         android:label="@string/title_login"
         tools:layout="@layout/fragment_login" />
+
+    <!-- Logout Fragment -->
+    <fragment
+        android:id="@+id/navigation_logout"
+        android:name="com.wyattconrad.cs_360weighttracker.ui.logout.LogoutFragment"
+        android:label="@string/title_logout"
+        tools:layout="@layout/fragment_logout" />
 
     <!-- Registration Fragment -->
     <fragment
@@ -39,13 +46,6 @@
         android:name="com.wyattconrad.cs_360weighttracker.ui.addweight.AddWeightFragment"
         android:label="@string/title_addweight"
         tools:layout="@layout/fragment_add_weight" />
-
-    <!-- Notifications Fragment -->
-    <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.wyattconrad.cs_360weighttracker.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
 
     <!-- Goal Fragment -->
     <fragment

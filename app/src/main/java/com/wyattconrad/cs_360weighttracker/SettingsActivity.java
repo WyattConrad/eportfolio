@@ -89,6 +89,23 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                     return true;
                 });
+
+            // Handle in-app messaging switch
+            SwitchPreferenceCompat inAppMessagingSwitch = findPreference("in_app_messaging");
+            assert inAppMessagingSwitch != null;
+
+            inAppMessagingSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
+                boolean isSelected = (Boolean) newValue;
+                if (isSelected) {
+                    // Enable in-app messaging
+                    sharedPreferences.edit().putBoolean("in_app_messaging", true).apply();
+                } else {
+                    // Disable in-app messaging
+                    sharedPreferences.edit().putBoolean("in_app_messaging", false).apply();
+                }
+                return true;
+            });
+
         }
 
         /***

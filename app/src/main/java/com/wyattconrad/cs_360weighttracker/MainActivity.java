@@ -1,6 +1,7 @@
 package com.wyattconrad.cs_360weighttracker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.wyattconrad.cs_360weighttracker.viewmodel.WeightListViewModel;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +40,26 @@ public class MainActivity extends AppCompatActivity {
         // Initialize the BottomNavigationView
         BottomNavigationView navView = binding.navView;
 
+        // Get the user's ID from SharedPreferences, if one doesn't exist, set it to -1
+        sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+        long userId = sharedPreferences.getLong("user_id", -1);
+        if (userId == -1) {
+            // Navigate to the login page
+            NavController navController = Navigation.findNavController(navHost);
+            navController.navigate(R.id.navigation_login);
+        }
+        else {
+            // Set the bottom navigation view to logout
+            navView.getMenu().findItem(R.id.navigation_logout).setVisible(true);
+            navView.getMenu().findItem(R.id.navigation_login).setVisible(false);
+        }
+
+
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_login, R.id.navigation_notifications)
+                R.id.navigation_home, R.id.navigation_goal, R.id.navigation_login, R.id.navigation_logout)
                 .build();
 
         // Initialize the NavController and set up the action bar

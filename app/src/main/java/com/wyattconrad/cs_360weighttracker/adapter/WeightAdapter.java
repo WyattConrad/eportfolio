@@ -1,9 +1,12 @@
 package com.wyattconrad.cs_360weighttracker.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Application;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.model.Weight;
+import com.wyattconrad.cs_360weighttracker.viewmodel.WeightListViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +30,12 @@ public class WeightAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     // Declare a list of weights
     private List<Weight> weightList = new ArrayList<>();
+
+    WeightListViewModel weightListViewModel;
+
+    public WeightAdapter(Application application) {
+        weightListViewModel = new WeightListViewModel(application);
+    }
 
     public void setWeightList(List<Weight> weightList) {
         // Update the weight list and notify the adapter
@@ -62,17 +72,40 @@ public class WeightAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @SuppressLint("SimpleDateFormat")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        // Bind data to the view holder based on the view type
-        if (holder.getItemViewType() == VIEW_TYPE_ITEM) {
-            // Bind weight data to the weight item view (subtract 1 for the header)
-            Weight weight = weightList.get(position - 1);
-            // Set the weight and date text for the weight item view
-            WeightViewHolder weightHolder = (WeightViewHolder) holder;
-            // Appending "lbs." to the weight text
-            weightHolder.weightText.setText(String.format("%s lbs.", weight.getWeight()));
-            // Convert the timestamp to a formatted date and time string
-            weightHolder.dateText.setText(formatDate(weight.getDateTimeLogged()));
-        }
+        // If the view type is the header, do nothing
+        if (holder.getItemViewType() != VIEW_TYPE_ITEM) { return; }
+
+        // Bind weight data to the weight item view (subtract 1 for the header)
+        Weight weight = weightList.get(position - 1);
+
+        // Create a weight view holder from the provided view holder
+        WeightViewHolder weightHolder = (WeightViewHolder) holder;
+
+        // Appending "lbs." to the weight text
+        weightHolder.weightText.setText(String.format("%s lbs.", weight.getWeight()));
+
+        // Convert the timestamp to a formatted date and time string
+        weightHolder.dateText.setText(formatDate(weight.getDateTimeLogged()));
+
+        // Set up the delete button click listener
+        weightHolder.deleteButton.setOnClickListener(v -> {
+
+            // Create a confirmation dialog
+            new AlertDialog.Builder(v.getContext())
+                    .setTitle("Confirm Delete")
+                    .setMessage("Are you sure you want to delete this weight entry?")
+                    .setPositiveButton("Delete", (dialog, which) -> {
+                        // Call ViewModel or Repository to delete
+                        weightListViewModel.deleteWeight(weight);
+
+                        // Update the list and notify adapter
+                        weightList.remove(position - 1);
+                        notifyItemRemoved(position - 1);
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
+
     }
 
     @Override
@@ -112,12 +145,14 @@ public class WeightAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static class WeightViewHolder extends RecyclerView.ViewHolder {
         // Declare weight and date text views
         TextView weightText, dateText;
+        ImageButton deleteButton;
 
         public WeightViewHolder(View itemView) {
             super(itemView);
             // Initialize weight and date text views
             weightText = itemView.findViewById(R.id.textWeight);
             dateText = itemView.findViewById(R.id.textDate);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
         }
     }
 }
