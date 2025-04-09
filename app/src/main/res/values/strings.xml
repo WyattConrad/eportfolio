@@ -45,5 +45,6 @@
     <string name="title_logout">Logout</string>
     <string name="confirm_logout">Are you sure you want to Logout?</string>
     <string name="logout">Logout</string>
+    <string name="scale_image">Scale Image</string>
 
 </resources>

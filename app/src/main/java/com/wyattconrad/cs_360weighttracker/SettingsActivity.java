@@ -91,7 +91,7 @@ public class SettingsActivity extends AppCompatActivity {
                 });
 
             // Handle in-app messaging switch
-            SwitchPreferenceCompat inAppMessagingSwitch = findPreference("in_app_messaging");
+            SwitchPreferenceCompat inAppMessagingSwitch = findPreference("in_app");
             assert inAppMessagingSwitch != null;
 
             inAppMessagingSwitch.setOnPreferenceChangeListener((preference, newValue) -> {

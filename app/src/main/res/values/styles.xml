@@ -17,13 +17,9 @@
         <item name="android:textSize">28sp</item>
         <item name="android:textColorHint">@color/grey</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:layout_marginStart">16dp</item>
-        <item name="android:layout_marginTop">20dp</item>
-        <item name="android:layout_marginEnd">16dp</item>
         <item name="android:minWidth">100dp</item>
         <item name="android:maxWidth">200dp</item>
         <item name="android:minHeight">48dp</item>
-        <item name="android:paddingHorizontal">16dp</item>
     </style>
 
     <style name="HeaderText">
@@ -34,6 +30,10 @@
         <item name="android:textAlignment">center</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="HeaderTextNoMarginTop" parent="@style/HeaderText">
+        <item name="android:layout_marginTop">0dp</item>
     </style>
 
 </resources>

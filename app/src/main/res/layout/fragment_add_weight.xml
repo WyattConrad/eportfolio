@@ -6,16 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".ui.addweight.AddWeightFragment">
 
+    <ImageView
+        android:id="@+id/weight_icon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:contentDescription="@string/scale_image"
+        android:src="@drawable/baseline_monitor_weight_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text_home"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="@color/french_blue" />
+
     <!-- Enter Weight Header Text -->
     <TextView
         android:id="@+id/text_home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/HeaderText"
+        style="@style/HeaderTextNoMarginTop"
         android:text="@string/enter_your_current_weight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/weight_icon"
+        app:layout_constraintBottom_toTopOf="@id/weightEntry" />
 
     <!-- Weight Entry Area, using a custom text input layout -->
     <com.google.android.material.textfield.TextInputLayout
@@ -28,6 +42,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_home"
+        app:layout_constraintBottom_toTopOf="@id/addWeightBtn"
         app:suffixText=" lbs.">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -50,6 +65,7 @@
         android:enabled="false"
         app:layout_constraintTop_toBottomOf="@id/weightEntry"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

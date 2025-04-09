@@ -15,31 +15,34 @@
         android:text="@string/your_current_goal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/goal_layout"
+        app:layout_constraintVertical_chainStyle="packed" />
 
-    <EditText
-        android:id="@+id/goal_value"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/goal_layout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/EditText"
-        android:text="135"
-        android:hint="Weight in lbs."
-        android:enabled="false"
-        android:inputType="numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/edit_btn"
-        app:layout_constraintTop_toBottomOf="@id/goal_text"
-        app:layout_constraintWidth_percent="0.6" />
-
-    <Button
-        android:id="@+id/edit_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Edit"
-        app:layout_constraintStart_toEndOf="@id/goal_value"
-        app:layout_constraintBottom_toBottomOf="@id/goal_value"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.3" />
+        app:layout_constraintTop_toBottomOf="@id/goal_text"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <EditText
+            android:id="@+id/goal_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/EditText"
+            android:hint="@string/weight_in_lbs"
+            android:enabled="false"
+            android:inputType="numberDecimal" />
 
+        <Button
+            android:id="@+id/edit_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/edit"
+            android:paddingHorizontal="8dp"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
