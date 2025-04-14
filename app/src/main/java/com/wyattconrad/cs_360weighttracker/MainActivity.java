@@ -11,25 +11,24 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.wyattconrad.cs_360weighttracker.databinding.ActivityMainBinding;
+import com.wyattconrad.cs_360weighttracker.service.LoginService;
 import com.wyattconrad.cs_360weighttracker.viewmodel.WeightListViewModel;
 
 public class MainActivity extends AppCompatActivity {
-
-    private ActivityMainBinding binding;
-    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Initialize the view binding
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.wyattconrad.cs_360weighttracker.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         View navHost = findViewById(R.id.nav_host_fragment_activity_main);
@@ -41,10 +40,12 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navView = binding.navView;
 
         // Get the user's ID from SharedPreferences, if one doesn't exist, set it to -1
-        sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
-        long userId = sharedPreferences.getLong("user_id", -1);
+        LoginService loginService = new LoginService(this);
+
+        long userId = loginService.getUserId();
+        Log.d("MainActivity", "User ID: " + userId);
         if (userId == -1) {
-            // Navigate to the login page
+            // Navigate to the login page, no user is logged in
             NavController navController = Navigation.findNavController(navHost);
             navController.navigate(R.id.navigation_login);
         }

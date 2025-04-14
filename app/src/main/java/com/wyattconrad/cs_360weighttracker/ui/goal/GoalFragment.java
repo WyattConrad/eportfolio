@@ -1,11 +1,6 @@
 package com.wyattconrad.cs_360weighttracker.ui.goal;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,42 +13,48 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentGoalBinding;
 import com.wyattconrad.cs_360weighttracker.model.Goal;
+import com.wyattconrad.cs_360weighttracker.service.LoginService;
 
 public class GoalFragment extends Fragment {
 
+    // Declare variables
     private GoalViewModel mViewModel;
     private FragmentGoalBinding binding;
-    private SharedPreferences sharedPreferences;
+    private LoginService loginService;
     private EditText goalValue;
     private Button editBtn;
     private boolean isEditing = false;
+    private long goalId;
 
-    public static GoalFragment newInstance() {
-        return new GoalFragment();
-    }
-
+    // Override the onCreateView method
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        // Initialize the view model
         mViewModel = new ViewModelProvider(this).get(GoalViewModel.class);
 
+        // Inflate the layout for this fragment
         binding = FragmentGoalBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        sharedPreferences = requireContext().getSharedPreferences("user_prefs", MODE_PRIVATE);
+        // Initialize the login service
+        loginService = new LoginService(requireContext());
 
+        // Initialize the goal value and edit button
         goalValue = binding.goalValue;
         editBtn = binding.editBtn;
+
+        // Get the user's goal weight
+        observeUserGoal(loginService.getUserId());
 
         // Setup the onClick listener for the edit button
         binding.editBtn.setOnClickListener(v -> {
 
+            // If the user is not editing, enable the EditText and change the button text to "Save"
             if (!isEditing) {
-
                 String newGoal = goalValue.getText().toString();
                 goalValue.setEnabled(true);
                 editBtn.setText("Save");
@@ -70,39 +71,46 @@ public class GoalFragment extends Fragment {
         return root;
     }
 
+    // Override the onViewCreated method
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(GoalViewModel.class);
-        // TODO: Use the ViewModel
     }
 
+    // Override the onDestroyView method
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
-    private void observeGoalText(long userId, TextView goalText) {
-        // Observe the goal weight from the view model
-        mViewModel.getGoalWeight(userId).observe(getViewLifecycleOwner(), new Observer<Double>() {
-            @Override
-            public void onChanged(Double goalWeight) {
-                // If no goal weight is found, set the text to "No goal set"
-                if (goalWeight == 0.0) {
-                    goalValue.setText("No goal set");
-                }
-                // Update the goal text view with the goal weight
-                else {
-                    goalValue.setText("Your Goal Weight Is: " + goalWeight + " lbs");
-                }
-            }
+    // Get the user's goal weight
+    public void observeUserGoal(long userId) {
+        // Observe the goal weight from the goal repository
+        mViewModel.getGoalValue(userId).observeForever(userGoalFromDb -> {
+            // If the goal weight is null, set it to 0.0
+            goalValue.setText(String.valueOf(userGoalFromDb));
         });
     }
+
+    // Get the user's goal weight
+    public void observeUserGoalId(long userId) {
+        // Observe the goal weight from the goal repository
+        mViewModel.getGoalId(userId).observeForever(userGoalIdFromDb -> {
+            // If the goal weight is null, set it to 0.0
+            goalId = userGoalIdFromDb;
+        });
+    }
+
+    // Method to save the new goal value to the database
     private void saveGoal() {
         // Get the new goal value from the EditText
         String newGoalString = goalValue.getText().toString().trim();
+
+        // Declare a new goal variable
         double newGoalValue;
+        // Try to parse the input string as a double
         try {
             newGoalValue = Double.parseDouble(newGoalString);
         }
@@ -112,11 +120,13 @@ public class GoalFragment extends Fragment {
             goalValue.setError("Please enter a value.");
             return;
         }
+
+        // Get the user ID from the login service
         long userId;
 
+        // Try to get the user ID from the login service
         try {
-
-            userId = sharedPreferences.getLong("user_id", -1);
+            userId = loginService.getUserId();
         }
         catch (Exception e) {
             // Handle the case where the user is not logged in
@@ -127,6 +137,7 @@ public class GoalFragment extends Fragment {
 
         // Create the new goal object
         Goal newGoal = new Goal(newGoalValue, userId);
+        newGoal.setId(goalId);
 
         // Save the new goal value to the database
         mViewModel.saveGoal(newGoal);

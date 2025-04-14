@@ -21,6 +21,8 @@ import android.widget.Button;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentLogoutBinding;
+import com.wyattconrad.cs_360weighttracker.service.LoginService;
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 
 public class LogoutFragment extends Fragment {
 
@@ -28,7 +30,7 @@ public class LogoutFragment extends Fragment {
     private FragmentLogoutBinding binding;
     private BottomNavigationView bottomNavigationView;
     private Button logoutBtn;
-    private SharedPreferences sharedPreferences;
+    private LoginService loginService;
 
     public static LogoutFragment newInstance() {
         return new LogoutFragment();
@@ -49,10 +51,8 @@ public class LogoutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Clear the user ID from SharedPreferences
-                sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.remove("user_id");
-                editor.apply();
+                loginService = new LoginService(requireContext());
+                loginService.clearUserId();
 
                 // Change the bottom navigation login menu item to logout
                 MenuItem loginItem = bottomNavigationView.getMenu().findItem(R.id.navigation_login);

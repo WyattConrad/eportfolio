@@ -12,27 +12,41 @@ import java.util.concurrent.Executors;
 
 public class GoalRepository {
 
+    // Declare variables
     private static final ExecutorService executorService = Executors.newFixedThreadPool(4);
-    private SharedPreferences sharedPreferences;
-    private LiveData<Double> goalWeight;
     private final GoalDao goalDao;
 
+    // Constructor
     public GoalRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         goalDao = db.goalDao();
     }
 
-    public LiveData<Double> getGoalWeight(long userId) {
-        return goalDao.getGoalByUserId(userId);
+    // Get the goal value for a user
+    public LiveData<Double> getGoalValue(long userId) {
+        return goalDao.getGoalValueByUserId(userId);
     }
 
-    // Save Goal
+    // Get the goal ID for a user
+    public LiveData<Long> getGoalId(long userId) {
+        return goalDao.getGoalIdByUserId(userId);
+    }
+
+    // Save Goal Method used for both adding and updating goals
     public void saveGoal(Goal goal) {
 
+        // Execute the goal save in a background thread
         executorService.execute(() -> {
-            boolean goalExists = goalDao.goalExists(goal.getUserId());
-            if (goalExists) {
-                goalDao.updateGoal(goal);
+            // Check if the goal already exists for the user
+            Goal existingGoal = goalDao.getGoalByUserId(goal.getUserId());
+            // If the goal exists, update it, otherwise insert it
+            if (existingGoal != null) {
+                // Update the existing goal with the new value and date/time set
+                existingGoal.setGoal(goal.getGoal());
+                existingGoal.setDateTimeSet(System.currentTimeMillis());
+                // Update the existing goal in the database
+                goalDao.updateGoal(existingGoal);
+            // If the goal does not exist, insert it into the database
             } else {
                 goalDao.insertGoal(goal);
             }

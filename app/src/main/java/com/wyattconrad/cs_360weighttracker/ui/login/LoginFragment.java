@@ -20,11 +20,16 @@ import androidx.navigation.Navigation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentLoginBinding;
+import com.wyattconrad.cs_360weighttracker.service.LoginService;
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
+
+import java.util.Objects;
 
 public class LoginFragment extends Fragment {
 
     private FragmentLoginBinding binding;
-    private SharedPreferences sharedPreferences;
+    private UserPreferencesService sharedPreferences;
+    private LoginService loginService;
     private BottomNavigationView bottomNavigationView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -34,6 +39,8 @@ public class LoginFragment extends Fragment {
 
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        loginService = new LoginService(requireContext());
 
         bottomNavigationView = requireActivity().findViewById(R.id.nav_view);
 
@@ -48,15 +55,14 @@ public class LoginFragment extends Fragment {
                 loginViewModel.login(username, password).observe(getViewLifecycleOwner(), user -> {
                     if(user != null) {
                         // Save the user ID to SharedPreferences
-                        sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putLong("user_id", user.getId());
-                        editor.putString("user_first_name", user.getFirstName());
-                        editor.apply();
+                        long userId = user.getId();
+                        loginService.saveUserId(userId);
+                        sharedPreferences = new UserPreferencesService(getContext());
+                        sharedPreferences.saveUserData(userId, "user_first_name", user.getFirstName());
 
                         // Get the values just saved to SharedPreferences
-                        long userIdFromPrefs = sharedPreferences.getLong("user_id", -1);
-                        String userFirstNameFromPrefs = sharedPreferences.getString("user_first_name", "");
+                        long userIdFromPrefs = loginService.getUserId();
+                        String userFirstNameFromPrefs = sharedPreferences.getUserData(userId, "user_first_name", "Guest");
 
                         Log.d("LoginFragment", "User ID saved to SharedPreferences: " + userIdFromPrefs);
                         Log.d("LoginFragment", "User First Name saved to SharedPreferences: " + userFirstNameFromPrefs);

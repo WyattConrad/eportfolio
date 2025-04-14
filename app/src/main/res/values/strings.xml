@@ -46,5 +46,9 @@
     <string name="confirm_logout">Are you sure you want to Logout?</string>
     <string name="logout">Logout</string>
     <string name="scale_image">Scale Image</string>
+    <string name="sms_number">Phone Number</string>
+    <string name="sms_number_summary">Phone number to send SMS messages</string>
+    <string name="sms_notification_category">SMS Notifications</string>
+    <string name="in_app_notification_category">In-App Notifications</string>
 
 </resources>

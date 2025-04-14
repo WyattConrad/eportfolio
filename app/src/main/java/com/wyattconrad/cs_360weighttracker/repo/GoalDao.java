@@ -12,10 +12,16 @@ import com.wyattconrad.cs_360weighttracker.model.Goal;
 public interface GoalDao {
 
     @Query("SELECT goal FROM goal WHERE user_id= :userid LIMIT 1")
-    LiveData<Double> getGoalByUserId(long userid);
+    LiveData<Double> getGoalValueByUserId(long userid);
 
     @Query("SELECT EXISTS (SELECT 1 FROM goal WHERE user_id= :userid)")
     boolean goalExists(long userid);
+
+    @Query("SELECT id FROM goal WHERE user_id= :userid LIMIT 1")
+    LiveData<Long> getGoalIdByUserId(long userid);
+
+    @Query("SELECT * FROM goal WHERE user_id= :userid")
+    Goal getGoalByUserId(long userid);
 
     @Insert
     void insertGoal(Goal goal);

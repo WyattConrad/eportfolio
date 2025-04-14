@@ -32,6 +32,8 @@ import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.adapter.WeightAdapter;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentHomeBinding;
 import com.wyattconrad.cs_360weighttracker.model.Weight;
+import com.wyattconrad.cs_360weighttracker.service.LoginService;
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 import com.wyattconrad.cs_360weighttracker.viewmodel.WeightListViewModel;
 
 import java.util.ArrayList;
@@ -41,7 +43,8 @@ public class HomeFragment extends Fragment {
 
     // Declare variables
     private HomeViewModel homeViewModel;
-    private SharedPreferences sharedPreferences;
+    private UserPreferencesService sharedPreferences;
+    private LoginService loginService;
     private FragmentHomeBinding binding;
     private WeightAdapter adapter;
     private RecyclerView recyclerView;
@@ -71,21 +74,16 @@ public class HomeFragment extends Fragment {
         WeightListViewModel weightListViewModel = new ViewModelProvider(this).get(WeightListViewModel.class);
 
         // Get the user's ID from SharedPreferences, if one doesn't exist, set it to -1
-        sharedPreferences = requireContext().getSharedPreferences("user_prefs", MODE_PRIVATE);
-        userId = sharedPreferences.getLong("user_id", -1);
+        loginService = new LoginService(requireContext());
+        userId = loginService.getUserId();
+
+        sharedPreferences = new UserPreferencesService(getContext());
 
         if (userId == -1) {
             // Navigate to the login page
             NavController navController = Navigation.findNavController(view);
             navController.navigate(R.id.navigation_login);
         }
-
-
-        // Get the user's first name from SharedPreferences
-        userFirstName = sharedPreferences.getString("user_first_name", "");
-        requireActivity().setTitle(userFirstName);
-        // Update the action bar title with the user's first name
-        requireActivity().setTitle("Welcome " + userFirstName);
 
 
         // Get the goal text view from the layout
@@ -169,8 +167,8 @@ public class HomeFragment extends Fragment {
         super.onResume();
 
         // Get the user's first name from SharedPreferences
-        sharedPreferences = requireContext().getSharedPreferences("user_prefs", MODE_PRIVATE);
-        userFirstName = sharedPreferences.getString("user_first_name", "");
+        sharedPreferences = new UserPreferencesService(getContext());
+        userFirstName = sharedPreferences.getUserData(userId, "user_first_name", "Guest");
         requireActivity().setTitle(userFirstName);
         // Update the action bar title with the user's first name
         new Handler(Looper.getMainLooper()).post(() -> {

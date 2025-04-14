@@ -1,5 +1,6 @@
 package com.wyattconrad.cs_360weighttracker.ui.addweight;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+
+import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -20,7 +23,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentAddWeightBinding;
+import com.wyattconrad.cs_360weighttracker.model.Goal;
 import com.wyattconrad.cs_360weighttracker.model.Weight;
+import com.wyattconrad.cs_360weighttracker.service.LoginService;
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 
 import java.util.Objects;
 
@@ -32,14 +38,14 @@ public class AddWeightFragment extends Fragment {
     private Button addWeightButton;
     private TextInputLayout weightEntry;
     private TextInputEditText weightEditText;
-    private SharedPreferences sharedPreferences;
+    private UserPreferencesService sharedPreferences;
+    private LoginService loginService;
     private long userId;
+    private Double goalValue;
+    private boolean smsEnabled;
+
     private boolean inAppMessagingEnabled;
 
-    // Create a new instance of the fragment
-    public static AddWeightFragment newInstance() {
-        return new AddWeightFragment();
-    }
 
     // Override the onCreateView method to initialize the view
     @Override
@@ -53,14 +59,21 @@ public class AddWeightFragment extends Fragment {
         View root = binding.getRoot();
 
         // Get the user ID from SharedPreferences
-        sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getLong("user_id", -1);
-        inAppMessagingEnabled = sharedPreferences.getBoolean("in_app_messaging", false);
+        loginService = new LoginService(requireContext());
+        userId = loginService.getUserId();
+
+        // Get the SMS enabled flag from SharedPreferences
+        sharedPreferences = new UserPreferencesService(getContext());
+        inAppMessagingEnabled = sharedPreferences.getBoolean(userId, "in_app_messaging_enabled", false);
+        smsEnabled = sharedPreferences.getBoolean(userId,"sms_enabled", false);
+
 
         // Initialize the add weight button
         addWeightButton = binding.addWeightBtn;
         weightEntry = binding.weightEntry;
         weightEditText = binding.weightEditText;
+
+        observeGoalValue(userId);
 
         // Create a listener for the weight edit text
         weightEditText.addTextChangedListener(new TextWatcher() {
@@ -124,6 +137,22 @@ public class AddWeightFragment extends Fragment {
             // Add the new weight to the database
             addWeightViewModel.addWeight(newWeight);
 
+
+
+            // Check if the user has reached their goal
+            if (weight <= goalValue) {
+                // Check if SMS is enabled
+                if (smsEnabled) {
+                    // Send an SMS to the user
+                    sendSMS(weight);
+                }
+                // Check if in-app messaging is enabled
+                if (inAppMessagingEnabled) {
+                    // Send a notification to the user
+                    Toast.makeText(getContext(), "GOAL REACHED! CONGRATULATIONS!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
             // Show a toast message to indicate that the weight has been added
             if (inAppMessagingEnabled) {
                 Toast.makeText(getContext(), "Weight added", Toast.LENGTH_SHORT).show();
@@ -143,6 +172,32 @@ public class AddWeightFragment extends Fragment {
             weightEntry.setError("Invalid weight value");
             return;
         }
+    }
+
+    private void observeGoalValue(long userId) {
+        // Observe the goal weight from the view model
+        addWeightViewModel.checkGoalReached(userId).observe(getViewLifecycleOwner(), new Observer<Double>() {
+            @Override
+            public void onChanged(Double goalWeight) {
+                goalValue = goalWeight;
+            }
+        });
+    }
+
+    private void sendSMS(double weight) {
+        // Get the phone number from SharedPreferences
+        String phoneNumber = sharedPreferences.getUserData(userId, "sms_number", "");
+
+        // Create the message
+        String message = "Congratulations! You have reached your goal of " + weight + " lbs.";
+
+        if(phoneNumber.isEmpty() || weight <= 0){
+            Toast.makeText(getContext(), "SMS not sent, please check your phone number in settings.", Toast.LENGTH_SHORT).show();
+        }
+
+        // Send the SMS
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
     }
 
     private void validateWeight(String weightText) {

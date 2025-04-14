@@ -78,14 +78,7 @@ public class HomeViewModel extends AndroidViewModel {
     // Get the user's goal weight
     public LiveData<Double> getGoalWeight(long userId) {
         // Observe the goal weight from the goal repository
-        goalRepository.getGoalWeight(userId).observeForever(goalWeight -> {
-            // If the goal weight is null, set it to 0.0
-            if (goalWeight != null) {
-                goal.setValue(goalWeight);
-            } else {
-                goal.setValue(0.0);
-            }
-        });
+        goalRepository.getGoalValue(userId).observeForever(goal::setValue);
         // Return the LiveData variable containing the goal weight
         return goal;
     }
