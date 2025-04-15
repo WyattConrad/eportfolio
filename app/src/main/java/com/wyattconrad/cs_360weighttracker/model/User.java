@@ -6,13 +6,17 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+// Set the username as unique
 @Entity(indices = {@Index(value = "username", unique = true)})
 public class User {
 
+    // Create the fields for the database
+    // Primary key and ID for the user
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private long mId;
 
+    // First and last name
     @NonNull
     @ColumnInfo(name = "first_name")
     private String mFirstName;
@@ -20,6 +24,7 @@ public class User {
     @ColumnInfo(name = "last_name")
     private String mLastName;
 
+    // Username and password
     @NonNull
     @ColumnInfo(name = "username")
     private String mUsername;
@@ -28,6 +33,7 @@ public class User {
     @ColumnInfo(name = "password")
     private String mPassword;
 
+    // Constructor for creating a new user
     public User(@NonNull String firstName, String lastName, @NonNull String username, @NonNull String password) {
         this.mFirstName = firstName;
         this.mLastName = lastName;

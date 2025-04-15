@@ -37,6 +37,7 @@ public class WeightAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         weightListViewModel = new WeightListViewModel(application);
     }
 
+    // Setter for weight list
     public void setWeightList(List<Weight> weightList) {
         // Update the weight list and notify the adapter
         if (this.weightList == null) {

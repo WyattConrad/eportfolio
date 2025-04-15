@@ -1,8 +1,6 @@
 package com.wyattconrad.cs_360weighttracker;
 
 import android.Manifest;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -21,19 +19,32 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.wyattconrad.cs_360weighttracker.service.LoginService;
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
+
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set the content view to the settings activity layout
         setContentView(R.layout.settings_activity);
+
+        LoginService loginService = new LoginService(this);
+        long userId = loginService.getUserId();
+
+        // If the saved instance state is null, replace the fragment container with the settings fragment
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.settings, new SettingsFragment())
                     .commit();
         }
+        // Get the action bar
         ActionBar actionBar = getSupportActionBar();
+
+        // If the action bar is not null, enable the home button
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -42,9 +53,11 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
 
-        private static final int SMS_PERMISSION_REQUEST_CODE = 1;
+        // Declare variables
         private ActivityResultLauncher<String> requestSMSPermissionLauncher; // Used for requesting SMS permission
-        private SharedPreferences sharedPreferences;
+        private UserPreferencesService sharedPreferences;
+        private LoginService loginService;
+        private long userId;
 
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -53,7 +66,12 @@ public class SettingsActivity extends AppCompatActivity {
             // Set the action bar height to 0
             int actionBarHeight = 0;
 
-            sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+            // Initialize the shared preferences
+            sharedPreferences = new UserPreferencesService(requireContext());
+            loginService = new LoginService(requireContext());
+
+            // Get the UserId
+            userId = loginService.getUserId();
 
             // Get the phone number shared preference
             EditTextPreference smsNumberPreference = findPreference("sms_number");
@@ -130,9 +148,9 @@ public class SettingsActivity extends AppCompatActivity {
                 }
                 // Save the phone number to shared preferences
                 String phoneNumber = (String) newValue;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("sms_number", phoneNumber);
-                editor.apply();
+
+                // Save the phone number to shared preferences
+                sharedPreferences.saveUserData(userId, "sms_number", phoneNumber);
 
                 // Send a welcome sms message to the user
                 SmsManager smsManager = SmsManager.getDefault();
@@ -149,15 +167,15 @@ public class SettingsActivity extends AppCompatActivity {
             inAppMessagingSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
                 // If the switch is selected, enable in-app messaging otherwise disable it
                 boolean isSelected = (Boolean) newValue;
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+
                 if (isSelected) {
                     // Enable in-app messaging
-                    editor.putBoolean("in_app_messaging", true);
+                    sharedPreferences.saveUserData(userId, "in_app_messaging", true);
                 } else {
                     // Disable in-app messaging
-                    editor.putBoolean("in_app_messaging", false);
+                    sharedPreferences.saveUserData(userId, "in_app_messaging", false);
                 }
-                editor.apply();
+
                 return true;
             });
 
@@ -183,9 +201,7 @@ public class SettingsActivity extends AppCompatActivity {
          */
         private void enableSMSPermission() {
             // Save the SMS notification preference to shared preferences
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("sms_enabled", true);
-            editor.apply();
+            sharedPreferences.saveUserData(userId, "sms_enabled", true);
 
             // Show a toast message indicating that SMS notifications are enabled
             Toast.makeText(getContext(), "SMS Enabled", Toast.LENGTH_SHORT).show();
@@ -196,9 +212,7 @@ public class SettingsActivity extends AppCompatActivity {
          */
         private void disableSMSPermission() {
             // Save the SMS notification preference to shared preferences
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("sms_enabled", false);
-            editor.apply();
+            sharedPreferences.saveUserData(userId, "sms_enabled", false);
 
             // Show a toast message indicating that SMS notifications are disabled
             Toast.makeText(getContext(), "SMS Disabled", Toast.LENGTH_SHORT).show();

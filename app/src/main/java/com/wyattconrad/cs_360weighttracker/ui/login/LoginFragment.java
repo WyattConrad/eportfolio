@@ -40,8 +40,6 @@ public class LoginFragment extends Fragment {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        loginService = new LoginService(requireContext());
-
         bottomNavigationView = requireActivity().findViewById(R.id.nav_view);
 
         final TextView textView = binding.textDashboard;
@@ -56,6 +54,7 @@ public class LoginFragment extends Fragment {
                     if(user != null) {
                         // Save the user ID to SharedPreferences
                         long userId = user.getId();
+                        loginService = new LoginService(requireContext());
                         loginService.saveUserId(userId);
                         sharedPreferences = new UserPreferencesService(getContext());
                         sharedPreferences.saveUserData(userId, "user_first_name", user.getFirstName());

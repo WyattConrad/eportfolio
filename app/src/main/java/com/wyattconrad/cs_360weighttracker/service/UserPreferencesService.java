@@ -38,6 +38,13 @@ public class UserPreferencesService {
         return getUserPreferences(userId).getString(key, defaultValue);
     }
 
+    //Method to save boolean data for a specific user
+    public void saveUserData(long userId, String key, boolean value) {
+        SharedPreferences.Editor editor = getUserPreferences(userId).edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
     //Method to retrieve boolean data for a specific user
     public boolean getBoolean(long userId,String key, boolean defaultValue) {
         return getUserPreferences(userId).getBoolean(key, defaultValue);

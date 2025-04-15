@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentGoalBinding;
 import com.wyattconrad.cs_360weighttracker.model.Goal;
 import com.wyattconrad.cs_360weighttracker.service.LoginService;
@@ -29,19 +32,31 @@ public class GoalFragment extends Fragment {
     private boolean isEditing = false;
     private long goalId;
 
-    // Override the onCreateView method
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        // Initialize the view model
-        mViewModel = new ViewModelProvider(this).get(GoalViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
         // Inflate the layout for this fragment
         binding = FragmentGoalBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+
+        return binding.getRoot();
+    }
+
+    // Override the onViewCreated method
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        // Initialize the view model
+        mViewModel = new ViewModelProvider(this).get(GoalViewModel.class);
 
         // Initialize the login service
         loginService = new LoginService(requireContext());
+        long userId = loginService.getUserId();
+
+        if (userId == -1) {
+            // Navigate to the login page
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.navigation_login);
+        }
 
         // Initialize the goal value and edit button
         goalValue = binding.goalValue;
@@ -68,14 +83,6 @@ public class GoalFragment extends Fragment {
             }
         });
 
-        return root;
-    }
-
-    // Override the onViewCreated method
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(GoalViewModel.class);
     }
 
     // Override the onDestroyView method
@@ -90,6 +97,10 @@ public class GoalFragment extends Fragment {
         // Observe the goal weight from the goal repository
         mViewModel.getGoalValue(userId).observeForever(userGoalFromDb -> {
             // If the goal weight is null, set it to 0.0
+            if (userGoalFromDb == null) {
+                userGoalFromDb = 0.0;
+            }
+            // Update the goal value EditText with the user's goal weight
             goalValue.setText(String.valueOf(userGoalFromDb));
         });
     }

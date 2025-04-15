@@ -17,6 +17,9 @@ public interface UserDao {
     @Query("SELECT * FROM user")
     LiveData<List<User>> getAllUsers();
 
+    @Query("SELECT COUNT(*) FROM user WHERE username = :username")
+    int countUsersByUsername(String username);
+
     @Query("SELECT EXISTS (SELECT 1 FROM user WHERE username = :username)")
     LiveData<Boolean> userExists(String username);
 

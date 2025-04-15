@@ -1,18 +1,15 @@
 package com.wyattconrad.cs_360weighttracker.ui.home;
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.app.AlertDialog;
 import android.app.Application;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +23,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.adapter.WeightAdapter;
@@ -55,6 +51,7 @@ public class HomeFragment extends Fragment {
     private Double goalValue;
     private long userId;
     private String userFirstName;
+    private Button settingsButton;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -85,13 +82,13 @@ public class HomeFragment extends Fragment {
             navController.navigate(R.id.navigation_login);
         }
 
-
         // Get the goal text view from the layout
         goalText = binding.goalText;
         // Get the weight lost text view from the layout
         weightLost = binding.weightLost;
         // Get the weight loss percentage text view from the layout
         weightToGoal = binding.weightToGoal;
+
 
         if (userId == -1) {
             // Observe the greeting text from the view model
@@ -199,7 +196,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(Double goalWeight) {
                 // If no goal weight is found, set the text to "No goal set"
-                if (goalWeight == 0.0) {
+                if (goalWeight == null || goalWeight == 0) {
+                    Log.d("HomeFragment", "No goal set");
                     goalText.setText("No goal set");
                     goalValue = 0.0;
                 }

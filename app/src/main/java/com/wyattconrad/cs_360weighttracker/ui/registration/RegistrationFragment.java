@@ -1,12 +1,10 @@
 package com.wyattconrad.cs_360weighttracker.ui.registration;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,18 +17,21 @@ import androidx.navigation.Navigation;
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentRegistrationBinding;
 import com.wyattconrad.cs_360weighttracker.model.User;
+import com.wyattconrad.cs_360weighttracker.service.LoginService;
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 
 public class RegistrationFragment extends Fragment {
 
     private FragmentRegistrationBinding binding;
     private RegistrationViewModel registrationViewModel;
-    private SharedPreferences sharedPreferences;
+    private UserPreferencesService sharedPreferences;
+    private LoginService loginService;
     private EditText firstName;
     private EditText lastName;
     private EditText username;
     private EditText password;
     private EditText confirmPassword;
-    private boolean loggedIn = false;
+    private Button registerBtn;
 
 
 
@@ -48,7 +49,32 @@ public class RegistrationFragment extends Fragment {
         lastName = binding.lastname;
         username = binding.username;
         password = binding.password;
+        registerBtn = binding.registerBtn;
         confirmPassword = binding.passwordConfirm;
+
+        // Create a text changed listener for the username text entry to check if it already exists
+        username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                // Check if the username already exists
+                if (!hasFocus) {
+                    String usernameText = username.getText().toString();
+                    registrationViewModel.checkForExistingUsername(usernameText, usernameExists -> {
+                        if (getActivity() != null) { // Check for null Activity
+                            getActivity().runOnUiThread(() -> {
+                                if (usernameExists) {
+                                    username.setError("Username already exists");
+                                    registerBtn.setEnabled(false);
+                                } else {
+                                    username.setError(null);
+                                    registerBtn.setEnabled(true);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
 
         // Set the click listener for the register button
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -76,14 +102,6 @@ public class RegistrationFragment extends Fragment {
     }
 
     public void register() {
-        //TODO: Register user
-        // Check if user already exists
-        registrationViewModel.userExists(username.getText().toString()).observe(getViewLifecycleOwner(), userExists -> {
-            if (userExists) {
-                // User already exists
-                binding.username.setError("Username already exists");
-                return;
-            }
 
             // Check if passwords match
             if (!password.getText().toString().equals(confirmPassword.getText().toString())) {
@@ -91,10 +109,12 @@ public class RegistrationFragment extends Fragment {
                 return;
             }
 
+            // Create new user
             User newUser = new User(firstName.getText().toString(),
                     lastName.getText().toString(),
                     username.getText().toString(),
                     password.getText().toString());
+
             // Register user
             registrationViewModel.registerUser(newUser);
 
@@ -102,13 +122,13 @@ public class RegistrationFragment extends Fragment {
             registrationViewModel.login(username.getText().toString(), password.getText().toString()).observe(getViewLifecycleOwner(), user -> {
                 if(user != null) {
                     // Save the user ID to SharedPreferences
-                    sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putLong("user_id", user.getId());
-                    editor.putString("user_first_name", user.getFirstName());
-                    editor.apply();
-                    Log.d("LoginFragment", "User ID saved to SharedPreferences: " + user.getId());
-                    Log.d("LoginFragment", "User First Name saved to SharedPreferences: " + user.getFirstName());
+                    sharedPreferences = new UserPreferencesService(getContext());
+                    loginService = new LoginService(requireContext());
+                    // Save the user ID to SharedPreferences
+                    loginService.saveUserId(user.getId());
+                    // Save the user's first name to SharedPreferences
+                    sharedPreferences.saveUserData(user.getId(), "user_first_name", user.getFirstName());
+
 
                     // User logged in successfully, proceed to next screen or update UI
                     NavController navController = Navigation.findNavController(requireView());
@@ -120,7 +140,7 @@ public class RegistrationFragment extends Fragment {
                     binding.password.requestFocus();
                     binding.password.setError("Invalid username or password");
                 }
-            });
+
         });
     }
 }

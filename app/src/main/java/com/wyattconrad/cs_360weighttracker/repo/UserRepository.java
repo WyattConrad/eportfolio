@@ -54,6 +54,20 @@ public class UserRepository {
         });
     }
 
+    // Create an interface for the callback
+    public interface UsernameCallback {
+        void onUsernameExists(boolean exists);
+    }
+
+    // Check if username already exists
+    public void checkForExistingUsername(String username, UsernameCallback callback) {
+         executorService.execute(() -> {
+             // Check if the username already exists in the database
+             int count = userDao.countUsersByUsername(username);
+             callback.onUsernameExists(count > 0);
+         });
+    }
+
     public void deleteAll() {
         AppDatabase.databaseWriteExecutor.execute(userDao::deleteAll);
     }

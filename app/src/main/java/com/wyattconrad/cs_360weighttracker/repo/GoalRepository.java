@@ -1,11 +1,9 @@
 package com.wyattconrad.cs_360weighttracker.repo;
 
 import android.app.Application;
-import android.content.SharedPreferences;
 
 import androidx.lifecycle.LiveData;
 import com.wyattconrad.cs_360weighttracker.model.Goal;
-import com.wyattconrad.cs_360weighttracker.model.User;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +22,18 @@ public class GoalRepository {
 
     // Get the goal value for a user
     public LiveData<Double> getGoalValue(long userId) {
-        return goalDao.getGoalValueByUserId(userId);
+        LiveData<Double> goalValue = goalDao.getGoalValueByUserId(userId);
+        if (goalValue == null) {
+            return new LiveData<Double>() {
+                @Override
+                protected void onActive() {
+                    super.onActive();
+                    Goal goal = new Goal(0.0, userId);
+                    goalDao.insertGoal(goal);
+                }
+            };
+        }
+        return goalValue;
     }
 
     // Get the goal ID for a user

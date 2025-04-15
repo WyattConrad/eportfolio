@@ -1,7 +1,6 @@
 package com.wyattconrad.cs_360weighttracker;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +10,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         LoginService loginService = new LoginService(this);
 
         long userId = loginService.getUserId();
-        Log.d("MainActivity", "User ID: " + userId);
+
         if (userId == -1) {
             // Navigate to the login page, no user is logged in
             NavController navController = Navigation.findNavController(navHost);
@@ -54,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
             navView.getMenu().findItem(R.id.navigation_logout).setVisible(true);
             navView.getMenu().findItem(R.id.navigation_login).setVisible(false);
         }
-
-
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

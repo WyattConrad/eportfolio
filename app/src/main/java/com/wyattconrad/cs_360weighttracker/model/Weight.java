@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+// Set a foreign key to the user table
 @Entity(foreignKeys = @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "user_id", onDelete = ForeignKey.CASCADE))
 public class Weight {
 

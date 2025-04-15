@@ -2,8 +2,6 @@ package com.wyattconrad.cs_360weighttracker.ui.addweight;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,12 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentAddWeightBinding;
-import com.wyattconrad.cs_360weighttracker.model.Goal;
 import com.wyattconrad.cs_360weighttracker.model.Weight;
 import com.wyattconrad.cs_360weighttracker.service.LoginService;
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
@@ -38,6 +36,7 @@ public class AddWeightFragment extends Fragment {
     private Button addWeightButton;
     private TextInputLayout weightEntry;
     private TextInputEditText weightEditText;
+    private TextView congratsText;
     private UserPreferencesService sharedPreferences;
     private LoginService loginService;
     private long userId;
@@ -72,6 +71,7 @@ public class AddWeightFragment extends Fragment {
         addWeightButton = binding.addWeightBtn;
         weightEntry = binding.weightEntry;
         weightEditText = binding.weightEditText;
+        congratsText = binding.textCongrats;
 
         observeGoalValue(userId);
 
@@ -187,17 +187,34 @@ public class AddWeightFragment extends Fragment {
     private void sendSMS(double weight) {
         // Get the phone number from SharedPreferences
         String phoneNumber = sharedPreferences.getUserData(userId, "sms_number", "");
+        boolean inAppMessagingEnabled = sharedPreferences.getBoolean(userId, "in_app_messaging_enabled", false);
+        boolean smsEnabled = sharedPreferences.getBoolean(userId, "sms_enabled", false);
+        boolean notificationSent = false;
 
         // Create the message
         String message = "Congratulations! You have reached your goal of " + weight + " lbs.";
 
-        if(phoneNumber.isEmpty() || weight <= 0){
-            Toast.makeText(getContext(), "SMS not sent, please check your phone number in settings.", Toast.LENGTH_SHORT).show();
+        if(smsEnabled && !phoneNumber.isEmpty() && weight > 0){
+            // Send the SMS
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+            notificationSent = true;
         }
 
-        // Send the SMS
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+        // Check if in-app messaging is enabled
+        if (inAppMessagingEnabled && !notificationSent) {
+            // Send a notification to the user
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            notificationSent = true;
+        }
+
+        if (!notificationSent) {
+            // Display a message on screen
+            congratsText.setText(message);
+            congratsText.setVisibility(View.VISIBLE);
+
+        }
+
     }
 
     private void validateWeight(String weightText) {

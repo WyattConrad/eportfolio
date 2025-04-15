@@ -128,14 +128,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/recorded_weights"
-        android:textColor="@android:color/black"
-        android:textSize="24sp"
-        android:textAlignment="center"
-        android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/weightLossArea"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
+        style="@style/SecondaryHeaderText" />
 
     <!-- List of recorded weights area -->
     <!-- Weight List Recycler View Used -->

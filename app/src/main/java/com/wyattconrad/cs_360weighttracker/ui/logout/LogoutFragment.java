@@ -26,15 +26,12 @@ import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 
 public class LogoutFragment extends Fragment {
 
-    private LogoutViewModel mViewModel;
+    // Declare variables
     private FragmentLogoutBinding binding;
     private BottomNavigationView bottomNavigationView;
     private Button logoutBtn;
     private LoginService loginService;
 
-    public static LogoutFragment newInstance() {
-        return new LogoutFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
