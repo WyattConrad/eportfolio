@@ -58,7 +58,7 @@
         app:layout_goneMarginTop="40dp" />
 
     <!-- Register Link -->
-    <TextView
+    <Button
         android:id="@+id/registerLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:text="@string/register_a_new_account"
-        android:background="@drawable/back"
+        android:background="@android:color/transparent"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

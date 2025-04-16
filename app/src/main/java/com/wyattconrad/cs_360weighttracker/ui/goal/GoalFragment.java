@@ -1,5 +1,6 @@
 package com.wyattconrad.cs_360weighttracker.ui.goal;
 
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 
@@ -15,11 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentGoalBinding;
 import com.wyattconrad.cs_360weighttracker.model.Goal;
 import com.wyattconrad.cs_360weighttracker.service.LoginService;
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 
 public class GoalFragment extends Fragment {
 
@@ -27,10 +30,12 @@ public class GoalFragment extends Fragment {
     private GoalViewModel mViewModel;
     private FragmentGoalBinding binding;
     private LoginService loginService;
+    private UserPreferencesService sharedPreferences;
     private EditText goalValue;
     private Button editBtn;
-    private boolean isEditing = false;
+    private Button changeBtn;
     private long goalId;
+    private boolean inAppMessagingEnabled;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -58,29 +63,30 @@ public class GoalFragment extends Fragment {
             navController.navigate(R.id.navigation_login);
         }
 
+        sharedPreferences = new UserPreferencesService(requireContext());
+        inAppMessagingEnabled = sharedPreferences.getBoolean(userId, "in_app_messaging", false);
+
         // Initialize the goal value and edit button
         goalValue = binding.goalValue;
         editBtn = binding.editBtn;
+        changeBtn = binding.changeBtn;
 
         // Get the user's goal weight
         observeUserGoal(loginService.getUserId());
 
+        // Setup the onClick listener for the change button
+        assert binding.changeBtn != null;
+        binding.changeBtn.setOnClickListener(v -> {
+            editBtn.setVisibility(View.VISIBLE);
+            changeBtn.setVisibility(View.GONE);
+            goalValue.setEnabled(true);
+            goalValue.requestFocus();
+            goalValue.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
+        });
+
         // Setup the onClick listener for the edit button
         binding.editBtn.setOnClickListener(v -> {
-
-            // If the user is not editing, enable the EditText and change the button text to "Save"
-            if (!isEditing) {
-                String newGoal = goalValue.getText().toString();
-                goalValue.setEnabled(true);
-                editBtn.setText("Save");
-                isEditing = true;
-            } else {
-                // Add methods to save the changes to the database
-                saveGoal();
-                goalValue.setEnabled(false);
-                editBtn.setText("Edit");
-                isEditing = false;
-            }
+            saveGoal();
         });
 
     }
@@ -102,15 +108,6 @@ public class GoalFragment extends Fragment {
             }
             // Update the goal value EditText with the user's goal weight
             goalValue.setText(String.valueOf(userGoalFromDb));
-        });
-    }
-
-    // Get the user's goal weight
-    public void observeUserGoalId(long userId) {
-        // Observe the goal weight from the goal repository
-        mViewModel.getGoalId(userId).observeForever(userGoalIdFromDb -> {
-            // If the goal weight is null, set it to 0.0
-            goalId = userGoalIdFromDb;
         });
     }
 
@@ -149,6 +146,17 @@ public class GoalFragment extends Fragment {
         // Create the new goal object
         Goal newGoal = new Goal(newGoalValue, userId);
         newGoal.setId(goalId);
+
+        // Notify the user that the goal has been updated
+        if (inAppMessagingEnabled) {
+            Toast.makeText(getContext(), "Goal updated", Toast.LENGTH_SHORT).show();
+        }
+
+        // Hide the edit button and show the change button
+        editBtn.setVisibility(View.GONE);
+        changeBtn.setVisibility(View.VISIBLE);
+        goalValue.setEnabled(false);
+        goalValue.setTextColor(ContextCompat.getColor(requireContext(), R.color.dark_grey));
 
         // Save the new goal value to the database
         mViewModel.saveGoal(newGoal);

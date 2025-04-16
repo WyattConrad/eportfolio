@@ -50,5 +50,7 @@
     <string name="sms_number_summary">Phone number to send SMS messages</string>
     <string name="sms_notification_category">SMS Notifications</string>
     <string name="in_app_notification_category">In-App Notifications</string>
+    <string name="save">Save</string>
+    <string name="update_goal">Modify This Goal</string>
 
 </resources>

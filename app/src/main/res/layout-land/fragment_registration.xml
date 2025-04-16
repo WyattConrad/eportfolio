@@ -111,7 +111,7 @@
             />
 
         <!-- Login Link -->
-        <TextView
+        <Button
             android:id="@+id/loginLink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -126,7 +126,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:text="@string/back_to_login_page"
-            android:background="@drawable/back"
+            android:background="@android:color/transparent"
             />
     </LinearLayout>
 </ScrollView>

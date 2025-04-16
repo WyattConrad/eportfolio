@@ -8,4 +8,16 @@
     <color name="syracuse_red_orange">#FFD65108</color>
     <color name="seal_brown">#FF591F0A</color>
     <color name="grey">#FFD3D3D3</color>
+    <color name="dark_grey">#FF808080</color>
+
+
+    <!-- Button Colors -->
+    <color name="button_enabled">@color/french_blue</color>
+    <color name="button_disabled">@color/grey</color>
+    <color name="button_pressed">@color/french_blue</color>
+    <color name="button_text_enabled">@color/white</color>
+    <color name="button_text_pressed">@color/white</color>
+    <color name="button_text_disabled">@color/green_blue</color>
+
+
 </resources>
