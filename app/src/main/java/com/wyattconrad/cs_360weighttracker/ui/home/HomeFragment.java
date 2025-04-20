@@ -71,6 +71,7 @@ public class HomeFragment extends Fragment {
         userId = loginService.getUserId();
 
         sharedPreferences = new UserPreferencesService(getContext());
+        userFirstName = sharedPreferences.getUserData(userId, "user_first_name", "Guest");
 
         // Get the goal text view from the layout
         goalText = binding.goalText;
@@ -86,8 +87,8 @@ public class HomeFragment extends Fragment {
         }
 
         // Log the user id and first name
-        Log.d("HomeFragment", "User ID" + userId);
-        Log.d("HomeFragment", "User First Name" + userFirstName);
+        Log.d("HomeFragment", "User ID: " + userId);
+        Log.d("HomeFragment", "User First Name: " + userFirstName);
 
         // Set up the recycler view to display the recorded weights list
         recyclerView = binding.listArea;
