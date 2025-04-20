@@ -57,12 +57,6 @@ public class GoalFragment extends Fragment {
         loginService = new LoginService(requireContext());
         long userId = loginService.getUserId();
 
-        if (userId == -1) {
-            // Navigate to the login page
-            NavController navController = Navigation.findNavController(view);
-            navController.navigate(R.id.navigation_login);
-        }
-
         sharedPreferences = new UserPreferencesService(requireContext());
         inAppMessagingEnabled = sharedPreferences.getBoolean(userId, "in_app_messaging", false);
 

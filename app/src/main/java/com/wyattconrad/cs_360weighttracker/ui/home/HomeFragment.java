@@ -73,12 +73,6 @@ public class HomeFragment extends Fragment {
 
         sharedPreferences = new UserPreferencesService(getContext());
 
-        if (userId == -1) {
-            // Navigate to the login page
-            NavController navController = Navigation.findNavController(view);
-            navController.navigate(R.id.navigation_login);
-        }
-
         // Get the goal text view from the layout
         goalText = binding.goalText;
         // Get the weight lost text view from the layout

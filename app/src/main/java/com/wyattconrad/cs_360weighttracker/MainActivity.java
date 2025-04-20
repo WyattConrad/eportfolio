@@ -29,30 +29,6 @@ public class MainActivity extends AppCompatActivity {
         com.wyattconrad.cs_360weighttracker.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        View navHost = findViewById(R.id.nav_host_fragment_activity_main);
-
-        // Initialize the ViewModel
-        WeightListViewModel mWeightListViewModel = new ViewModelProvider(this).get(WeightListViewModel.class);
-
-        // Initialize the BottomNavigationView
-        BottomNavigationView navView = binding.navView;
-
-        // Get the user's ID from SharedPreferences, if one doesn't exist, set it to -1
-        LoginService loginService = new LoginService(this);
-
-        long userId = loginService.getUserId();
-
-        if (userId == -1) {
-            // Navigate to the login page, no user is logged in
-            NavController navController = Navigation.findNavController(navHost);
-            navController.navigate(R.id.navigation_login);
-        }
-        else {
-            // Set the bottom navigation view to logout
-            navView.getMenu().findItem(R.id.navigation_logout).setVisible(true);
-            navView.getMenu().findItem(R.id.navigation_login).setVisible(false);
-        }
-
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(

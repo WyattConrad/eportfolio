@@ -60,7 +60,8 @@ public abstract class AppDatabase extends RoomDatabase {
      */
     private static void addStarterData(UserDao userDao, WeightDao weightDao, GoalDao goalDao) {
     // Create a user
-    User user = new User("Admin", "User", "admin@email.com", "password@123");
+    User user = new User("Guest", "User", "guest", "password@123");
+    user.setId(-1);
     long userId = userDao.insertUser(user);
 
     Log.d("WeightRepository", "User added with ID: " + userId);

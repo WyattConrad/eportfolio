@@ -44,11 +44,11 @@ public class HomeViewModel extends AndroidViewModel {
         userRepository.getUserFirstName(userId).observeForever(firstName -> {
             // If the first name is null or empty, set the greeting text to "Welcome Guest"
             if (firstName == null || firstName.isEmpty()) {
-                greetingText.setValue("Welcome Guest");
+                greetingText.setValue("Guest");
             }
             // Otherwise, set the greeting text to "Welcome <first name>"
             else {
-                greetingText.setValue("Welcome " + toProperCase(firstName));
+                greetingText.setValue(toProperCase(firstName));
             }
         });
         // Return the LiveData variable containing the greeting text
