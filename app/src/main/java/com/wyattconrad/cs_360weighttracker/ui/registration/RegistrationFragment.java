@@ -56,44 +56,33 @@ public class RegistrationFragment extends Fragment {
         confirmPassword = binding.passwordConfirm;
 
         // Create a text changed listener for the username text entry to check if it already exists
-        username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                // Check if the username already exists
-                if (!hasFocus) {
-                    String usernameText = username.getText().toString();
-                    registrationViewModel.checkForExistingUsername(usernameText, usernameExists -> {
-                        if (getActivity() != null) { // Check for null Activity
-                            getActivity().runOnUiThread(() -> {
-                                if (usernameExists) {
-                                    username.setError("Username already exists");
-                                    registerBtn.setEnabled(false);
-                                } else {
-                                    username.setError(null);
-                                    registerBtn.setEnabled(true);
-                                }
-                            });
-                        }
-                    });
-                }
+        username.setOnFocusChangeListener((v, hasFocus) -> {
+            // Check if the username already exists
+            if (!hasFocus) {
+                String usernameText = username.getText().toString();
+                registrationViewModel.checkForExistingUsername(usernameText, usernameExists -> {
+                    if (getActivity() != null) { // Check for null Activity
+                        getActivity().runOnUiThread(() -> {
+                            if (usernameExists) {
+                                username.setError("Username already exists");
+                                registerBtn.setEnabled(false);
+                            } else {
+                                username.setError(null);
+                                registerBtn.setEnabled(true);
+                            }
+                        });
+                    }
+                });
             }
         });
 
         // Set the click listener for the register button
-        binding.registerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                register();
-            }
-        });
+        binding.registerBtn.setOnClickListener(v -> register());
 
         // Set the click listener for the login link
-        binding.loginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavController navController = Navigation.findNavController(v);
-                navController.navigate(R.id.navigation_login);
-            }
+        binding.loginLink.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            navController.navigate(R.id.navigation_login);
         });
         return root;
     }
@@ -140,7 +129,7 @@ public class RegistrationFragment extends Fragment {
                     sharedPreferences.saveUserData(userId, "sms_enabled", false);
 
                     // Log the user id and first name
-                    Log.d("RegistrationFragment", "User ID" + String.valueOf(userId));
+                    Log.d("RegistrationFragment", "User ID" + userId);
                     Log.d("RegistrationFragment", "User First Name" + user.getFirstName());
 
                     // Change the bottom navigation login menu item to logout

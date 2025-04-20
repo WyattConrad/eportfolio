@@ -9,17 +9,15 @@ public class LoginService {
     private static final String KEY_USER_ID = "user_id";
 
     // Define variables
-    private Context context;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
+    private final SharedPreferences sharedPreferences;
+    private final SharedPreferences.Editor editor;
 
     /**
      * Constructor for LoginService
-     * @param context
+     * @param context The application context
      */
     public LoginService(Context context) {
         // Initialize variables
-        this.context = context;
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }

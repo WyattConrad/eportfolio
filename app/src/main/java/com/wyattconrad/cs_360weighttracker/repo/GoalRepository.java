@@ -24,7 +24,7 @@ public class GoalRepository {
     public LiveData<Double> getGoalValue(long userId) {
         LiveData<Double> goalValue = goalDao.getGoalValueByUserId(userId);
         if (goalValue == null) {
-            return new LiveData<Double>() {
+            return new LiveData<>() {
                 @Override
                 protected void onActive() {
                     super.onActive();

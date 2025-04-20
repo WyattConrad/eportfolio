@@ -10,7 +10,7 @@ public class UserPreferencesService {
 
     /**
      * Constructor for UserPreferencesService
-     * @param context
+     * @param context The application context
      */
     public UserPreferencesService(Context context) {
         this.context = context;

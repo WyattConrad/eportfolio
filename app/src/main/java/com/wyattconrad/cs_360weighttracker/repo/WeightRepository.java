@@ -46,16 +46,12 @@ public class WeightRepository {
 
     public void updateWeight(Weight weight) {
         // Update the weight in the database on a background thread
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            weightDao.updateWeight(weight);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> weightDao.updateWeight(weight));
     }
 
     public void deleteWeight(Weight weight) {
         // Delete the weight from the database on a background thread
-        AppDatabase.databaseWriteExecutor.execute(() -> {
-            weightDao.deleteWeight(weight);
-        });
+        AppDatabase.databaseWriteExecutor.execute(() -> weightDao.deleteWeight(weight));
     }
 
 }

@@ -1,6 +1,5 @@
 package com.wyattconrad.cs_360weighttracker.ui.addweight;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -70,9 +69,9 @@ public class AddWeightFragment extends Fragment {
         smsSent = sharedPreferences.getBoolean(userId, "sms_sent", false);
 
         // Log the user id
-        Log.d("AddWeightFragment", "User ID: " + String.valueOf(userId));
-        Log.d("AddWeightFragment", "In-app messaging: " + String.valueOf(inAppMessagingEnabled));
-        Log.d("AddWeightFragment", "SMS enabled: " + String.valueOf(smsEnabled));
+        Log.d("AddWeightFragment", "User ID: " + userId);
+        Log.d("AddWeightFragment", "In-app messaging: " + inAppMessagingEnabled);
+        Log.d("AddWeightFragment", "SMS enabled: " + smsEnabled);
 
         // Initialize the add weight button
         addWeightButton = binding.addWeightBtn;
@@ -119,15 +118,12 @@ public class AddWeightFragment extends Fragment {
         });
 
         // Set the click listener for the add weight button
-        addWeightButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        addWeightButton.setOnClickListener(v -> {
 
-                // Get the weight value from the TextInputLayout
-                String weightText = Objects.requireNonNull(weightEntry.getEditText()).getText().toString();
+            // Get the weight value from the TextInputLayout
+            String weightText = Objects.requireNonNull(weightEntry.getEditText()).getText().toString();
 
-                saveNewWeight(v, weightText);
-            }
+            saveNewWeight(v, weightText);
         });
 
         return root;
@@ -179,18 +175,12 @@ public class AddWeightFragment extends Fragment {
             }
             // Set an error on the field
             weightEntry.setError("Invalid weight value");
-            return;
         }
     }
 
     private void observeGoalValue(long userId) {
         // Observe the goal weight from the view model
-        addWeightViewModel.checkGoalReached(userId).observe(getViewLifecycleOwner(), new Observer<Double>() {
-            @Override
-            public void onChanged(Double goalWeight) {
-                goalValue = goalWeight;
-            }
-        });
+        addWeightViewModel.checkGoalReached(userId).observe(getViewLifecycleOwner(), goalWeight -> goalValue = goalWeight);
     }
 
     private void sendSMS(double weight) {

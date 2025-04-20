@@ -52,5 +52,6 @@
     <string name="in_app_notification_category">In-App Notifications</string>
     <string name="save">Save</string>
     <string name="update_goal">Modify This Goal</string>
+    <string name="no_goal_set">No goal set</string>
 
 </resources>

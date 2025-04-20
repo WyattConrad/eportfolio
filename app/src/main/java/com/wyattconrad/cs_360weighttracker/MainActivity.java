@@ -2,22 +2,17 @@ package com.wyattconrad.cs_360weighttracker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.wyattconrad.cs_360weighttracker.databinding.ActivityMainBinding;
-import com.wyattconrad.cs_360weighttracker.service.LoginService;
-import com.wyattconrad.cs_360weighttracker.viewmodel.WeightListViewModel;
 
 public class MainActivity extends AppCompatActivity {
 

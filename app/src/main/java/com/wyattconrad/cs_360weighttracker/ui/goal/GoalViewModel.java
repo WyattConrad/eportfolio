@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 
 import com.wyattconrad.cs_360weighttracker.model.Goal;
 import com.wyattconrad.cs_360weighttracker.repo.GoalRepository;
-import com.wyattconrad.cs_360weighttracker.service.LoginService;
 
 public class GoalViewModel extends AndroidViewModel {
 

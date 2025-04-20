@@ -32,9 +32,6 @@ public class SettingsActivity extends AppCompatActivity {
         // Set the content view to the settings activity layout
         setContentView(R.layout.settings_activity);
 
-        LoginService loginService = new LoginService(this);
-        long userId = loginService.getUserId();
-
         // If the saved instance state is null, replace the fragment container with the settings fragment
         if (savedInstanceState == null) {
             getSupportFragmentManager()
@@ -185,13 +182,8 @@ public class SettingsActivity extends AppCompatActivity {
                 // If the switch is selected, enable in-app messaging otherwise disable it
                 boolean isSelected = (Boolean) newValue;
 
-                if (isSelected) {
-                    // Enable in-app messaging
-                    sharedPreferences.saveUserData(userId, "in_app_messaging", true);
-                } else {
-                    // Disable in-app messaging
-                    sharedPreferences.saveUserData(userId, "in_app_messaging", false);
-                }
+                // Set the value in SharedPreferences
+                sharedPreferences.saveUserData(userId, "in_app_messaging", isSelected);
 
                 return true;
             });

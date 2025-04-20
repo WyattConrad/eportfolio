@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 public class UserRepository {
 
     private final UserDao userDao;
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
     private static final ExecutorService executorService = Executors.newFixedThreadPool(4);
 
 

@@ -1,9 +1,5 @@
 package com.wyattconrad.cs_360weighttracker.ui.logout;
 
-import androidx.lifecycle.ViewModelProvider;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,7 +18,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentLogoutBinding;
 import com.wyattconrad.cs_360weighttracker.service.LoginService;
-import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 
 public class LogoutFragment extends Fragment {
 
@@ -44,23 +39,20 @@ public class LogoutFragment extends Fragment {
 
         bottomNavigationView = requireActivity().findViewById(R.id.nav_view);
 
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Clear the user ID from SharedPreferences
-                loginService = new LoginService(requireContext());
-                loginService.clearUserId();
+        logoutBtn.setOnClickListener(v -> {
+            // Clear the user ID from SharedPreferences
+            loginService = new LoginService(requireContext());
+            loginService.clearUserId();
 
-                // Change the bottom navigation login menu item to logout
-                MenuItem loginItem = bottomNavigationView.getMenu().findItem(R.id.navigation_login);
-                MenuItem logoutItem = bottomNavigationView.getMenu().findItem(R.id.navigation_logout);
-                loginItem.setVisible(true);
-                logoutItem.setVisible(false);
+            // Change the bottom navigation login menu item to logout
+            MenuItem loginItem = bottomNavigationView.getMenu().findItem(R.id.navigation_login);
+            MenuItem logoutItem = bottomNavigationView.getMenu().findItem(R.id.navigation_logout);
+            loginItem.setVisible(true);
+            logoutItem.setVisible(false);
 
-                // User logged in successfully, proceed to next screen or update UI
-                NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(R.id.navigation_login);
-            }
+            // User logged in successfully, proceed to next screen or update UI
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.navigation_login);
         });
 
         return root;

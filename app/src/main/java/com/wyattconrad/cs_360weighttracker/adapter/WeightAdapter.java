@@ -3,7 +3,6 @@ package com.wyattconrad.cs_360weighttracker.adapter;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Application;
-import android.media.Image;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

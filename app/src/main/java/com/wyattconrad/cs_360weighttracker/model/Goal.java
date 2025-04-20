@@ -35,8 +35,8 @@ public class Goal {
 
     /**
      * Default constructor
-     * @param goal
-     * @param mUserId
+     * @param goal The goal value
+     * @param mUserId The user Id
      */
     public Goal(double goal, long mUserId) {
         mGoal = goal;

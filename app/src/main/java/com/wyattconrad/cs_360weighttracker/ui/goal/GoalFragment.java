@@ -7,8 +7,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,7 +32,6 @@ public class GoalFragment extends Fragment {
     private EditText goalValue;
     private Button editBtn;
     private Button changeBtn;
-    private long goalId;
     private boolean inAppMessagingEnabled;
 
     @Override
@@ -69,7 +66,6 @@ public class GoalFragment extends Fragment {
         observeUserGoal(loginService.getUserId());
 
         // Setup the onClick listener for the change button
-        assert binding.changeBtn != null;
         binding.changeBtn.setOnClickListener(v -> {
             editBtn.setVisibility(View.VISIBLE);
             changeBtn.setVisibility(View.GONE);
@@ -79,9 +75,7 @@ public class GoalFragment extends Fragment {
         });
 
         // Setup the onClick listener for the edit button
-        binding.editBtn.setOnClickListener(v -> {
-            saveGoal();
-        });
+        binding.editBtn.setOnClickListener(v -> saveGoal());
 
     }
 
@@ -139,7 +133,6 @@ public class GoalFragment extends Fragment {
 
         // Create the new goal object
         Goal newGoal = new Goal(newGoalValue, userId);
-        newGoal.setId(goalId);
 
         // Notify the user that the goal has been updated
         if (inAppMessagingEnabled) {

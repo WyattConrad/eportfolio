@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -87,7 +86,7 @@ public class HomeFragment extends Fragment {
         }
 
         // Log the user id and first name
-        Log.d("HomeFragment", "User ID" + String.valueOf(userId));
+        Log.d("HomeFragment", "User ID" + userId);
         Log.d("HomeFragment", "User First Name" + userFirstName);
 
         // Set up the recycler view to display the recorded weights list
@@ -165,45 +164,36 @@ public class HomeFragment extends Fragment {
         // Get the FAB from the layout
         FloatingActionButton fab = root.findViewById(R.id.fab);
         // Set the click listener for the FAB
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Navigate to the AddWeightFragment when the FAB is clicked
-                NavController navController = Navigation.findNavController(view);
-                navController.navigate(R.id.navigation_addweight);
-            }
+        fab.setOnClickListener(view -> {
+            // Navigate to the AddWeightFragment when the FAB is clicked
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.navigation_addweight);
         });
     }
 
     private void observeGoalText(long userId) {
         // Observe the goal weight from the view model
-        homeViewModel.getGoalWeight(userId).observe(getViewLifecycleOwner(), new Observer<Double>() {
-            @Override
-            public void onChanged(Double goalWeight) {
-                // If no goal weight is found, set the text to "No goal set"
-                if (goalWeight == null || goalWeight == 0) {
-                    Log.d("HomeFragment", "No goal set");
-                    goalText.setText("No goal set");
-                    goalValue = 0.0;
-                }
-                // Update the goal text view with the goal weight
-                else {
-                    goalText.setText("Your Goal Weight Is: " + goalWeight + " lbs");
-                    goalValue = goalWeight;
-                }
+        homeViewModel.getGoalWeight(userId).observe(getViewLifecycleOwner(), goalWeight -> {
+            // If no goal weight is found, set the text to "No goal set"
+            if (goalWeight == null || goalWeight == 0) {
+                Log.d("HomeFragment", "No goal set");
+                goalText.setText(R.string.no_goal_set);
+                goalValue = 0.0;
+            }
+            // Update the goal text view with the goal weight
+            else {
+                goalText.setText(String.format("Your Goal Weight Is: %s lbs", goalWeight));
+                goalValue = goalWeight;
             }
         });
     }
 
     private void observeUserFirstName(long userId) {
         // Observe the user's first name from the view model
-        homeViewModel.getText(userId).observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(String welcomeMessage) {
-                // Update the action bar title with the user's first name
-                userFirstName = welcomeMessage;
-                requireActivity().setTitle(userFirstName);
-            }
+        homeViewModel.getText(userId).observe(getViewLifecycleOwner(), welcomeMessage -> {
+            // Update the action bar title with the user's first name
+            userFirstName = welcomeMessage;
+            requireActivity().setTitle(userFirstName);
         });
     }
 

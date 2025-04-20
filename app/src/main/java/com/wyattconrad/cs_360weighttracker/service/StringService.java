@@ -4,7 +4,7 @@ public class StringService {
 
     /**
      * Converts a string to proper case.
-     * @param input
+     * @param input The string to convert
      * @return String in proper case format
      */
     public static String toProperCase(String input) {
@@ -20,7 +20,7 @@ public class StringService {
         // Convert each word to proper case
         for (String word : words) {
             // Capitalize the first letter of each word
-            if (word.length() > 0) {
+            if (!word.isEmpty()) {
                 sb.append(Character.toUpperCase(word.charAt(0)))
                         .append(word.substring(1))
                         .append(" ");
