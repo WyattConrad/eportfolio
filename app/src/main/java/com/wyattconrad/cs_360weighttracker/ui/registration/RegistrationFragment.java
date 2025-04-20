@@ -1,6 +1,7 @@
 package com.wyattconrad.cs_360weighttracker.ui.registration;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,19 +122,31 @@ public class RegistrationFragment extends Fragment {
             // Login user
             registrationViewModel.login(username.getText().toString(), password.getText().toString()).observe(getViewLifecycleOwner(), user -> {
                 if(user != null) {
+
+                    long userId = user.getId();
+
                     // Save the user ID to SharedPreferences
                     sharedPreferences = new UserPreferencesService(getContext());
                     loginService = new LoginService(requireContext());
-                    // Save the user ID to SharedPreferences
-                    loginService.saveUserId(user.getId());
-                    // Save the user's first name to SharedPreferences
-                    sharedPreferences.saveUserData(user.getId(), "user_first_name", user.getFirstName());
 
+                    // Save the user ID to SharedPreferences
+                    loginService.saveUserId(userId);
+
+                    // Save the user's first name and default notification preferences to SharedPreferences
+                    sharedPreferences.saveUserData(userId, "user_first_name", user.getFirstName());
+                    sharedPreferences.saveUserData(userId, "in_app_messaging", true);
+                    sharedPreferences.saveUserData(userId, "sms_enabled", false);
+
+                    // Log the user id and first name
+                    Log.d("RegistrationFragment", "User ID" + String.valueOf(userId));
+                    Log.d("RegistrationFragment", "User First Name" + user.getFirstName());
 
                     // User logged in successfully, proceed to next screen or update UI
                     NavController navController = Navigation.findNavController(requireView());
                     navController.navigate(R.id.navigation_home);
+
                 } else {
+
                     // Login failed, show an error message
                     Toast.makeText(getContext(), "Invalid username or password", Toast.LENGTH_SHORT).show();
                     binding.password.setText("");

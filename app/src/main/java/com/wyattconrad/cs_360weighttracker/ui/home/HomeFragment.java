@@ -65,7 +65,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         // Initialize the home and weightlist view models
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         WeightListViewModel weightListViewModel = new ViewModelProvider(this).get(WeightListViewModel.class);
@@ -95,6 +94,10 @@ public class HomeFragment extends Fragment {
             observeUserFirstName(userId);
         }
 
+        // Log the user id and first name
+        Log.d("HomeFragment", "User ID" + String.valueOf(userId));
+        Log.d("HomeFragment", "User First Name" + userFirstName);
+
         // Set up the recycler view to display the recorded weights list
         recyclerView = binding.listArea;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -112,7 +115,7 @@ public class HomeFragment extends Fragment {
         // Observe the LiveData and update the adapter when the data changes
         weightListViewModel.getWeightByUserId(userId).observe(getViewLifecycleOwner(), weights -> {
             // Update the adapter with the user's weights
-            if (weights != null && !weights.isEmpty()) {
+            if (weights != null && goalValue != null && !weights.isEmpty()) {
                 adapter.setWeightList(weights);
                 calculateWeightLoss(weights);
                 calculateWeightToGoal(weights);
@@ -137,16 +140,6 @@ public class HomeFragment extends Fragment {
 
         // Update the weight loss percentage text view
         weightToGoal.setText(String.valueOf(weightLeft));
-
-        // Create an alert dialog if the user has reached their goal
-        if (weightLeft <= 0) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setTitle("Congratulations!");
-            builder.setMessage("You have reached your goal weight!<br/>Please consider setting a new goal.");
-            builder.setPositiveButton("OK", null);
-            AlertDialog dialog = builder.create();
-        }
-
     }
 
     private void calculateWeightLoss(List<Weight> weights) {

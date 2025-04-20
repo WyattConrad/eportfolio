@@ -8,6 +8,20 @@
     android:weightSum="3">
 
     <!-- This layout is used to display the weights in the recyclerview -->
+
+    <!-- Edit Button -->
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/edit_icon"
+        android:contentDescription="@string/edit"
+        android:id="@+id/editButton"
+        app:tint="@color/french_blue"
+        android:gravity="start"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        />
+
     <!-- Weight Text -->
     <TextView
         android:id="@+id/textWeight"

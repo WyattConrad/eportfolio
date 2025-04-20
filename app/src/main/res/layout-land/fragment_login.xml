@@ -12,7 +12,7 @@
 
     <!-- Login Header Text -->
     <TextView
-        android:id="@+id/text_dashboard"
+        android:id="@+id/text_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/HeaderText"

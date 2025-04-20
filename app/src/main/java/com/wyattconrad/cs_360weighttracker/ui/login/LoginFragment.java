@@ -42,7 +42,7 @@ public class LoginFragment extends Fragment {
 
         bottomNavigationView = requireActivity().findViewById(R.id.nav_view);
 
-        final TextView textView = binding.textDashboard;
+        final TextView textView = binding.textHeader;
         loginViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {

@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class AddWeightFragment extends Fragment {
     private long userId;
     private Double goalValue;
     private boolean smsEnabled;
+    private boolean smsSent;
 
     private boolean inAppMessagingEnabled;
 
@@ -63,9 +65,14 @@ public class AddWeightFragment extends Fragment {
 
         // Get the SMS enabled flag from SharedPreferences
         sharedPreferences = new UserPreferencesService(getContext());
-        inAppMessagingEnabled = sharedPreferences.getBoolean(userId, "in_app_messaging_enabled", false);
+        inAppMessagingEnabled = sharedPreferences.getBoolean(userId, "in_app_messaging", false);
         smsEnabled = sharedPreferences.getBoolean(userId,"sms_enabled", false);
+        smsSent = sharedPreferences.getBoolean(userId, "sms_sent", false);
 
+        // Log the user id
+        Log.d("AddWeightFragment", "User ID: " + String.valueOf(userId));
+        Log.d("AddWeightFragment", "In-app messaging: " + String.valueOf(inAppMessagingEnabled));
+        Log.d("AddWeightFragment", "SMS enabled: " + String.valueOf(smsEnabled));
 
         // Initialize the add weight button
         addWeightButton = binding.addWeightBtn;
@@ -136,20 +143,22 @@ public class AddWeightFragment extends Fragment {
 
             // Add the new weight to the database
             addWeightViewModel.addWeight(newWeight);
-
-
+            Log.d("AddWeightFragment", "Weight added to database");
 
             // Check if the user has reached their goal
-            if (weight <= goalValue) {
+            if (goalValue != null && weight <= goalValue) {
+                Log.d("AddWeightFragment", "User has reached their goal");
                 // Check if SMS is enabled
-                if (smsEnabled) {
+                if (smsEnabled && !smsSent) {
                     // Send an SMS to the user
                     sendSMS(weight);
+                    Log.d("AddWeightFragment", "SMS sent");
                 }
                 // Check if in-app messaging is enabled
                 if (inAppMessagingEnabled) {
                     // Send a notification to the user
                     Toast.makeText(getContext(), "GOAL REACHED! CONGRATULATIONS!", Toast.LENGTH_SHORT).show();
+                    Log.d("AddWeightFragment", "In-app messaging sent");
                 }
             }
 
@@ -192,13 +201,14 @@ public class AddWeightFragment extends Fragment {
         boolean notificationSent = false;
 
         // Create the message
-        String message = "Congratulations! You have reached your goal of " + weight + " lbs.";
+        String message = "Congratulations! You have reached your goal of " + goalValue + " lbs.";
 
         if(smsEnabled && !phoneNumber.isEmpty() && weight > 0){
             // Send the SMS
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNumber, null, message, null, null);
             notificationSent = true;
+            sharedPreferences.saveUserData(userId, "sms_sent", true);
         }
 
         // Check if in-app messaging is enabled

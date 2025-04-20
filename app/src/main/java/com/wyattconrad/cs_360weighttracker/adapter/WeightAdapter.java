@@ -3,9 +3,13 @@ package com.wyattconrad.cs_360weighttracker.adapter;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Application;
+import android.media.Image;
+import android.text.InputType;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -88,6 +92,39 @@ public class WeightAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         // Convert the timestamp to a formatted date and time string
         weightHolder.dateText.setText(formatDate(weight.getDateTimeLogged()));
 
+        // Set up the edit button click listener
+        weightHolder.editButton.setOnClickListener(v -> {
+
+            // Create a dialog to get the new weight value
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setTitle("Edit Weight");
+
+            // Create an input field for the new weight value and format it
+            final EditText input = new EditText(v.getContext());
+            input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            input.setText(String.valueOf(weight.getWeight()));
+            input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            input.setHint("Enter new weight");
+            input.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
+
+            // Set the view
+            builder.setView(input);
+
+            // Set up the save button click listener
+            builder.setPositiveButton("Save", (dialog, which) -> {
+                double newValue = Double.parseDouble(input.getText().toString());
+                weight.setWeight(newValue);
+                // Update the database
+                weightListViewModel.updateWeight(weight);
+            });
+
+            // Set up the cancel button click listener
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+            // Show the dialog
+            builder.show();
+        });
+
         // Set up the delete button click listener
         weightHolder.deleteButton.setOnClickListener(v -> {
 
@@ -147,6 +184,7 @@ public class WeightAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         // Declare weight and date text views
         TextView weightText, dateText;
         ImageButton deleteButton;
+        ImageButton editButton;
 
         public WeightViewHolder(View itemView) {
             super(itemView);
@@ -154,6 +192,7 @@ public class WeightAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             weightText = itemView.findViewById(R.id.textWeight);
             dateText = itemView.findViewById(R.id.textDate);
             deleteButton = itemView.findViewById(R.id.deleteButton);
+            editButton = itemView.findViewById(R.id.editButton);
         }
     }
 }

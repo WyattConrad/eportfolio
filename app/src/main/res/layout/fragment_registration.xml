@@ -16,6 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/firstname"
+        app:layout_constraintVertical_chainStyle="packed"
         />
 
     <!-- First Name Field -->
@@ -30,6 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_title"
+        app:layout_constraintBottom_toTopOf="@id/lastname"
         />
 
     <!-- Last Name Field -->
@@ -44,6 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/firstname"
+        app:layout_constraintBottom_toTopOf="@id/username"
         />
 
     <!-- Username Field -->
@@ -58,6 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/lastname"
+        app:layout_constraintBottom_toTopOf="@id/password"
         />
 
     <!-- Password Field -->
@@ -72,6 +77,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/username"
+        app:layout_constraintBottom_toTopOf="@id/password_confirm"
         />
 
     <!-- Confirm Password Field -->
@@ -86,6 +92,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password"
+        app:layout_constraintBottom_toTopOf="@id/registerBtn"
         />
 
     <!-- Register Button -->
@@ -100,6 +107,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/password_confirm"
+        app:layout_constraintBottom_toTopOf="@id/loginLink"
         app:layout_goneMarginTop="40dp"
         />
 
@@ -112,6 +120,7 @@
         android:textSize="18sp"
         android:textColor="@color/french_blue"
         app:layout_constraintTop_toBottomOf="@id/registerBtn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:padding="5dp"

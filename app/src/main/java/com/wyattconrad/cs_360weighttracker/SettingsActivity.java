@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
@@ -58,6 +59,8 @@ public class SettingsActivity extends AppCompatActivity {
         private UserPreferencesService sharedPreferences;
         private LoginService loginService;
         private long userId;
+        private boolean smsEnabled;
+        private boolean inAppMessagingEnabled;
 
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -65,13 +68,6 @@ public class SettingsActivity extends AppCompatActivity {
 
             // Set the action bar height to 0
             int actionBarHeight = 0;
-
-            // Initialize the shared preferences
-            sharedPreferences = new UserPreferencesService(requireContext());
-            loginService = new LoginService(requireContext());
-
-            // Get the UserId
-            userId = loginService.getUserId();
 
             // Get the phone number shared preference
             EditTextPreference smsNumberPreference = findPreference("sms_number");
@@ -121,16 +117,36 @@ public class SettingsActivity extends AppCompatActivity {
 
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
 
+            // Initialize the shared preferences
+            sharedPreferences = new UserPreferencesService(requireContext());
+            loginService = new LoginService(requireContext());
+
+            // Get the UserId
+            userId = loginService.getUserId();
+            smsEnabled = sharedPreferences.getBoolean(userId,"sms_enabled", false);
+            inAppMessagingEnabled = sharedPreferences.getBoolean(userId, "in_app_messaging", false);
+
+            // Log the user id and preferences
+            Log.d("SettingsActivity", "User ID: " + userId);
+            Log.d("SettingsActivity", "SMS Enabled: " + smsEnabled);
+            Log.d("SettingsActivity", "In-app Messaging Enabled: " + inAppMessagingEnabled);
+
             // Set up the checkbox listener for the SMS checkbox
             SwitchPreferenceCompat smsSwitch = findPreference("sms");
             assert smsSwitch != null;
+            smsSwitch.setChecked(smsEnabled);
+
             smsSwitch.setOnPreferenceChangeListener((preference, newValue) -> {
                     boolean isSelected = (Boolean) newValue;
 
                     // If the switch is selected, request the SMS permission otherwise disable it
                     if (isSelected && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
                         requestSMSPermission();
-                    } else {
+                    }
+                    else if (isSelected && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+                        enableSMSPermission();
+                    }
+                    else {
                         disableSMSPermission();
                     }
                     return true;
@@ -162,6 +178,7 @@ public class SettingsActivity extends AppCompatActivity {
             // Handle in-app messaging switch
             SwitchPreferenceCompat inAppMessagingSwitch = findPreference("in_app");
             assert inAppMessagingSwitch != null;
+            inAppMessagingSwitch.setChecked(inAppMessagingEnabled);
 
             // Create a Shared Preferences on change listener for in app messaging
             inAppMessagingSwitch.setOnPreferenceChangeListener((preference, newValue) -> {

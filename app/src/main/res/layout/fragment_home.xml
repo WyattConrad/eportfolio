@@ -11,6 +11,7 @@
         android:id="@+id/goal_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
         style="@style/HeaderText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -124,7 +125,7 @@
 
     <!-- Recorded Weights Header Text -->
     <TextView
-        android:id="@+id/recorded_weights_btn"
+        android:id="@+id/recorded_weights"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/recorded_weights"
@@ -141,7 +142,7 @@
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recorded_weights_btn"
+        app:layout_constraintTop_toBottomOf="@id/recorded_weights"
         app:layout_constraintBottom_toBottomOf="parent"
         android:clipToPadding="false"
         android:paddingTop="8dp"
@@ -153,12 +154,12 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
         android:contentDescription="@string/submit"
         android:src="@drawable/baseline_add_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="100dp"
-        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toTopOf="@id/recorded_weights"
+        app:layout_constraintBottom_toBottomOf="@id/recorded_weights"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

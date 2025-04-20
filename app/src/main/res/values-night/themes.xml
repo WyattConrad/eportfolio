@@ -15,7 +15,7 @@
         <item name="android:buttonCornerRadius">25dp</item>
 
         <!-- Customize your theme here. -->
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/french_blue</item>
     </style>
     <style name="EditText">
         <item name="android:textColor">@color/white</item>

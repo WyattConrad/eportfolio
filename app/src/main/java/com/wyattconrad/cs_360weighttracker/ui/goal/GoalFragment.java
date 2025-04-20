@@ -160,6 +160,9 @@ public class GoalFragment extends Fragment {
 
         // Save the new goal value to the database
         mViewModel.saveGoal(newGoal);
+
+        // Reset the SMS sent flag
+        sharedPreferences.saveUserData(userId, "sms_sent", false);
     }
 
 }
