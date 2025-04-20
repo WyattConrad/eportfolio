@@ -3,6 +3,7 @@ package com.wyattconrad.cs_360weighttracker.ui.registration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentRegistrationBinding;
 import com.wyattconrad.cs_360weighttracker.model.User;
@@ -140,6 +142,13 @@ public class RegistrationFragment extends Fragment {
                     // Log the user id and first name
                     Log.d("RegistrationFragment", "User ID" + String.valueOf(userId));
                     Log.d("RegistrationFragment", "User First Name" + user.getFirstName());
+
+                    // Change the bottom navigation login menu item to logout
+                    BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.nav_view);
+                    MenuItem loginItem = bottomNavigationView.getMenu().findItem(R.id.navigation_login);
+                    MenuItem logoutItem = bottomNavigationView.getMenu().findItem(R.id.navigation_logout);
+                    loginItem.setVisible(false);
+                    logoutItem.setVisible(true);
 
                     // User logged in successfully, proceed to next screen or update UI
                     NavController navController = Navigation.findNavController(requireView());

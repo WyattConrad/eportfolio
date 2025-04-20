@@ -1,5 +1,7 @@
 package com.wyattconrad.cs_360weighttracker.ui.home;
 
+import static com.wyattconrad.cs_360weighttracker.service.StringService.toProperCase;
+
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -46,7 +48,7 @@ public class HomeViewModel extends AndroidViewModel {
             }
             // Otherwise, set the greeting text to "Welcome <first name>"
             else {
-                greetingText.setValue("Welcome " + firstName);
+                greetingText.setValue("Welcome " + toProperCase(firstName));
             }
         });
         // Return the LiveData variable containing the greeting text

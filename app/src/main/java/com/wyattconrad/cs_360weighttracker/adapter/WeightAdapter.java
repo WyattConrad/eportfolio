@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -111,18 +112,59 @@ public class WeightAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             builder.setView(input);
 
             // Set up the save button click listener
-            builder.setPositiveButton("Save", (dialog, which) -> {
-                double newValue = Double.parseDouble(input.getText().toString());
-                weight.setWeight(newValue);
-                // Update the database
-                weightListViewModel.updateWeight(weight);
-            });
+            builder.setPositiveButton("Save", null);
 
             // Set up the cancel button click listener
             builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
-            // Show the dialog
-            builder.show();
+            // Create the dialog and show it on screen
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            // Setup a listener for the positive button and validate the input
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+                // Get the input text and trim any leading or trailing whitespace
+                String weightText = input.getText().toString().trim();
+
+                // Validate decimals
+                if (weightText.contains(".")) {
+                    int index = weightText.indexOf(".");
+                    if (index >= 0 && index < weightText.length() - 1) {
+                        int decimals = weightText.length() - index - 1;
+                        if (decimals > 2) {
+                            String newText = weightText.substring(0, index + 3);
+                            input.setText(newText);
+                            input.setSelection(newText.length());
+                            weightText = newText;
+                        }
+                    }
+                }
+
+                // Validate weight range
+                try {
+                    double newValue = Double.parseDouble(weightText);
+                    if (newValue <= 0) {
+                        input.setError("Weight must be greater than 0");
+                        return;
+                    } else if (newValue > 999) {
+                        input.setError("Weight must be less than 1000");
+                        return;
+                    }
+
+                    // Update the weight since no errors were found
+                    input.setError(null);
+                    weight.setWeight(newValue);
+                    weightListViewModel.updateWeight(weight);
+                    // Close the dialog
+                    dialog.dismiss();
+
+                } catch (NumberFormatException e) {
+                    // Handle invalid input
+                    input.setError("Invalid number format");
+                }
+            });
+
+
         });
 
         // Set up the delete button click listener
@@ -195,4 +237,5 @@ public class WeightAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             editButton = itemView.findViewById(R.id.editButton);
         }
     }
+
 }

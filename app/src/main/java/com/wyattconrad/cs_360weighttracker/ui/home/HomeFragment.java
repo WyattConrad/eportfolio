@@ -1,6 +1,7 @@
 package com.wyattconrad.cs_360weighttracker.ui.home;
 
-import android.app.AlertDialog;
+import static com.wyattconrad.cs_360weighttracker.service.StringService.toProperCase;
+
 import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,14 +44,12 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private WeightAdapter adapter;
     private RecyclerView recyclerView;
-    private TextView textView;
     private TextView weightLost;
     private TextView weightToGoal;
     private TextView goalText;
     private Double goalValue;
     private long userId;
     private String userFirstName;
-    private Button settingsButton;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -164,7 +162,7 @@ public class HomeFragment extends Fragment {
         new Handler(Looper.getMainLooper()).post(() -> {
             ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
             if (actionBar != null) {
-                actionBar.setTitle("Welcome " + userFirstName);
+                actionBar.setTitle("Welcome " + toProperCase(userFirstName));
             }
         });
     }
