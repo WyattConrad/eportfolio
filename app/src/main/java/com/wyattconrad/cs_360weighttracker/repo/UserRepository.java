@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.LiveData;
 
 import com.wyattconrad.cs_360weighttracker.model.User;
@@ -15,13 +16,22 @@ public class UserRepository {
 
     private final UserDao userDao;
     private final SharedPreferences sharedPreferences;
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(4);
+    private final ExecutorService executorService;
 
 
     public UserRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         userDao = db.userDao();
+        this.executorService = Executors.newFixedThreadPool(4);
         sharedPreferences = application.getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+    }
+
+    // Constructor for Testing purposes
+    @VisibleForTesting
+    public UserRepository(UserDao userDao, ExecutorService executorService, SharedPreferences sharedPreferences){
+        this.userDao = userDao;
+        this.executorService = executorService;
+        this.sharedPreferences = sharedPreferences;
     }
 
     //Login method
@@ -43,6 +53,17 @@ public class UserRepository {
     public LiveData<Boolean> userExists(String username) {
         return userDao.userExists(username);
     }
+
+    // Fetch the user
+    public LiveData<User> fetchUser(long userId) {
+        return userDao.fetchUser(userId);
+    }
+
+    public LiveData<String> getUsername(long userId) {
+        return userDao.getUsername(userId);
+    }
+
+
 
     // Register New User
     public void registerUser(User user) {

@@ -44,4 +44,11 @@ public interface UserDao {
     @Query("DELETE FROM user")
     void deleteAll();
 
+
+    @Query("SELECT * FROM user WHERE id = :userId")
+    LiveData<User> fetchUser(long userId);
+
+    @Query("SELECT username FROM user WHERE id = :userId")
+    LiveData<String> getUsername(long userId);
+
 }

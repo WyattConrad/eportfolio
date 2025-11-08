@@ -20,6 +20,13 @@ public class GoalRepository {
         goalDao = db.goalDao();
     }
 
+    // Constructor for testing purposes
+    // Uses dependency injection for the goalDao so it can be mocked
+    public GoalRepository(GoalDao goalDao) {
+        this.goalDao = goalDao;
+    }
+
+
     // Get the goal value for a user
     public LiveData<Double> getGoalValue(long userId) {
         LiveData<Double> goalValue = goalDao.getGoalValueByUserId(userId);

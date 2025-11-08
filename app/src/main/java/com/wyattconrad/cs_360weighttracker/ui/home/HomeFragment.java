@@ -29,6 +29,7 @@ import com.wyattconrad.cs_360weighttracker.databinding.FragmentHomeBinding;
 import com.wyattconrad.cs_360weighttracker.model.Weight;
 import com.wyattconrad.cs_360weighttracker.service.LoginService;
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
+import com.wyattconrad.cs_360weighttracker.service.WeightService;
 import com.wyattconrad.cs_360weighttracker.viewmodel.WeightListViewModel;
 
 import java.util.ArrayList;
@@ -39,10 +40,9 @@ public class HomeFragment extends Fragment {
     // Declare variables
     private HomeViewModel homeViewModel;
     private UserPreferencesService sharedPreferences;
-    private LoginService loginService;
+
     private FragmentHomeBinding binding;
     private WeightAdapter adapter;
-    private RecyclerView recyclerView;
     private TextView weightLost;
     private TextView weightToGoal;
     private TextView goalText;
@@ -61,6 +61,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Initialize the login service
+        LoginService loginService;
 
         // Initialize the home and weightlist view models
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -90,6 +93,9 @@ public class HomeFragment extends Fragment {
         Log.d("HomeFragment", "User ID: " + userId);
         Log.d("HomeFragment", "User First Name: " + userFirstName);
 
+        // Initialize the recycler view
+        RecyclerView recyclerView;
+
         // Set up the recycler view to display the recorded weights list
         recyclerView = binding.listArea;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -104,13 +110,21 @@ public class HomeFragment extends Fragment {
         // Observe the goal text from the view model
         observeGoalText(userId);
 
+        // Initialize the Weight Service
+        WeightService weightService = new WeightService();
+
+
         // Observe the LiveData and update the adapter when the data changes
         weightListViewModel.getWeightByUserId(userId).observe(getViewLifecycleOwner(), weights -> {
             // Update the adapter with the user's weights
             if (weights != null && goalValue != null && !weights.isEmpty()) {
                 adapter.setWeightList(weights);
-                calculateWeightLoss(weights);
-                calculateWeightToGoal(weights);
+
+                // Get and Update the weight loss percentage text view
+                weightToGoal.setText(String.valueOf(weightService.calculateWeightToGoal(weights, goalValue)));
+
+                // Get and Update the weight lost text view
+                weightLost.setText(String.valueOf(weightService.calculateWeightLoss(weights)));
             }
             // If no weights are found, set the adapter to an empty list
             else {
@@ -121,27 +135,6 @@ public class HomeFragment extends Fragment {
         // Set up the FAB click listener
         setFABClickListener(view);
 
-    }
-
-    private void calculateWeightToGoal(List<Weight> weights) {
-        // Get the last weight from the list
-        Weight last = weights.get(0);
-        // Calculate the weight left to reach the goal
-        double factor = Math.pow(10, 2);
-        double weightLeft = Math.round((last.getWeight() - goalValue) * factor) / factor;
-
-        // Update the weight loss percentage text view
-        weightToGoal.setText(String.valueOf(weightLeft));
-    }
-
-    private void calculateWeightLoss(List<Weight> weights) {
-        // Get the first and last weights from the list
-        Weight last = weights.get(0);
-        Weight first = weights.get(weights.size() - 1);
-
-        double factor = Math.pow(10, 2);
-        double weightLostValue = Math.round((first.getWeight() - last.getWeight()) * factor) / factor;
-        weightLost.setText(String.valueOf(weightLostValue));
     }
 
     @Override
