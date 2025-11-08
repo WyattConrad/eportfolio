@@ -13,6 +13,13 @@
         android:icon="@drawable/goal"
         android:title="@string/title_goal" />
 
+    <!-- Log Icon -->
+    <item
+        android:id="@+id/navigation_log"
+        android:icon="@drawable/log_icon"
+        android:title="@string/title_log" />
+
+
     <!-- Login Icon -->
     <item
         android:id="@+id/navigation_login"

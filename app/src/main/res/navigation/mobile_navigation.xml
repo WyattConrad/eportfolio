@@ -54,4 +54,11 @@
         android:label="@string/title_goal"
         tools:layout="@layout/fragment_goal" />
 
+    <!-- Log Fragment -->
+    <fragment
+        android:id="@+id/navigation_log"
+        android:name="com.wyattconrad.cs_360weighttracker.ui.log.LogFragment"
+        android:label="@string/title_log"
+        tools:layout="@layout/fragment_log" />
+
 </navigation>
