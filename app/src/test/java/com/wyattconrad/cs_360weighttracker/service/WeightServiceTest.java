@@ -221,39 +221,146 @@ public class WeightServiceTest {
     @Test
     public void calculateWeightLoss_with_two_weight_entries_showing_weight_gain() {
         // Test with a list of two weights where the first weight is less than the last, expecting a negative result. 
-        // NOTE: The implementation has a bug, it uses get(0) as last and get(size-1) as first.
-        // TODO implement test
+
+        ArrayList<Weight> weights = new ArrayList<>();
+        Weight weight = new Weight(100.0, -1);
+        weights.add(weight);
+
+        Weight weight2 = new Weight(110.0, -1);
+        weights.add(weight2);
+
+
+        WeightService weightService = new WeightService();
+        double result = weightService.calculateWeightLoss(weights);
+
+        Assertions.assertEquals(10.0, result);
     }
 
     @Test
     public void calculateWeightLoss_with_multiple_weight_entries() {
         // Test with a list containing multiple weights to verify it correctly calculates the difference between the first and last recorded weights. 
-        // NOTE: The implementation has a bug, it uses get(0) as last and get(size-1) as first.
-        // TODO implement test
+
+        ArrayList<Weight> weights = new ArrayList<>();
+        LocalDateTime datetimelogged = LocalDateTime.now().minusDays(10);
+        long currentWeight = 100L;
+
+        for (int i = 0; i <= 10; i++) {
+
+            Weight weight = new Weight(currentWeight, -1, datetimelogged);
+            weights.add(weight);
+
+            datetimelogged = datetimelogged.plusDays(1);
+            currentWeight--;
+        }
+
+        // Order the weights by datetime logged
+        weights.sort(Comparator.comparing(Weight::getDateTimeLogged).reversed());
+
+        WeightService weightService = new WeightService();
+        double result = weightService.calculateWeightLoss(weights);
+
+        Assertions.assertEquals(10.0, result);
     }
 
     @Test
     public void calculateWeightLoss_where_first_and_last_weights_are_equal() {
         // Test with a list where the first and last weights are identical, expecting a result of 0.0.
-        // TODO implement test
+        ArrayList<Weight> weights = new ArrayList<>();
+        LocalDateTime datetimelogged = LocalDateTime.now().minusDays(10);
+        long currentWeight = 100L;
+
+        for (int i = 0; i <= 10; i++) {
+
+            Weight weight = new Weight(currentWeight, -1, datetimelogged);
+            weights.add(weight);
+
+            datetimelogged = datetimelogged.plusDays(1);
+            currentWeight--;
+        }
+
+        Weight weight = new Weight(100.0, -1, datetimelogged);
+        weights.add(weight);
+
+
+        // Order the weights by datetime logged
+        weights.sort(Comparator.comparing(Weight::getDateTimeLogged).reversed());
+
+        WeightService weightService = new WeightService();
+        double result = weightService.calculateWeightLoss(weights);
+
+        Assertions.assertEquals(0.0, result);
     }
 
     @Test
     public void calculateWeightLoss_with_large_weight_values() {
         // Test with large double values for weights to check for potential floating-point precision issues or overflow.
-        // TODO implement test
+        ArrayList<Weight> weights = new ArrayList<>();
+        LocalDateTime datetimelogged = LocalDateTime.now().minusDays(10);
+        long currentWeight = 999L;
+
+        for (int i = 0; i <= 8; i++) {
+
+            Weight weight = new Weight(currentWeight, -1, datetimelogged);
+            weights.add(weight);
+
+            datetimelogged = datetimelogged.plusDays(1);
+            currentWeight -= 100;
+        }
+
+        // Order the weights by datetime logged
+        weights.sort(Comparator.comparing(Weight::getDateTimeLogged).reversed());
+
+        WeightService weightService = new WeightService();
+        double result = weightService.calculateWeightLoss(weights);
+
+        Assertions.assertEquals(800.0, result);
     }
 
     @Test
     public void calculateWeightLoss_with_floating_point_precision_check() {
         // Test the rounding logic by using weight values that result in a difference with more than two decimal places before rounding. [2, 18]
-        // TODO implement test
+        ArrayList<Weight> weights = new ArrayList<>();
+        LocalDateTime datetimelogged = LocalDateTime.now().minusDays(10);
+        double currentWeight = (double) 100.123456789;
+        double decrementAmount = (double) 2.123456789;
+
+
+        for (int i = 0; i <10; i++) {
+
+            System.out.println("Current Weight: " + String.valueOf(currentWeight));
+            Weight weight = new Weight(currentWeight, -1, datetimelogged);
+            weights.add(weight);
+
+            datetimelogged = datetimelogged.plusDays(1);
+            currentWeight = currentWeight - decrementAmount;
+        }
+
+        // Order the weights by datetime logged
+        weights.sort(Comparator.comparing(Weight::getDateTimeLogged).reversed());
+
+        WeightService weightService = new WeightService();
+        double result = weightService.calculateWeightLoss(weights);
+
+        Assertions.assertEquals(19.11, result);
     }
 
     @Test
     public void calculateWeightLoss_with_a_list_containing_a_null_Weight_object() {
         // Test how the method handles a list that contains a null Weight object, which may lead to a NullPointerException when getWeight() is called. [3, 9]
-        // TODO implement test
+        ArrayList<Weight> weights = new ArrayList<>();
+        Weight weight = new Weight(100.0, -1);
+        weights.add(weight);
+
+        Weight weight2 = null;
+        weights.add(weight2);
+
+        Weight weight3 = new Weight(110.0, -1);
+        weights.add(weight3);
+
+        WeightService weightService = new WeightService();
+        double result = weightService.calculateWeightLoss(weights);
+
+        Assertions.assertEquals(10.0, result);
     }
 
 }
