@@ -8,6 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.adapter.WeightAdapter;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentLogBinding;
 import com.wyattconrad.cs_360weighttracker.service.LoginService;
@@ -24,10 +28,9 @@ import java.util.ArrayList;
 
 public class LogFragment extends Fragment {
 
-    private LogViewModel mViewModel;
+
     private WeightAdapter adapter;
     private FragmentLogBinding binding;
-    private long userId;
 
     public static LogFragment newInstance() {
         return new LogFragment();
@@ -42,8 +45,11 @@ public class LogFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        LogViewModel mViewModel;
+
         mViewModel = new ViewModelProvider(this).get(LogViewModel.class);
         // TODO: Use the ViewModel
 
@@ -51,7 +57,7 @@ public class LogFragment extends Fragment {
 
         // Get the user's ID from SharedPreferences, if one doesn't exist, set it to -1
         loginService = new LoginService(requireContext());
-        userId = loginService.getUserId();
+        long userId = loginService.getUserId();
 
         WeightListViewModel weightListViewModel = new ViewModelProvider(this).get(WeightListViewModel.class);
 
@@ -81,6 +87,20 @@ public class LogFragment extends Fragment {
             }
         });
 
+        // Set up the FAB click listener
+        setFABClickListener(view);
+
+    }
+
+    private static void setFABClickListener(View root) {
+        // Get the FAB from the layout
+        FloatingActionButton fab = root.findViewById(R.id.fab);
+        // Set the click listener for the FAB
+        fab.setOnClickListener(view -> {
+            // Navigate to the AddWeightFragment when the FAB is clicked
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.navigation_addweight);
+        });
     }
 
 }

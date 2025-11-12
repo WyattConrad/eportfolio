@@ -128,7 +128,7 @@
         android:id="@+id/recorded_weights"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/recorded_weights"
+        android:text="@string/trends"
         app:layout_constraintTop_toBottomOf="@id/weightLossArea"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

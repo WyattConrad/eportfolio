@@ -42,7 +42,6 @@ public class HomeFragment extends Fragment {
     private UserPreferencesService sharedPreferences;
 
     private FragmentHomeBinding binding;
-    private WeightAdapter adapter;
     private TextView weightLost;
     private TextView weightToGoal;
     private TextView goalText;
@@ -76,11 +75,9 @@ public class HomeFragment extends Fragment {
         sharedPreferences = new UserPreferencesService(getContext());
         userFirstName = sharedPreferences.getUserData(userId, "user_first_name", "Guest");
 
-        // Get the goal text view from the layout
+        // Get the goal, weight, and weight loss percentage text view from the layout
         goalText = binding.goalText;
-        // Get the weight lost text view from the layout
         weightLost = binding.weightLost;
-        // Get the weight loss percentage text view from the layout
         weightToGoal = binding.weightToGoal;
 
 
@@ -93,16 +90,6 @@ public class HomeFragment extends Fragment {
         Log.d("HomeFragment", "User ID: " + userId);
         Log.d("HomeFragment", "User First Name: " + userFirstName);
 
-        // Initialize the recycler view
-        RecyclerView recyclerView;
-
-        // Set up the recycler view to display the recorded weights list
-        recyclerView = binding.listArea;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Set up the adapter for the recycler view
-        adapter = new WeightAdapter(new Application());
-        recyclerView.setAdapter(adapter);
 
         // Get the user's weights from the view model
         weightListViewModel.getWeightByUserId(userId);
@@ -118,7 +105,6 @@ public class HomeFragment extends Fragment {
         weightListViewModel.getWeightByUserId(userId).observe(getViewLifecycleOwner(), weights -> {
             // Update the adapter with the user's weights
             if (weights != null && goalValue != null && !weights.isEmpty()) {
-                adapter.setWeightList(weights);
 
                 // Get and Update the weight loss percentage text view
                 weightToGoal.setText(String.valueOf(weightService.calculateWeightToGoal(weights, goalValue)));
@@ -128,7 +114,7 @@ public class HomeFragment extends Fragment {
             }
             // If no weights are found, set the adapter to an empty list
             else {
-                adapter.setWeightList(new ArrayList<>());
+                //TODO: Add blank trend analysis adapter here
             }
         });
 

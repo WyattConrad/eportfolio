@@ -17,8 +17,6 @@ public class HomeViewModel extends AndroidViewModel {
     private final MutableLiveData<String> greetingText;
     private final UserRepository userRepository;
     private final GoalRepository goalRepository;
-    private final MutableLiveData<Double> mWeightLost;
-    private final MutableLiveData<Double> mWeightToGoal;
     private final MutableLiveData<Double> goal;
 
 
@@ -30,9 +28,10 @@ public class HomeViewModel extends AndroidViewModel {
 
         // Initialize the LiveData variables
         greetingText = new MutableLiveData<>();
-        mWeightLost = new MutableLiveData<>();
         goal = new MutableLiveData<>();
-        mWeightToGoal = new MutableLiveData<>();
+
+        MutableLiveData<Double> mWeightLost = new MutableLiveData<>();
+        MutableLiveData<Double> mWeightToGoal = new MutableLiveData<>();
 
         // Set the initial values for the LiveData variables
         mWeightLost.setValue(0.0);
