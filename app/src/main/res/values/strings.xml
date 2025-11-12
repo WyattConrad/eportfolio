@@ -56,5 +56,7 @@
     <string name="title_log">Log</string>
     <string name="trends">Weight Trends</string>
     <string name="weight_log">Weight Log</string>
+    <string name="LessThanGoal">Less Than Goal</string>
+    <string name="WeightGained">Weight Gained</string>
 
 </resources>

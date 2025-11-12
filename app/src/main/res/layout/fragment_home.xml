@@ -47,6 +47,7 @@
 
             <!-- Weight Lost Header Text -->
             <TextView
+                android:id="@+id/weightLostHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/weight_lost"
@@ -77,7 +78,7 @@
             android:layout_width="16dp"
             android:layout_height="match_parent"/>
 
-        <!-- Second Box: Weight Loss Percentage -->
+        <!-- Second Box: Weight To Goal Amount -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="150dp"
@@ -91,6 +92,7 @@
 
             <!-- Weight To Goal Header Text -->
             <TextView
+                android:id="@+id/weightToGoalHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/weight_to_goal"

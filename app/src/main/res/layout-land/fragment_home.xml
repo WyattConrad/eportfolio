@@ -51,6 +51,7 @@
 
                 <!-- Weight Lost Header Text -->
                 <TextView
+                    android:id="@+id/weightLostHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/weight_lost"
@@ -95,6 +96,7 @@
 
                 <!-- Weight To Goal Header Text -->
                 <TextView
+                    android:id="@+id/weightToGoalHeader"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/weight_to_goal"

@@ -42,7 +42,9 @@ public class HomeFragment extends Fragment {
     private UserPreferencesService sharedPreferences;
 
     private FragmentHomeBinding binding;
+    private TextView weightLostHeader;
     private TextView weightLost;
+    private TextView weightToGoalHeader;
     private TextView weightToGoal;
     private TextView goalText;
     private Double goalValue;
@@ -79,7 +81,8 @@ public class HomeFragment extends Fragment {
         goalText = binding.goalText;
         weightLost = binding.weightLost;
         weightToGoal = binding.weightToGoal;
-
+        weightLostHeader = binding.weightLostHeader;
+        weightToGoalHeader = binding.weightToGoalHeader;
 
         if (userId == -1) {
             // Observe the greeting text from the view model
@@ -106,11 +109,26 @@ public class HomeFragment extends Fragment {
             // Update the adapter with the user's weights
             if (weights != null && goalValue != null && !weights.isEmpty()) {
 
-                // Get and Update the weight loss percentage text view
-                weightToGoal.setText(String.valueOf(weightService.calculateWeightToGoal(weights, goalValue)));
+                // Get and Update the weight to goal
+                double weightToGoalValue = weightService.calculateWeightToGoal(weights, goalValue);
+                double weightLostValue = weightService.calculateWeightLoss(weights);
 
-                // Get and Update the weight lost text view
-                weightLost.setText(String.valueOf(weightService.calculateWeightLoss(weights)));
+                // If weight to goal is negative, set the text to "Less Than Goal" and make it positive
+                if (weightToGoalValue < 0) {
+                    weightToGoalValue *= -1;
+                    weightToGoalHeader.setText(R.string.LessThanGoal);
+                }
+
+                // If weight lost is negative, set the text to "Weight Gained" and make it positive
+                if (weightLostValue < 0) {
+                    weightLostHeader.setText(R.string.WeightGained);
+                    weightLostValue *= -1;
+                }
+
+                // Update the values of the text boxes
+                weightToGoal.setText(String.valueOf(weightToGoalValue));
+                weightLost.setText(String.valueOf(weightLostValue));
+
             }
             // If no weights are found, set the adapter to an empty list
             else {
