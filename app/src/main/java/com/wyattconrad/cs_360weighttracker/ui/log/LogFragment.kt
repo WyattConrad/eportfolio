@@ -1,106 +1,91 @@
-package com.wyattconrad.cs_360weighttracker.ui.log;
+package com.wyattconrad.cs_360weighttracker.ui.log
 
-import androidx.lifecycle.ViewModelProvider;
+import android.app.Application
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.wyattconrad.cs_360weighttracker.R
+import com.wyattconrad.cs_360weighttracker.adapter.WeightAdapter
+import com.wyattconrad.cs_360weighttracker.databinding.FragmentLogBinding
+import com.wyattconrad.cs_360weighttracker.model.Weight
+import com.wyattconrad.cs_360weighttracker.service.LoginService
+import com.wyattconrad.cs_360weighttracker.viewmodel.WeightListViewModel
 
-import android.app.Application;
-import android.os.Bundle;
+class LogFragment : Fragment() {
+    private var adapter: WeightAdapter? = null
+    private var binding: FragmentLogBinding? = null
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentLogBinding.inflate(inflater, container, false)
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.wyattconrad.cs_360weighttracker.R;
-import com.wyattconrad.cs_360weighttracker.adapter.WeightAdapter;
-import com.wyattconrad.cs_360weighttracker.databinding.FragmentLogBinding;
-import com.wyattconrad.cs_360weighttracker.service.LoginService;
-import com.wyattconrad.cs_360weighttracker.viewmodel.WeightListViewModel;
-
-import java.util.ArrayList;
-
-public class LogFragment extends Fragment {
-
-
-    private WeightAdapter adapter;
-    private FragmentLogBinding binding;
-
-    public static LogFragment newInstance() {
-        return new LogFragment();
+        return binding!!.getRoot()
     }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        binding = FragmentLogBinding.inflate(inflater, container, false);
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        return binding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        LogViewModel mViewModel;
-
-        mViewModel = new ViewModelProvider(this).get(LogViewModel.class);
         // TODO: Use the ViewModel
-
-        LoginService loginService;
+        val loginService: LoginService?
 
         // Get the user's ID from SharedPreferences, if one doesn't exist, set it to -1
-        loginService = new LoginService(requireContext());
-        long userId = loginService.getUserId();
+        loginService = LoginService(requireContext())
+        val userId = loginService.getUserId()
 
-        WeightListViewModel weightListViewModel = new ViewModelProvider(this).get(WeightListViewModel.class);
+        val weightListViewModel = ViewModelProvider(this).get<WeightListViewModel>(WeightListViewModel::class.java)
 
         // Initialize the recycler view
-        RecyclerView recyclerView;
+        val recyclerView: RecyclerView?
 
         // Set up the recycler view to display the recorded weights list
-        recyclerView = binding.listArea;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView = binding!!.listArea
+        recyclerView.setLayoutManager(LinearLayoutManager(getContext()))
 
         // Set up the adapter for the recycler view
-        adapter = new WeightAdapter(new Application());
-        recyclerView.setAdapter(adapter);
+        adapter = WeightAdapter(Application())
+        recyclerView.setAdapter(adapter)
 
         // Get the user's weights from the view model
-        weightListViewModel.getWeightByUserId(userId);
+        weightListViewModel.getWeightByUserId(userId)
 
         // Observe the LiveData and update the adapter when the data changes
-        weightListViewModel.getWeightByUserId(userId).observe(getViewLifecycleOwner(), weights -> {
+        weightListViewModel.getWeightByUserId(userId).observe(getViewLifecycleOwner(), Observer { weights: MutableList<Weight?>? ->
             // Update the adapter with the user's weights
             if (weights != null && !weights.isEmpty()) {
-                adapter.setWeightList(weights);
+                adapter!!.setWeightList(weights)
+            } else {
+                adapter!!.setWeightList(ArrayList<Weight?>())
             }
-            // If no weights are found, set the adapter to an empty list
-            else {
-                adapter.setWeightList(new ArrayList<>());
-            }
-        });
+        })
 
         // Set up the FAB click listener
-        setFABClickListener(view);
-
+        setFABClickListener(view)
     }
 
-    private static void setFABClickListener(View root) {
-        // Get the FAB from the layout
-        FloatingActionButton fab = root.findViewById(R.id.fab);
-        // Set the click listener for the FAB
-        fab.setOnClickListener(view -> {
-            // Navigate to the AddWeightFragment when the FAB is clicked
-            NavController navController = Navigation.findNavController(view);
-            navController.navigate(R.id.navigation_addweight);
-        });
-    }
+    companion object {
+        fun newInstance(): LogFragment {
+            return LogFragment()
+        }
 
+        private fun setFABClickListener(root: View) {
+            // Get the FAB from the layout
+            val fab = root.findViewById<FloatingActionButton>(R.id.fab)
+            // Set the click listener for the FAB
+            fab.setOnClickListener(View.OnClickListener { view: View? ->
+                // Navigate to the AddWeightFragment when the FAB is clicked
+                val navController = findNavController(view!!)
+                navController.navigate(R.id.navigation_addweight)
+            })
+        }
+    }
 }

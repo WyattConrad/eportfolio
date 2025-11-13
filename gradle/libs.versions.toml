@@ -11,11 +11,17 @@ constraintlayout = "2.2.1"
 lifecycleLivedataKtx = "2.9.4"
 lifecycleViewmodelKtx = "2.9.4"
 mockitoCore = "5.20.0"
-navigationFragment = "2.9.5"
-navigationUi = "2.9.5"
+navigationFragment = "2.9.6"
+navigationUi = "2.9.6"
 legacySupportV4 = "1.0.0"
 preference = "1.2.1"
-junitJupiter = "5.8.1"
+junitJupiter = "6.0.1"
+kotlin = "2.2.21"
+coreKtx = "1.17.0"
+lifecycleRuntimeKtx = "2.9.4"
+activityCompose = "1.11.0"
+composeBom = "2025.11.00"
+runtime = "1.9.4"
 
 [libraries]
 awaitility = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
@@ -23,6 +29,9 @@ core-testing = { module = "androidx.arch.core:core-testing", version.ref = "core
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
@@ -35,7 +44,11 @@ navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version
 legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
