@@ -1,5 +1,6 @@
 package com.wyattconrad.cs_360weighttracker.ui.home;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static com.wyattconrad.cs_360weighttracker.service.StringService.toProperCase;
 
 import android.app.Application;
@@ -105,19 +106,8 @@ public class HomeFragment extends Fragment {
 
 
         // Observe the LiveData and update the adapter when the data changes
-        weightListViewModel.getWeightByUserId(userId).observe(getViewLifecycleOwner(), weights -> {
+        weightListViewModel.getWeightLostByUserId(userId).observe(getViewLifecycleOwner(), weightLostValue -> {
             // Update the adapter with the user's weights
-            if (weights != null && goalValue != null && !weights.isEmpty()) {
-
-                // Get and Update the weight to goal
-                double weightToGoalValue = weightService.calculateWeightToGoal(weights, goalValue);
-                double weightLostValue = weightService.calculateWeightLoss(weights);
-
-                // If weight to goal is negative, set the text to "Less Than Goal" and make it positive
-                if (weightToGoalValue < 0) {
-                    weightToGoalValue *= -1;
-                    weightToGoalHeader.setText(R.string.LessThanGoal);
-                }
 
                 // If weight lost is negative, set the text to "Weight Gained" and make it positive
                 if (weightLostValue < 0) {
@@ -126,14 +116,21 @@ public class HomeFragment extends Fragment {
                 }
 
                 // Update the values of the text boxes
-                weightToGoal.setText(String.valueOf(weightToGoalValue));
                 weightLost.setText(String.valueOf(weightLostValue));
+        });
 
+        // Observe the LiveData and update the adapter when the data changes
+        weightListViewModel.getWeightToGoalByUserId(userId).observe(getViewLifecycleOwner(), weightToGoalValue -> {
+
+            // If weight to goal is negative, set the text to "Less Than Goal" and make it positive
+            if (weightToGoalValue < 0) {
+                weightToGoalValue *= -1;
+                weightToGoalHeader.setText(R.string.LessThanGoal);
             }
-            // If no weights are found, set the adapter to an empty list
-            else {
-                //TODO: Add blank trend analysis adapter here
-            }
+
+            // Update the values of the text boxes
+            weightToGoal.setText(String.valueOf(weightToGoalValue));
+
         });
 
         // Set up the FAB click listener

@@ -2,7 +2,10 @@ package com.wyattconrad.cs_360weighttracker.repo;
 
 import android.app.Application;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.LiveDataKt;
+
 import com.wyattconrad.cs_360weighttracker.model.Weight;
+import kotlinx.coroutines.flow.Flow;
 import java.util.List;
 
 public class WeightRepository {
@@ -34,6 +37,11 @@ public class WeightRepository {
         return weightDao.getWeightByUserId(userid);
     }
 
+    public Flow<List<Weight>> getAllWeightsByUserId(long userId) {
+        // Get LiveData from the DAO and convert it to a Flow
+        return weightDao.getWeightsByUserId(userId);
+    }
+
     public LiveData<Weight> getFirstWeightByUserId(long userId) {
         // Get the first weight from the database and return it as a LiveData object
         return weightDao.getFirstWeightByUserId(userId);
@@ -42,6 +50,15 @@ public class WeightRepository {
     public LiveData<Weight> getLastWeightByUserId(long userId) {
         // Get the last weight from the database and return it as a LiveData object
         return weightDao.getLastWeightByUserId(userId);
+    }
+
+    public LiveData<Double> getWeightLostByUserId(long userId) {
+        return weightDao.getWeightLostByUserId(userId);
+
+    }
+
+    public LiveData<Double> getWeightToGoalByUserId(long userId) {
+        return weightDao.getWeightToGoalByUserId(userId);
     }
 
     public void updateWeight(Weight weight) {

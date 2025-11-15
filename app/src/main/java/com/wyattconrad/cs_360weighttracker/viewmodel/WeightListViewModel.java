@@ -32,4 +32,12 @@ public class WeightListViewModel extends AndroidViewModel {
         weightRepository.deleteWeight(weight);
     }
 
+    public LiveData<Double> getWeightLostByUserId(long id) {
+        return weightRepository.getWeightLostByUserId(id);
+    }
+
+    public LiveData<Double> getWeightToGoalByUserId(long userId){
+        return weightRepository.getWeightToGoalByUserId(userId);
+
+    }
 }

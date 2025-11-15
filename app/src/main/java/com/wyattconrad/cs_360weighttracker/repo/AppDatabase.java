@@ -7,17 +7,21 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.wyattconrad.cs_360weighttracker.model.Goal;
 import com.wyattconrad.cs_360weighttracker.model.User;
 import com.wyattconrad.cs_360weighttracker.model.Weight;
+import com.wyattconrad.cs_360weighttracker.service.Converters;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
 @Database(entities = {User.class, Weight.class, Goal.class}, version = 1)
+@TypeConverters(Converters.class)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract WeightDao weightDao();
@@ -27,7 +31,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final int number_of_threads = 4;
     static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(number_of_threads);
 
-    static AppDatabase getDatabase(final Context context) {
+    public static AppDatabase getDatabase(final Context context) {
         if (instance == null) {
             synchronized (AppDatabase.class) {
                 if (instance == null) {
@@ -71,34 +75,34 @@ public abstract class AppDatabase extends RoomDatabase {
     LocalDateTime dateTimeLogged = LocalDateTime.now().minusDays(10);
 
     // Add some sample weights
-    Weight weight = new Weight(150.0, userId, dateTimeLogged);
+    Weight weight = new Weight(0L, 150.0, dateTimeLogged, userId);
     weightDao.insertWeight(weight);
     dateTimeLogged = LocalDateTime.now().minusDays(9);
-    Weight weight2 = new Weight(149.0, userId, dateTimeLogged);
+    Weight weight2 = new Weight(0L,149.0, dateTimeLogged, userId);
     weightDao.insertWeight(weight2);
     dateTimeLogged = LocalDateTime.now().minusDays(8);
-    Weight weight3 = new Weight(148.0, userId, dateTimeLogged);
+    Weight weight3 = new Weight(0L,148.0, dateTimeLogged, userId);
     weightDao.insertWeight(weight3);
     dateTimeLogged = LocalDateTime.now().minusDays(7);
-    Weight weight4 = new Weight(147.0, userId, dateTimeLogged);
+    Weight weight4 = new Weight(0L,147.0, dateTimeLogged, userId);
     weightDao.insertWeight(weight4);
     dateTimeLogged = LocalDateTime.now().minusDays(6);
-    Weight weight5 = new Weight(146.0, userId, dateTimeLogged);
+    Weight weight5 = new Weight(0L,146.0, dateTimeLogged, userId);
     weightDao.insertWeight(weight5);
     dateTimeLogged = LocalDateTime.now().minusDays(5);
-    Weight weight6 = new Weight(145.0, userId, dateTimeLogged);
+    Weight weight6 = new Weight(0L,145.0, dateTimeLogged, userId);
     weightDao.insertWeight(weight6);
     dateTimeLogged = LocalDateTime.now().minusDays(4);
-    Weight weight7 = new Weight(144.0, userId, dateTimeLogged);
+    Weight weight7 = new Weight(0L,144.0, dateTimeLogged, userId);
     weightDao.insertWeight(weight7);
     dateTimeLogged = LocalDateTime.now().minusDays(3);
-    Weight weight8 = new Weight(143.0, userId, dateTimeLogged);
+    Weight weight8 = new Weight(0L,143.0, dateTimeLogged, userId);
     weightDao.insertWeight(weight8);
     dateTimeLogged = LocalDateTime.now().minusDays(2);
-    Weight weight9 = new Weight(142.0, userId, dateTimeLogged);
+    Weight weight9 = new Weight(0L,142.0, dateTimeLogged, userId);
     weightDao.insertWeight(weight9);
     dateTimeLogged = LocalDateTime.now().minusDays(1);
-    Weight weight10 = new Weight(141.0, userId, dateTimeLogged);
+    Weight weight10 = new Weight(0L,141.0, dateTimeLogged, userId);
     weightDao.insertWeight(weight10);
 
     // Add a sample goal

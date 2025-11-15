@@ -89,7 +89,7 @@ public class WeightAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         weightHolder.weightText.setText(String.format("%s lbs.", weight.getWeight()));
 
         // Convert the timestamp to a formatted date and time string
-        weightHolder.dateText.setText(formatDate(weight.getDateTimeLogged()));
+        weightHolder.dateText.setText(weight.getDateTimeLogged().toString());
 
         // Set up the edit button click listener
         weightHolder.editButton.setOnClickListener(v -> {
