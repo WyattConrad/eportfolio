@@ -17,21 +17,26 @@
  */
 package com.wyattconrad.cs_360weighttracker.service;
 
+/**
+ * A service to convert a string to proper case.
+ */
 public class StringService {
 
     /**
-     * Converts a string to proper case.
+     * Converts a string to proper case
      * @param input The string to convert
      * @return String in proper case format
      */
     public static String toProperCase(String input) {
-        // Handle null or empty input
+        // Exit if the input is null or empty
         if (input == null || input.isEmpty()) {
             return input;
         }
 
-        // Split the input string into words if necessary
+        // Split the input string into words if there are multiple
         String[] words = input.toLowerCase().split(" ");
+
+        // Create a StringBuilder to build the output string
         StringBuilder sb = new StringBuilder();
 
         // Convert each word to proper case
@@ -44,6 +49,7 @@ public class StringService {
             }
         }
 
+        // Remove the trailing space and return the output string
         return sb.toString().trim();
     }
 }

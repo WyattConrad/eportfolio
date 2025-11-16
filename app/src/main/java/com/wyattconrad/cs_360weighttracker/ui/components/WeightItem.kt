@@ -44,6 +44,17 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toKotlinLocalDateTime
 
+/**
+ * Composable for displaying a single weight item in the weight list.
+ *
+ * @param weight The Weight object to display.
+ * @param onEditClick Lambda to be invoked when the edit button is clicked.
+ * @param onDeleteClick Lambda to be invoked when the delete button is clicked.
+ * @param modifier Modifier for styling and layout.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Composable
 fun WeightItem(
     weight: Weight,
@@ -51,10 +62,12 @@ fun WeightItem(
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Card for the weight item
     Card(modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {
+        // Row for the weight and actions
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -62,17 +75,19 @@ fun WeightItem(
             ) {
             // Weight and Date section
             Column(modifier = Modifier.weight(1f)) {
+                // Weight text
                 Text(
                     text = "${weight.weight} lbs",
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Bold
                 )
+                // Date text
                 Text(
                     text = weight.dateTimeLogged.toKotlinLocalDateTime().format(LocalDateTime.Format {
-                        monthNumber(); char('/'); dayOfMonth();
-                        char('/'); year();
-                        char(' ');
-                        amPmHour(); char(':'); minute();
+                        monthNumber(); char('/'); dayOfMonth()
+                        char('/'); year()
+                        char(' ')
+                        amPmHour(); char(':'); minute()
                         amPmMarker("AM", "PM")
                     }),
                     style = MaterialTheme.typography.bodySmall
@@ -84,6 +99,7 @@ fun WeightItem(
 
             // Icon buttons for actions
             Row {
+                // Edit button
                 IconButton(onClick = onEditClick) {
                     Icon(
                         imageVector = Icons.Default.Edit,
@@ -91,6 +107,7 @@ fun WeightItem(
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
+                // Delete button
                 IconButton(onClick = onDeleteClick) {
                     Icon(
                         imageVector = Icons.Default.Delete,
@@ -103,21 +120,21 @@ fun WeightItem(
     }
 }
 
+// Preview for the WeightItem composable
 @Preview(showBackground = true)
 @Composable
 fun WeightItemPreview() {
-    // 1. Create a fake Weight object for the preview.
-    // Make sure the property names match your Weight model (e.g., .weight, .dateTimeLogged).
+    // Create a fake Weight object for the preview.
     val sampleWeight = Weight(
         185.5,
         1L
     )
 
-    // 2. Call your WeightItem with the sample data and empty lambdas for the clicks.
+    // Call WeightItem with the sample data and empty lambdas for the clicks.
     WeightItem(
         weight = sampleWeight,
         onEditClick = { /* Clicks do nothing in preview */ },
         onDeleteClick = { /* Clicks do nothing in preview */ },
-        modifier = Modifier.padding(16.dp) // Add padding to see it clearly
+        modifier = Modifier.padding(16.dp)
     )
 }

@@ -38,6 +38,8 @@ import com.wyattconrad.cs_360weighttracker.R
  */
 @Composable
 fun AddWeightScreen() {
+
+    // State variables for weight input and whether to show congrats message
     var weightInput by remember { mutableStateOf("") }
     var showCongrats by remember { mutableStateOf(false) }
 

@@ -21,6 +21,13 @@ import com.wyattconrad.cs_360weighttracker.model.Goal
 import kotlinx.coroutines.flow.Flow
 
 
+/**
+ * Implementation of the goal repository interface
+ * @param goalDao The goal data access object
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 class GoalRepository(
     private val goalDao: GoalDao
 ) : IGoalRepository {

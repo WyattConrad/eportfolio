@@ -39,6 +39,12 @@ import com.wyattconrad.cs_360weighttracker.model.Goal;
 import com.wyattconrad.cs_360weighttracker.service.LoginService;
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 
+/**
+ * A fragment class to display the user's goal weight.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 public class GoalFragment extends Fragment {
 
     // Declare variables
@@ -51,6 +57,7 @@ public class GoalFragment extends Fragment {
     private Button changeBtn;
     private boolean inAppMessagingEnabled;
 
+    // Override the onCreateView method
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
@@ -71,7 +78,9 @@ public class GoalFragment extends Fragment {
         loginService = new LoginService(requireContext());
         long userId = loginService.getUserId();
 
+        // Initialize the shared preferences
         sharedPreferences = new UserPreferencesService(requireContext());
+        // Check if in-app messaging is enabled for the user
         inAppMessagingEnabled = sharedPreferences.getBoolean(userId, "in_app_messaging", false);
 
         // Initialize the goal value and edit button

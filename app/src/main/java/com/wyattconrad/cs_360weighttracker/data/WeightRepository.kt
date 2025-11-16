@@ -20,50 +20,68 @@ package com.wyattconrad.cs_360weighttracker.data
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Implementation of the WeightRepository interface.
+ * This class is responsible for providing access to the weight data in the database.
+ *
+ * @param weightDao The Data Access Object for the Weight entity.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 class WeightRepository(
     private val weightDao: WeightDao) : IWeightRepository {
 
-
-    override suspend fun addWeight(weight: Weight) {
-            // Insert the weight into the database and get the Id
-            val weightId = weightDao.insertWeight(weight)
-            // Set the Id of the weight to the Id returned from the database
-            weight.id = weightId
-    }
-
+    // Get all weights for a user ID from the database and return them as a Flow Mutable List object
     override fun getWeightByUserId(userid: Long): Flow<MutableList<Weight?>?> {
         // Get the weight from the database and return it as a Flow object
         return weightDao.getWeightByUserId(userid)
     }
 
+    // Get all weights for a user ID from the database and return them as a Flow List object
     override fun getAllWeightsByUserId(userId: Long): Flow<List<Weight>> {
         // Get Flow from the DAO and convert it to a Flow
         return weightDao.getWeightsByUserId(userId)
     }
 
+    // Get the first weight for a user ID from the database and return it as a Flow object
     override fun getFirstWeightByUserId(userId: Long): Flow<Weight?> {
         // Get the first weight from the database and return it as a Flow object
         return weightDao.getFirstWeightByUserId(userId)
     }
 
+    // Get the last weight for a user ID from the database and return it as a Flow object
     override fun getLastWeightByUserId(userId: Long): Flow<Weight?> {
         // Get the last weight from the database and return it as a Flow object
         return weightDao.getLastWeightByUserId(userId)
     }
 
+    // Get the weight lost for a user ID from the database and return it as a Flow object
     override fun getWeightLostByUserId(userId: Long): Flow<Double?> {
         return weightDao.getWeightLostByUserId(userId)
     }
 
+    // Get the weight to goal for a user ID from the database and return it as a Flow object
     override fun getWeightToGoalByUserId(userId: Long): Flow<Double?> {
         return weightDao.getWeightToGoalByUserId(userId)
     }
 
+    // Suspend is used for the following functions to run them on a separate thread
+    // Add a weight to the database and set the Id of the weight to the Id returned from the database
+    override suspend fun addWeight(weight: Weight) {
+        // Insert the weight into the database and get the Id
+        val weightId = weightDao.insertWeight(weight)
+        // Set the Id of the weight to the Id returned from the database
+        weight.id = weightId
+    }
+
+    // Update the weight in the database
     override suspend fun updateWeight(weight: Weight) {
         // Update the weight in the database on a background thread
         weightDao.updateWeight(weight)
     }
 
+    // Delete the weight from the database
     override suspend fun deleteWeight(weight: Weight) {
         // Delete the weight from the database on a background thread
         weightDao.deleteWeight(weight)

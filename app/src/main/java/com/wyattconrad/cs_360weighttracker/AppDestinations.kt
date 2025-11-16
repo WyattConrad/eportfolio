@@ -25,13 +25,19 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 
-
+/**
+ * Sealed interface representing the different destinations in the app.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 sealed interface AppDestination {
     val icon: ImageVector
     val route: String
     val title: String
 }
 
+// Home, Goal, Log, Login, Settings destinations
 data object Home : AppDestination {
     override val icon = Icons.Filled.Home
     override val route: String = "home"
@@ -62,4 +68,5 @@ data object Settings : AppDestination {
     override val title: String = "Settings"
 }
 
+// List of destinations that go on the bottom navigation bar
 val appTabRowScreens = listOf(Home, Goal, Log, Login)

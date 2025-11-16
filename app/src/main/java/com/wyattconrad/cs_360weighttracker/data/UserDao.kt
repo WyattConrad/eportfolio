@@ -25,45 +25,64 @@ import androidx.room.Update
 import com.wyattconrad.cs_360weighttracker.model.User
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Data access object for users.
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Dao
 interface UserDao {
+
+    // Get a user by their username
     @Query("SELECT * FROM users WHERE username = :username")
     fun getUserByUsername(username: String?): Flow<User?>
 
+    // Get all users
     @get:Query("SELECT * FROM users")
     val allUsers: Flow<MutableList<User?>?>
 
+    // Get the count of users by username
     @Query("SELECT COUNT(*) FROM users WHERE username = :username")
     fun countUsersByUsername(username: String?): Int
 
+    // Check if a user exists by their username
     @Query("SELECT EXISTS (SELECT 1 FROM users WHERE username = :username)")
     fun userExists(username: String?): Flow<Boolean?>
 
+    // Login a user by their username and password
     @Query("SELECT * FROM users WHERE username = :username AND password = :password LIMIT 1")
     fun login(username: String?, password: String?): Flow<User?>
 
+    // Get the id of a user by their username
     @Query("SELECT id FROM users WHERE username = :username")
     fun getUserId(username: String?): Flow<Long?>
 
+    // Get the first name of a user by their id
     @Query("SELECT first_name FROM users WHERE id = :userId")
     fun getUserFirstName(userId: Long): Flow<String?>
 
+    // Suspend is used for the following functions to run them on a separate thread
+    // Insert a user into the database
     @Insert
     suspend fun insertUser(user: User): Long
 
+    // Update a user in the database
     @Update
     suspend fun updateUser(user: User)
 
+    // Delete a user from the database
     @Delete
     suspend fun deleteUser(user: User)
 
+    // Delete all users from the database
     @Query("DELETE FROM users")
     suspend fun deleteAll()
 
-
+    // Get a user by their id
     @Query("SELECT * FROM users WHERE id = :userId")
     fun fetchUser(userId: Long): Flow<User?>
 
+    // Get the username of a user by their id
     @Query("SELECT username FROM users WHERE id = :userId")
     fun getUsername(userId: Long): Flow<String?>
 }

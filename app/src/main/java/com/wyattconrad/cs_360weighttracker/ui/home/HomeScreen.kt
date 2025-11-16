@@ -19,7 +19,6 @@ package com.wyattconrad.cs_360weighttracker.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,11 +26,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,57 +35,69 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.wyattconrad.cs_360weighttracker.ui.components.WeightItem
-import com.wyattconrad.cs_360weighttracker.ui.log.LogEvent
+import com.wyattconrad.cs_360weighttracker.ui.components.GoalText
+import com.wyattconrad.cs_360weighttracker.ui.components.WeightLogList
 
+/**
+ * The main screen for the Weight Tracker app.
+ * @param viewModel The view model for this screen.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
 
-    // Collect the Flow<List<Weight>> as state
+    // Collect the weight and goal state from the view model
     val weights by viewModel.weights.collectAsState(initial = emptyList())
     val weightChange by viewModel.weightChange.collectAsState(initial = 0.0)
     val weightToGoal by viewModel.weightToGoal.collectAsState(initial = 0.0)
     val goalState by viewModel.goalState.collectAsState(initial = GoalState.Loading)
 
 
+    // Display the weights and goal state in a column
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        // Display the goal state
         when (val state = goalState) {
+            // Loading state
             GoalState.Loading -> CircularProgressIndicator()
+
+            // Goal not set message
             GoalState.NotSet -> GoalText(
                 "Your Goal HAS NOT BEEN SET!",
                 Color.Red,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
+            // Goal set, display the weight
             is GoalState.Set -> GoalText(
                 "Your Goal Weight Is: ${state.value} lbs",
                 modifier = Modifier.padding(vertical = 16.dp)
             )
         }
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Display the weight change and weight to goal
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Weight change card
             Card(
                 modifier = Modifier.weight(1f)
             ) {
+                // Display the weight change and weight to goal in a column
                 Column(
                     modifier = Modifier
                         .background(Color.Black)
@@ -97,15 +105,18 @@ fun HomeScreen(
                         .padding(horizontal = 2.dp, vertical = 12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Text views in the box
                     Text("Weight Lost:", color = Color.White)
                     Text(weightChange.toString(), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
                     Text("lbs.", color = Color.White)
                 }
             }
 
+            // Weight to goal card
             Card(
                 modifier = Modifier.weight(1f)
             ) {
+                // Display the weight change and weight to goal in a column
                 Column(
                     modifier = Modifier
                         .background(Color.Black)
@@ -113,6 +124,7 @@ fun HomeScreen(
                         .padding(horizontal = 2.dp, vertical = 12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Text views in the box
                     Text("Left To Goal:", color = Color.White)
                     Text(weightToGoal.toString(), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
                     Text("lbs.", color = Color.White)
@@ -124,6 +136,7 @@ fun HomeScreen(
             .fillMaxWidth()
             .height(64.dp))
 
+        // Header for the recorded weights list
         Text(
             text = "Recorded Weights",
             fontWeight = FontWeight.Bold,
@@ -133,22 +146,8 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(
-                items = weights,
-                key = { it.id }
-            ) { weight ->
-                WeightItem(
-                    weight = weight,
-                    onEditClick = { LogEvent.EditWeight(weight) },
-                    onDeleteClick = { LogEvent.DeleteWeight(weight) },
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-            }
-        }
+        // Lazy column for the recorded weights (WILL BE REPLACED)
+        WeightLogList(weights = weights, { }, {})
     }
 }
 
@@ -157,32 +156,4 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview() {
     HomeScreen()
-}
-
-
-@Composable
-fun GoalText(
-    text: String,
-    color: Color = MaterialTheme.colorScheme.onSurface, // default
-    modifier: Modifier = Modifier,
-    style: TextStyle = MaterialTheme.typography.bodyLarge,
-    maxFontSize: TextUnit = 24.sp,  // largest font size
-    minFontSize: TextUnit = 14.sp   // smallest font size
-){
-    BoxWithConstraints(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        // Adjust font size based on maxWidth
-        val fontSize = (maxWidth.value / 20).coerceIn(minFontSize.value, maxFontSize.value).sp
-
-        Text(
-            text = text,
-            fontSize = fontSize,
-            color = color,
-            style = style,
-            modifier = modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold
-        )
-    }
 }

@@ -20,7 +20,14 @@ package com.wyattconrad.cs_360weighttracker.service;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+/**
+ * A service to help manage user login.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 public class LoginService {
+
     // Define constants
     private static final String PREF_NAME = "login_prefs";
     private static final String KEY_USER_ID = "user_id";

@@ -17,20 +17,29 @@
  */
 package com.wyattconrad.cs_360weighttracker.ui.home
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import com.wyattconrad.cs_360weighttracker.data.GoalRepository
 import com.wyattconrad.cs_360weighttracker.data.UserRepository
 import com.wyattconrad.cs_360weighttracker.data.WeightRepository
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.LoginService
-import com.wyattconrad.cs_360weighttracker.service.StringService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+/**
+ * View model for the home screen.
+ * This view model is responsible for providing the data for the home screen.
+ *
+ * @property userRepository the user repository
+ * @property goalRepository the goal repository
+ * @property weightRepository the weight repository
+ * @property loginService the login service
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
@@ -39,10 +48,10 @@ class HomeViewModel @Inject constructor(
     loginService: LoginService
 ) : ViewModel() {
 
+    // Get the user's id from the login service
     val userId: Long = loginService.userId
 
     // Observe the Flow of the user's goal from the database
-    // Just expose the Flow from the repository
     val goalState: Flow<GoalState> = goalRepository.getGoalValue(userId)
         .map { value ->
             if (value == null || value == 0.0) GoalState.NotSet
@@ -59,41 +68,19 @@ class HomeViewModel @Inject constructor(
     // Observe the Flow for the weight to goal from the database
     val weightToGoal = weightRepository.getWeightToGoalByUserId(userId)
 
+    // Update the weight in the database
     suspend fun updateWeight(weight: Weight) {
         weightRepository.updateWeight(weight)
     }
 
+    // Delete the weight from the database
     suspend fun deleteWeight(weight: Weight) {
         weightRepository.deleteWeight(weight)
     }
 
-
-
-    fun getText(userId: Long): LiveData<String?> {
-        // Observe the user's first name from the user repository
-        return userRepository.getUserFirstName(userId).map { firstName: String? ->
-            if (firstName.isNullOrBlank()){
-                "Guest"
-            } else {
-                StringService.toProperCase(firstName)
-            }
-        }.asLiveData()
-    }
-
-
-    // Get the user's goal weight
-    fun getGoalWeight(userId: Long): LiveData<Double?> {
-        // Observe the goal weight from the goal repository
-        return goalRepository.getGoalValue(userId).map { goalValue: Double? ->
-            when {
-                goalValue == null -> 0.0
-                goalValue.isNaN() -> 0.0
-                else -> goalValue
-            }
-        }.asLiveData()
-    }
 }
 
+// Sealed class for the goal state
 sealed class GoalState {
     object Loading : GoalState()
     object NotSet : GoalState()

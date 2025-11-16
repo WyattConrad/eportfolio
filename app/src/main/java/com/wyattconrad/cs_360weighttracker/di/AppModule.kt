@@ -44,22 +44,34 @@ import java.time.LocalDateTime
 import javax.inject.Singleton
 
 
+/**
+ * App module for dependency injection.
+ * Provides singleton instances of database, repositories, and login service.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+    // Singleton instances of database
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        // Create the database
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
             "weight_database.db"
+            // Add a callback to add starter data to the database
         ).addCallback(object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
+                // Launch a coroutine to add starter data to the database
                 CoroutineScope(Dispatchers.IO).launch {
                     val database = provideAppDatabase(context)
+                    // Add starter data to the database
                     addStarterData(
                         database.userDao,
                         database.weightDao,
@@ -70,35 +82,46 @@ object AppModule {
         }).build()
     }
 
+    // Singleton instances of User Repository
     @Provides
     @Singleton
     fun provideUserRepository(db: AppDatabase): UserRepository {
         return UserRepository(db.userDao)
     }
 
+    // Singleton instances of Goal Repository
     @Provides
     @Singleton
     fun provideGoalRepository(db: AppDatabase): GoalRepository {
         return GoalRepository(db.goalDao)
     }
 
+    // Singleton instances of Weight Repository
     @Provides
     @Singleton
     fun provideWeightRepository(db: AppDatabase): WeightRepository {
         return WeightRepository(db.weightDao)
     }
 
+    // Singleton instance of LoginService
     @Provides
-    @Singleton // Only one LoginService instance
+    @Singleton
     fun provideLoginService(@ApplicationContext context: Context): LoginService {
         return LoginService(context)
     }
 
 }
 
-//*
-//Add some starter data to the database
-//*
+/**
+ * Add starter data to the database
+ *
+ * @param userDao User DAO
+ * @param weightDao Weight DAO
+ * @param goalDao Goal DAO
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+*/
 suspend fun addStarterData(
     userDao: UserDao,
     weightDao: WeightDao,
@@ -112,11 +135,13 @@ suspend fun addStarterData(
         password = "password@123"
     )
 
+    // Insert user into database and get the user ID
     val userId = userDao.insertUser(user)
 
     // Generate weights from 160 → 141 (10 days)
     val startDate = LocalDateTime.now().minusDays(20)
 
+    // Create the weights and add them to the database
     (160 downTo 141).forEachIndexed { index, weightValue ->
         weightDao.insertWeight(
             Weight(

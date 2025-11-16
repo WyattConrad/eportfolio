@@ -49,7 +49,7 @@ public class AddWeightFragment extends Fragment {
 
     // Declare variables
     private FragmentAddWeightBinding binding;
-    private AddWeightViewModel addWeightViewModel;;
+    private AddWeightViewModel addWeightViewModel;
     private Button addWeightButton;
     private TextInputLayout weightEntry;
     private TextInputEditText weightEditText;

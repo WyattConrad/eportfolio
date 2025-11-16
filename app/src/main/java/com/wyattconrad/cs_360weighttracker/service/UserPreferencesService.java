@@ -20,6 +20,12 @@ package com.wyattconrad.cs_360weighttracker.service;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+/**
+ * A service to help manage the user preferences
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 public class UserPreferencesService {
 
     // Define Variables

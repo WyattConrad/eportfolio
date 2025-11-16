@@ -26,18 +26,20 @@ import com.wyattconrad.cs_360weighttracker.model.Goal
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the GoalScreen
+ * @property goalRepository The repository for goals
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 class GoalViewModel @Inject constructor(
     private val goalRepository: GoalRepository
 ) : ViewModel() {
 
-    // Save the new goal value to the database
-    suspend fun saveGoal(newGoal: Goal) {
-        // Save the new goal to the database
-        goalRepository.saveGoal(newGoal)
-    }
-
     // Function to update the goal value in the database
     fun saveGoalCoroutine(goal: Goal) {
+        // Launch a coroutine to save the goal to the database
         viewModelScope.launch {
             goalRepository.saveGoal(goal)
         }

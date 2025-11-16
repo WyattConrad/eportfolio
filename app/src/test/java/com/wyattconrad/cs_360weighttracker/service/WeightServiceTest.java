@@ -321,13 +321,13 @@ public class WeightServiceTest {
         // Test the rounding logic by using weight values that result in a difference with more than two decimal places before rounding. [2, 18]
         ArrayList<Weight> weights = new ArrayList<>();
         LocalDateTime datetimelogged = LocalDateTime.now().minusDays(10);
-        double currentWeight = (double) 100.123456789;
-        double decrementAmount = (double) 2.123456789;
+        double currentWeight = 100.123456789;
+        double decrementAmount = 2.123456789;
 
 
         for (int i = 0; i <10; i++) {
 
-            System.out.println("Current Weight: " + String.valueOf(currentWeight));
+            System.out.println("Current Weight: " + currentWeight);
             Weight weight = new Weight(currentWeight, -1, datetimelogged);
             weights.add(weight);
 

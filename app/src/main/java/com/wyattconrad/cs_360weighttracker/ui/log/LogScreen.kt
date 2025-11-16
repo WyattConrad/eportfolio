@@ -19,10 +19,7 @@ package com.wyattconrad.cs_360weighttracker.ui.log
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -30,7 +27,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -45,11 +41,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.wyattconrad.cs_360weighttracker.model.Weight
-import com.wyattconrad.cs_360weighttracker.ui.components.WeightItem
+import com.wyattconrad.cs_360weighttracker.ui.components.WeightLogList
 
+/**
+ * LogScreen Composable
+ *
+ * This Composable represents the main screen of the application for logging weights.
+ * @param viewModel The ViewModel associated with this screen.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Composable
 fun LogScreen(
     viewModel: LogViewModel = hiltViewModel(),
@@ -62,7 +65,9 @@ fun LogScreen(
     // State to store user input
     var inputWeight by remember { mutableStateOf("") }
 
+    // Scaffold with floating action button
     Scaffold(
+        // Add a floating action button for adding new weights
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showDialog = true },
@@ -74,39 +79,25 @@ fun LogScreen(
         },
         floatingActionButtonPosition = FabPosition.End
     ) { paddingValues ->
+        // Column to hold the weight log list
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .padding(horizontal = 16.dp)
-            ) {
-                items(
-                    items = weights,
-                    key = { it.id }
-                ) { weight ->
-                    WeightItem(
-                        weight = weight,
-                        onEditClick = { LogEvent.EditWeight(weight) },
-                        onDeleteClick = { LogEvent.DeleteWeight(weight) },
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
-                }
-            }
+            // Weight Log List
+            WeightLogList(weights = weights, { }, {})
         }
 
         // Add Weight Dialog
         if (showDialog) {
+            // AlertDialog for adding a new weight
             AlertDialog(
                 onDismissRequest = { showDialog = false },
                 title = { Text(text = "Add Weight") },
                 text = {
+                    // Text field for entering weight
                     TextField(
                         value = inputWeight,
                         onValueChange = { inputWeight = it },
@@ -116,15 +107,17 @@ fun LogScreen(
                     )
                 },
                 confirmButton = {
+                    // Button to confirm weight addition
                     TextButton(
                         onClick = {
                             val weightValue = inputWeight.toDoubleOrNull()
                             if (weightValue != null) {
-                                viewModel.addWeight(weightValue) // Call a function in your ViewModel
+                                viewModel.addWeight(weightValue)
                                 inputWeight = ""
                                 showDialog = false
                             } else {
-                                // Optionally, show an error if input is invalid
+                                // If weight value is null, show error message
+
                             }
                         }
                     ) {
@@ -132,6 +125,7 @@ fun LogScreen(
                     }
                 },
                 dismissButton = {
+                    // Cancel button
                     TextButton(onClick = { showDialog = false }) {
                         Text("Cancel")
                     }
@@ -143,41 +137,5 @@ fun LogScreen(
 
 
 
-@Composable
-fun EditWeightDialog(
-    weight: Weight,
-    onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
-) {
-    // State to hold the text field value, initialized with the current weight
-    var text by remember { mutableStateOf(weight.weight.toString()) }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = "Edit Weight") },
-        text = {
-            OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
-                label = { Text("New weight") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onConfirm(text)
-                }
-            ) {
-                Text("Update")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
-        }
-    )
-}
 

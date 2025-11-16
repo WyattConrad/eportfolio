@@ -40,8 +40,15 @@ import androidx.preference.SwitchPreferenceCompat;
 import com.wyattconrad.cs_360weighttracker.service.LoginService;
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 
+/**
+ * Settings activity for the application.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 public class SettingsActivity extends AppCompatActivity {
 
+    // Override the onCreate method to set the content view to the settings activity layout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +73,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    // Setup the settings fragment
     public static class SettingsFragment extends PreferenceFragmentCompat {
 
         // Declare variables
@@ -76,6 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
         private boolean smsEnabled;
         private boolean inAppMessagingEnabled;
 
+        // Override the onViewCreated method to set the view
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
@@ -126,6 +135,7 @@ public class SettingsActivity extends AppCompatActivity {
             view.setPadding(0, actionBarHeight, 0, 0);
         }
 
+        // Override the onCreatePreferences method to set the preferences from the XML file
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 

@@ -28,6 +28,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wyattconrad.cs_360weighttracker.model.Weight
 
+/**
+ * A composable that displays a list of weights.
+ *
+ * @param weights The list of weights to display.
+ * @param onEditClick A lambda that is called when the edit button is clicked.
+ * @param onDeleteClick A lambda that is called when the delete button is clicked.
+ * @param modifier The modifier to apply to this composable.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Composable
 fun WeightLogList(
     weights: List<Weight>,
@@ -35,14 +46,17 @@ fun WeightLogList(
     onDeleteClick: (Weight) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Create a LazyColumn to display the weights
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier.fillMaxSize()
     ) {
+        // Iterate through the weights and display each one
         items(
             items = weights,
             key = { it.id }
         ) { weight ->
+            // Create a WeightItem composable for each weight
             WeightItem(
                 weight = weight,
                 onEditClick = { onEditClick(weight) },
@@ -53,6 +67,7 @@ fun WeightLogList(
     }
 }
 
+// Preview the WeightLogList composable
 @Preview(showBackground = true)
 @Composable
 fun WeightListPreview() {

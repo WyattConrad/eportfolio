@@ -30,33 +30,46 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// Sealed class to define the events that can be sent from the UI
-sealed class LogEvent {
-    data class DeleteWeight(val weight: Weight) : LogEvent()
-    data class EditWeight(val weight: Weight) : LogEvent()
-    data class UpdateWeight(val newWeightValue: String) : LogEvent()
-    object DismissEditDialog : LogEvent()
-}
 
+/**
+ * ViewModel for the LogFragment.
+ * @param weightRepository Repository for managing weights.
+ * @param loginService Service for handling user login.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @HiltViewModel
 class LogViewModel @Inject constructor(// Inject your repository, which in turn uses your DAO
     private val weightRepository: WeightRepository,
     loginService: LoginService
 ) : ViewModel() {
 
+    // Get the user ID from the login service
     val userId: Long = loginService.userId
+
+    // Setup a channel for sending UI events
     private val _uiEvent =  Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
-
 
     // Observe the Flow of weights from the database
     val weights = weightRepository.getAllWeightsByUserId(userId)
 
+    // Add a weight to the database
     fun addWeight(weightValue: Double) {
+        // Launch a coroutine to perform the database operation
         viewModelScope.launch {
             val weight = Weight(weight = weightValue, userId = userId)
             weightRepository.addWeight(weight)
         }
     }
 
+}
+
+// Sealed class to define the events that can be sent from the UI
+sealed class LogEvent {
+    data class DeleteWeight(val weight: Weight) : LogEvent()
+    data class EditWeight(val weight: Weight) : LogEvent()
+    data class UpdateWeight(val newWeightValue: String) : LogEvent()
+    object DismissEditDialog : LogEvent()
 }

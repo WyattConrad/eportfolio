@@ -19,6 +19,12 @@ package com.wyattconrad.cs_360weighttracker.ui.logout;
 
 import androidx.lifecycle.ViewModel;
 
+/**
+ * LogoutViewModel for the Logout Screen
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 public class LogoutViewModel extends ViewModel {
     // TODO: Implement the ViewModel
 }

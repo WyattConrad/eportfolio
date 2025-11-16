@@ -20,24 +20,36 @@ package com.wyattconrad.cs_360weighttracker.data
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Sets up the interface for the WeightRepository.
+ */
 interface IWeightRepository {
 
-    suspend fun addWeight(weight: Weight)
-
+    // Get a Flow mutablelist of weights by User ID
     fun getWeightByUserId(userid: Long): Flow<MutableList<Weight?>?>
 
+    // Get a Flow List of weights by user ID
     fun getAllWeightsByUserId(userId: Long): Flow<List<Weight>>
 
-
+    // Get the first weight by user ID
     fun getFirstWeightByUserId(userId: Long): Flow<Weight?>
 
+    // Get the last weight by user ID
     fun getLastWeightByUserId(userId: Long): Flow<Weight?>
 
+    // Get the weight lost by user ID
     fun getWeightLostByUserId(userId: Long): Flow<Double?>
 
+    // Get the weight to goal by user ID
     fun getWeightToGoalByUserId(userId: Long): Flow<Double?>
 
+    // Suspend is used for the following functions to run them on a separate thread
+    // Add a weight to the database
+    suspend fun addWeight(weight: Weight)
+
+    // Update a weight in the database
     suspend fun updateWeight(weight: Weight)
 
+    // Delete a weight from the database
     suspend fun deleteWeight(weight: Weight)
 }

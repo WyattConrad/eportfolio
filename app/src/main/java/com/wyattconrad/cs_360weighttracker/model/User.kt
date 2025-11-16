@@ -22,16 +22,23 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+/**
+ * The user entity
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 // Set the username as unique
 @Entity(
     tableName = "users",
     indices = [Index(value = arrayOf("username"), unique = true)])
 data class User (
 
+    // Create the id as the primary key
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id: Long = 0L,
 
+    // Create the first name, last name, username, and password
     @ColumnInfo(name = "first_name")
     var firstName: String,
 
@@ -45,7 +52,13 @@ data class User (
     var password: String
 
 ) {
-    // Constructor for creating a new user
+    /**
+     * Constructor for the user entity
+     * @param firstName The first name of the user
+     * @param lastName The last name of the user
+     * @param username The username of the user
+     * @param password The password of the user
+     */
     constructor(firstName: String, lastName: String?, username: String, password: String) : this (
         id = 0L,
         firstName = firstName,

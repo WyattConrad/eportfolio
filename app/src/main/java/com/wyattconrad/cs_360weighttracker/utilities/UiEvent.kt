@@ -17,6 +17,12 @@
  */
 package com.wyattconrad.cs_360weighttracker.utilities
 
+/**
+ * UiEvent is a sealed class that represents different events that can occur in the UI.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 sealed class UiEvent {
     object PopBackStack : UiEvent()
     data class Navigate(val route: String) : UiEvent()

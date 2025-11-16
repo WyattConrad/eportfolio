@@ -48,11 +48,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wyattconrad.cs_360weighttracker.R
 
+/**
+ * Composable function representing the login screen of the application.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Composable
 fun LoginScreen() {
+
+    // State variables for username and password
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+    // Column layout for the login screen
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -98,7 +107,7 @@ fun LoginScreen() {
 
         // Login Button
         Button(
-            onClick = { /* Handle login */ },
+            onClick = { /* TODO: Handle login */ },
             modifier = Modifier
                 .width(150.dp)
                 .height(50.dp),
@@ -111,7 +120,7 @@ fun LoginScreen() {
 
         // Register Link
         TextButton(
-            onClick = { /* Navigate to registration */ },
+            onClick = { /* TODO: Navigate to registration */ },
             modifier = Modifier
                 .wrapContentWidth()
         ) {

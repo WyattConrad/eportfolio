@@ -29,13 +29,21 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import com.wyattconrad.cs_360weighttracker.AppDestination
 
+/**
+ * Top Bar Composable for the app.
+ * @param currentScreen the current screen being displayed
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBar(currentScreen: AppDestination) {
     TopAppBar(
         title = {
+            // Display the title for the current screen
             Text(
-                text = currentScreen.title,  // use whatever text you want
+                text = currentScreen.title,
                 color = MaterialTheme.colorScheme.onPrimary
             )
         },
@@ -43,7 +51,8 @@ fun AppTopBar(currentScreen: AppDestination) {
             containerColor = MaterialTheme.colorScheme.primary
         ),
         actions = {
-            IconButton(onClick = { /* settings click */ }) {
+            // Settings button
+            IconButton(onClick = { /* TODO: Implement settings click */ }) {
                 Icon(
                     Icons.Default.Settings,
                     contentDescription = "Settings",

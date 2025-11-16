@@ -25,18 +25,28 @@ import com.wyattconrad.cs_360weighttracker.data.UserRepository
 import com.wyattconrad.cs_360weighttracker.model.User
 import javax.inject.Inject
 
+/**
+ * A ViewModel for the Login Screen
+ * @param userRepository The repository for the User data
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+    // Get the text for the login button
     fun getText() : LiveData<String> {
         return MutableLiveData<String>("Please Login")
     }
 
+    // Login a user
     fun login(username: String?, password: String?): LiveData<User?> {
         return userRepository.login(username, password).asLiveData()
     }
 
+    // Get the user id for a username
     fun getUserId(username: String?): LiveData<Long?> {
         return userRepository.getUserId(username).asLiveData()
     }

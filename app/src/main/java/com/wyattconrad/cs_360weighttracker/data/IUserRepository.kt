@@ -21,15 +21,38 @@ import com.wyattconrad.cs_360weighttracker.data.UserRepository.UsernameCallback
 import com.wyattconrad.cs_360weighttracker.model.User
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Sets up the interface for the UserRepository.
+ */
 interface IUserRepository {
+
+    // Logs a user into the application.
     fun login(username: String?, password: String?): Flow<User?>
+
+    // Get the User ID for a given username.
     fun getUserId(username: String?): Flow<Long?>
+
+    // Get the first name for a given user ID.
     fun getUserFirstName(userId: Long): Flow<String?>
+
+    // Check if the user exists in the database
     fun userExists(username: String?): Flow<Boolean?>
+
+    // Get the user record for a given user ID.
     fun fetchUser(userId: Long): Flow<User?>
+
+    // Get the username for a user for a given user ID.
     fun getUsername(userId: Long): Flow<String?>
+
+    // Register a new User
     suspend fun registerUser(user: User)
+
+    // Check if the username already exists in the database, including a callback function
     fun checkForExistingUsername(username: String?, callback: UsernameCallback)
+
+    // Check if the username already exists in the database
     fun checkForExistingUsername(username: String) : Boolean
+
+    // Delete all users from the database
     suspend fun deleteAll()
 }

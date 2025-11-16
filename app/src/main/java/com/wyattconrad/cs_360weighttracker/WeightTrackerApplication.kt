@@ -20,5 +20,9 @@ package com.wyattconrad.cs_360weighttracker
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
+/**
+ * The application class for the weight tracker.
+ * HiltAndroidApp adds dependency injection to the app
+ */
 @HiltAndroidApp
 class WeightTrackerApplication : Application()

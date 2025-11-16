@@ -28,11 +28,20 @@ import com.wyattconrad.cs_360weighttracker.ui.home.HomeScreen
 import com.wyattconrad.cs_360weighttracker.ui.log.LogScreen
 import com.wyattconrad.cs_360weighttracker.ui.login.LoginScreen
 
+/**
+ * AppNavHost is the navigation host for the app.
+ * @param navController The navigation controller.
+ * @param modifier The modifier to apply to the navigation host.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    // Create a navigation graph for the app.
     NavHost(
         navController = navController,
         startDestination = Home.route,
@@ -54,6 +63,7 @@ fun AppNavHost(
     }
 }
 
+// Helper function to navigate to a destination.
 fun NavHostController.navigateSingleTopTo(route: String) =
     this.navigate(route) {
         // Pop up to the start destination of the graph to

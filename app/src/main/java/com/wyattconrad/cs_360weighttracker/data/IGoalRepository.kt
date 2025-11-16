@@ -20,12 +20,18 @@ package com.wyattconrad.cs_360weighttracker.data
 import com.wyattconrad.cs_360weighttracker.model.Goal
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Sets up the interface for the GoalRepository.
+ */
 interface IGoalRepository {
 
+    // Get the goal value for a user
     fun getGoalValue(userId: Long): Flow<Double?>
 
+    // Get the goal ID for a user
     fun getGoalId(userId: Long): Flow<Long?>
 
+    // Save a goal
     suspend fun saveGoal(goal: Goal)
 
 

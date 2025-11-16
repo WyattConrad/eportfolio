@@ -21,6 +21,12 @@ import androidx.room.TypeConverter
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
+/**
+ * Converters for LocalDateTime to Long and back
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 class Converters {
 
     /**

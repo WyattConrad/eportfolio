@@ -33,11 +33,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.res.stringResource
 import com.wyattconrad.cs_360weighttracker.R
 
+/**
+ * Composable function for the registration screen.
+ *
+ * @param onRegisterClick Callback to be invoked when the register button is clicked.
+ * @param onBackToLoginClick Callback to be invoked when the back to login link is clicked.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Composable
 fun RegistrationScreen(
     onRegisterClick: () -> Unit,
     onBackToLoginClick: () -> Unit
 ) {
+    // State variables for form fields
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
@@ -51,6 +61,7 @@ fun RegistrationScreen(
             password.isNotBlank() &&
             password == confirmPassword
 
+    // Column layout for the registration screen
     Column(
         modifier = Modifier
             .fillMaxSize()

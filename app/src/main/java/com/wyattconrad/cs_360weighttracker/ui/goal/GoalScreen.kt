@@ -45,11 +45,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wyattconrad.cs_360weighttracker.R
 
+/**
+ * A composable function representing the goal screen of the weight tracker app.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Composable
 fun GoalScreen() {
+    // State variables for goal value and editing state
     val goalValue = remember { mutableStateOf("") }
     var isEditing by remember { mutableStateOf(false) }
 
+    // Column layout for the goal screen
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +84,7 @@ fun GoalScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Goal Value (read-only)
+        // Goal Value
         TextField(
             value = goalValue.value,
             onValueChange = { goalValue.value = it },
@@ -88,8 +96,9 @@ fun GoalScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Save Button (initially gone)
+        // Save Button - Initially hidden
         if (isEditing) {
+            // Save Button
             Button(
                 onClick = { isEditing = false },
                 modifier = Modifier
@@ -102,7 +111,7 @@ fun GoalScreen() {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        // Update Goal Button
+        // Update Goal Button, enables the text field and save button
         Button(
             onClick = { isEditing = true },
             modifier = Modifier
@@ -113,6 +122,7 @@ fun GoalScreen() {
                 containerColor = Color.Transparent
             )
         ) {
+            // Text on the button
             Text(
                 text = stringResource(R.string.update_goal),
                 fontSize = 18.sp,
@@ -122,6 +132,7 @@ fun GoalScreen() {
     }
 }
 
+// Preview for the goal screen
 @Preview(showBackground = true)
 @Composable
 fun GoalScreenPreview() {

@@ -23,6 +23,11 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+/**
+ * The goal entity
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 // Set the username as unique
 // Set a foreign key to the user table
 // Set the child column on delete method
@@ -33,16 +38,20 @@ import androidx.room.PrimaryKey
 )
 class Goal(
 
+    // Create the id as the primary key
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id: Long = 0,
 
+    // Create the date time set
     @ColumnInfo(name = "date_time_set")
     var dateTimeSet: Long,
 
+    // Create the goal
     @field:ColumnInfo(name = "goal")
     var goal: Double,
 
+    // Create the user id
     @field:ColumnInfo(name = "user_id")
     var userId: Long
 

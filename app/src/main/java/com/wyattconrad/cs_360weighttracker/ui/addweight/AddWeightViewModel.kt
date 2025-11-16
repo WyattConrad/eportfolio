@@ -27,6 +27,14 @@ import com.wyattconrad.cs_360weighttracker.model.Weight
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the AddWeightScreen.
+ * @property weightRepository The repository for weights.
+ * @property goalRepository The repository for goals.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 class AddWeightViewModel @Inject constructor(
     private val weightRepository: WeightRepository,
     private val goalRepository: GoalRepository
@@ -40,9 +48,12 @@ class AddWeightViewModel @Inject constructor(
         weightRepository.addWeight(weight)
     }
 
-    // Launch a coroutine to add the weight
+    /**
+     * Inserts a new weight into the database.
+     * @param weight The weight to insert.
+     */
     fun insertWeight(weight: Weight) = viewModelScope.launch {
-        addWeight(weight) // Call the suspend function from here
+        addWeight(weight)
     }
 
     /**

@@ -25,14 +25,23 @@ import androidx.room.Update
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Data access object for weight.
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Dao
 interface WeightDao {
+
+    // Get a mutable list of weights for a user
     @Query("SELECT * FROM weights WHERE user_id = :userid ORDER BY date_time_logged DESC")
     fun getWeightByUserId(userid: Long): Flow<MutableList<Weight?>?>
 
+    // Get a Flow list of weights for a user
     @Query("SELECT * FROM weights WHERE user_id = :userid ORDER BY date_time_logged DESC")
     fun getWeightsByUserId(userid: Long): Flow<List<Weight>>
 
+    /// Get a weight by its id
     @Query("SELECT * FROM weights WHERE id = :id")
     fun getWeightById(id: Int): Flow<Weight?>
 
@@ -55,6 +64,7 @@ interface WeightDao {
     )
     fun getWeightLostByUserId(userId: Long): Flow<Double?>
 
+    // Get the weight to goal for a user
     @Query(
         ("SELECT\n" +
                 "    -- First, get the most recent weight logged\n" +
@@ -65,15 +75,20 @@ interface WeightDao {
     )
     fun getWeightToGoalByUserId(userId: Long): Flow<Double?>
 
+    // Suspend is used for the following functions to run them on a separate thread
+    // Add a weight to the database
     @Insert
     suspend fun insertWeight(weight: Weight): Long
 
+    // Update a weight in the database
     @Update
     suspend fun updateWeight(weight: Weight)
 
+    // Delete a weight from the database
     @Delete
     suspend fun deleteWeight(weight: Weight)
 
+    // Delete all weights from the database
     @Query("DELETE FROM weights")
     suspend fun deleteAll()
 }

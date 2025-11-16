@@ -21,7 +21,11 @@ package com.wyattconrad.cs_360weighttracker.data
 import com.wyattconrad.cs_360weighttracker.model.User
 import kotlinx.coroutines.flow.Flow
 
-
+/**
+ * Implementation of the user repository interface.
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 class UserRepository(
     private val userDao: UserDao,
 
@@ -52,10 +56,12 @@ class UserRepository(
         return userDao.fetchUser(userId)
     }
 
+    // Get the username of a user
     override fun getUsername(userId: Long): Flow<String?> {
         return userDao.getUsername(userId)
     }
 
+    // Suspend is used for the following functions to run them on a separate thread
     // Register New User
     override suspend fun registerUser(user: User) {
             val userId = userDao.insertUser(user)
@@ -77,9 +83,10 @@ class UserRepository(
 
     // Check if username already exists
     override fun checkForExistingUsername(username: String): Boolean {
-            return if(userDao.countUsersByUsername(username) > 0) true else false
+            return userDao.countUsersByUsername(username) > 0
     }
 
+    // Delete all users
     override suspend fun deleteAll() {
         userDao.deleteAll()
     }

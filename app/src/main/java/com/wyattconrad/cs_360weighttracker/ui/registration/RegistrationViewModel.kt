@@ -27,6 +27,13 @@ import com.wyattconrad.cs_360weighttracker.model.User
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * View model for the registration screen.
+ * @property userRepository The repository for the user data.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 class RegistrationViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
@@ -36,6 +43,7 @@ class RegistrationViewModel @Inject constructor(
         userRepository.registerUser(user)
     }
 
+    // Register new user with coroutine
     fun registerUserCoroutine(user: User){
         viewModelScope.launch {
             registerUser(user)

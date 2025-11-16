@@ -29,8 +29,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.res.stringResource
 import com.wyattconrad.cs_360weighttracker.R
 
+/**
+ * Composable function for the logout screen.
+ *
+ * @param onLogoutClick Callback function to handle the logout action.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @Composable
 fun LogoutScreen(onLogoutClick: () -> Unit) {
+
+    // Column layout for the logout screen
     Column(
         modifier = Modifier
             .fillMaxSize()

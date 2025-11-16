@@ -21,25 +21,36 @@ import com.wyattconrad.cs_360weighttracker.model.Weight;
 
 import java.util.List;
 
+/**
+ * A service to help manage the Weights
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 public class WeightService {
 
+    // Method to calculate the weight to reach the goal
     public double calculateWeightToGoal(List<Weight> weights, Double goalValue) {
         // Get the last weight from the list
-        Weight last = weights.get(0);
+        Weight last = weights.getFirst();
 
-        // Calculate the weight left to reach the goal
+        // Restrict the weight to goal to two decimal places
         double factor = Math.pow(10, 2);
 
+        // Calculate the weight to goal and return it
         return Math.round((last.getWeight() - goalValue) * factor) / factor;
     }
 
+    // Method to calculate the weight loss
     public double calculateWeightLoss(List<Weight> weights) {
         // Get the first and last weights from the list
-        Weight last = weights.get(0);
-        Weight first = weights.get(weights.size() - 1);
+        Weight last = weights.getFirst();
+        Weight first = weights.getLast();
 
+        // Restrict the weight loss to two decimal places
         double factor = Math.pow(10, 2);
 
+        // Calculate the weight loss and return it
         return Math.round((first.getWeight() - last.getWeight()) * factor) / factor;
     }
 }
