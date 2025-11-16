@@ -1,18 +1,30 @@
 package com.wyattconrad.cs_360weighttracker.di
 
-import android.app.Application
+
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.wyattconrad.cs_360weighttracker.data.AppDatabase
+import com.wyattconrad.cs_360weighttracker.data.GoalDao
 import com.wyattconrad.cs_360weighttracker.data.GoalRepository
+import com.wyattconrad.cs_360weighttracker.data.UserDao
 import com.wyattconrad.cs_360weighttracker.data.UserRepository
+import com.wyattconrad.cs_360weighttracker.data.WeightDao
 import com.wyattconrad.cs_360weighttracker.data.WeightRepository
+import com.wyattconrad.cs_360weighttracker.model.Goal
+import com.wyattconrad.cs_360weighttracker.model.User
+import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.LoginService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Singleton
 
 
@@ -22,12 +34,24 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAppDatabase(app: Application): AppDatabase {
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
-            app,
+            context,
             AppDatabase::class.java,
-            "weight_database"
-        ).build()
+            "weight_database.db"
+        ).addCallback(object : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                CoroutineScope(Dispatchers.IO).launch {
+                    val database = provideAppDatabase(context)
+                    addStarterData(
+                        database.userDao,
+                        database.weightDao,
+                        database.goalDao
+                    )
+                }
+            }
+        }).build()
     }
 
     @Provides
@@ -54,4 +78,45 @@ object AppModule {
         return LoginService(context)
     }
 
+}
+
+//*
+//Add some starter data to the database
+//*
+suspend fun addStarterData(
+    userDao: UserDao,
+    weightDao: WeightDao,
+    goalDao: GoalDao
+) {
+    // Create sample user
+    val user = User(
+        firstName = "Guest",
+        lastName = "User",
+        username = "guest",
+        password = "password@123"
+    )
+
+    val userId = userDao.insertUser(user)
+
+    // Generate weights from 160 → 141 (10 days)
+    val startDate = LocalDateTime.now().minusDays(20)
+
+    (160 downTo 141).forEachIndexed { index, weightValue ->
+        weightDao.insertWeight(
+            Weight(
+                id = 0L,
+                weight = weightValue.toDouble(),
+                dateTimeLogged = startDate.plusDays(index.toLong()),
+                userId = userId
+            )
+        )
+    }
+
+    // Add a sample goal
+    goalDao.insertGoal(
+        Goal(
+            goal = 135.0,
+            userId = userId
+        )
+    )
 }
