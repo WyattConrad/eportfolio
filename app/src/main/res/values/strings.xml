@@ -17,6 +17,7 @@
     <string name="register_your_account">Register Your Account</string>
     <string name="logged_in">Logged In</string>
     <string name="enter_your_current_weight">Enter your current weight</string>
+    <string name="congrats">GOAL REACHED! CONGRATULATIONS!</string>
 
     <!-- Titles -->
     <string name="title_registration">Registration</string>

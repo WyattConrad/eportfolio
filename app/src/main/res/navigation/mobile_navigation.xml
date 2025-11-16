@@ -8,7 +8,6 @@
     <!-- Home Fragment -->
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.wyattconrad.cs_360weighttracker.ui.home.HomeFragment"
         tools:layout="@layout/fragment_home"
         android:label="">
         <action
