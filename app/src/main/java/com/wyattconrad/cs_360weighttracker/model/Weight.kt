@@ -5,12 +5,11 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
-import java.time.ZoneId
 
 // Set a foreign key to the user table
 @Entity(
-    tableName = "weight",
-    foreignKeys = [ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["user_id"], onDelete = ForeignKey.Companion.CASCADE)])
+    tableName = "weights",
+    foreignKeys = [ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["user_id"], onDelete = ForeignKey.CASCADE)])
 data class Weight (
 
     @PrimaryKey(autoGenerate = true)

@@ -108,7 +108,7 @@ public class RegistrationFragment extends Fragment {
                     password.getText().toString());
 
             // Register user
-            registrationViewModel.registerUser(newUser);
+            registrationViewModel.registerUserCoroutine(newUser);
 
             // Login user
             registrationViewModel.login(username.getText().toString(), password.getText().toString()).observe(getViewLifecycleOwner(), user -> {

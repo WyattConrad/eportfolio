@@ -1,38 +1,41 @@
-package com.wyattconrad.cs_360weighttracker.repo;
+package com.wyattconrad.cs_360weighttracker.data
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
-import com.wyattconrad.cs_360weighttracker.model.Goal;
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import androidx.room.Upsert
+import com.wyattconrad.cs_360weighttracker.model.Goal
+import kotlinx.coroutines.flow.Flow
 
 @Dao
-public interface GoalDao {
+interface GoalDao {
+    @Query("SELECT goal FROM goals WHERE user_id= :userid LIMIT 1")
+    fun getGoalValueByUserId(userid: Long): Flow<Double?>
 
-    @Query("SELECT goal FROM goal WHERE user_id= :userid LIMIT 1")
-    LiveData<Double> getGoalValueByUserId(long userid);
+    @Query("SELECT EXISTS (SELECT 1 FROM goals WHERE user_id= :userid)")
+    fun goalExists(userid: Long): Boolean
 
-    @Query("SELECT EXISTS (SELECT 1 FROM goal WHERE user_id= :userid)")
-    boolean goalExists(long userid);
+    @Query("SELECT id FROM goals WHERE user_id= :userid LIMIT 1")
+    fun getGoalIdByUserId(userid: Long): Flow<Long?>
 
-    @Query("SELECT id FROM goal WHERE user_id= :userid LIMIT 1")
-    LiveData<Long> getGoalIdByUserId(long userid);
-
-    @Query("SELECT * FROM goal WHERE user_id= :userid")
-    Goal getGoalByUserId(long userid);
+    @Query("SELECT * FROM goals WHERE user_id= :userid")
+    fun getGoalByUserId(userid: Long): Goal?
 
     @Insert
-    void insertGoal(Goal goal);
+    suspend fun insertGoal(goal: Goal)
 
     @Update
-    void updateGoal(Goal goal);
+    suspend fun updateGoal(goal: Goal)
+
+    @Upsert
+    suspend fun upsertGoal(goal: Goal)
 
     @Delete
-    void deleteGoal(Goal goal);
+    suspend fun deleteGoal(goal: Goal)
 
-    @Query("DELETE FROM goal")
-    void deleteAll();
-
+    @Query("DELETE FROM goals")
+    suspend fun deleteAll()
 }

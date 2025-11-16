@@ -1,9 +1,6 @@
 package com.wyattconrad.cs_360weighttracker.ui.home;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static com.wyattconrad.cs_360weighttracker.service.StringService.toProperCase;
-
-import android.app.Application;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -20,21 +17,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wyattconrad.cs_360weighttracker.R;
-import com.wyattconrad.cs_360weighttracker.adapter.WeightAdapter;
 import com.wyattconrad.cs_360weighttracker.databinding.FragmentHomeBinding;
-import com.wyattconrad.cs_360weighttracker.model.Weight;
 import com.wyattconrad.cs_360weighttracker.service.LoginService;
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 import com.wyattconrad.cs_360weighttracker.service.WeightService;
-import com.wyattconrad.cs_360weighttracker.viewmodel.WeightListViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -69,7 +58,6 @@ public class HomeFragment extends Fragment {
 
         // Initialize the home and weightlist view models
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        WeightListViewModel weightListViewModel = new ViewModelProvider(this).get(WeightListViewModel.class);
 
         // Get the user's ID from SharedPreferences, if one doesn't exist, set it to -1
         loginService = new LoginService(requireContext());
@@ -96,7 +84,7 @@ public class HomeFragment extends Fragment {
 
 
         // Get the user's weights from the view model
-        weightListViewModel.getWeightByUserId(userId);
+        homeViewModel.getWeightByUserId(userId);
 
         // Observe the goal text from the view model
         observeGoalText(userId);
@@ -106,7 +94,7 @@ public class HomeFragment extends Fragment {
 
 
         // Observe the LiveData and update the adapter when the data changes
-        weightListViewModel.getWeightLostByUserId(userId).observe(getViewLifecycleOwner(), weightLostValue -> {
+        homeViewModel.getWeightLostByUserId(userId).observe(getViewLifecycleOwner(), weightLostValue -> {
             // Update the adapter with the user's weights
 
                 // If weight lost is negative, set the text to "Weight Gained" and make it positive
@@ -120,7 +108,7 @@ public class HomeFragment extends Fragment {
         });
 
         // Observe the LiveData and update the adapter when the data changes
-        weightListViewModel.getWeightToGoalByUserId(userId).observe(getViewLifecycleOwner(), weightToGoalValue -> {
+        homeViewModel.getWeightToGoalByUserId(userId).observe(getViewLifecycleOwner(), weightToGoalValue -> {
 
             // If weight to goal is negative, set the text to "Less Than Goal" and make it positive
             if (weightToGoalValue < 0) {

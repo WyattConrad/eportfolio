@@ -1,98 +1,39 @@
-package com.wyattconrad.cs_360weighttracker.model;
+package com.wyattconrad.cs_360weighttracker.model
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
 // Set the username as unique
-@Entity(indices = {@Index(value = "username", unique = true)})
-public class User {
+@Entity(
+    tableName = "users",
+    indices = [Index(value = arrayOf("username"), unique = true)])
+data class User (
 
-    // Create the fields for the database
-    // Primary key and ID for the user
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private long mId;
+    var id: Long = 0L,
 
-    // First and last name
-    @NonNull
     @ColumnInfo(name = "first_name")
-    private String mFirstName;
+    var firstName: String,
 
     @ColumnInfo(name = "last_name")
-    private String mLastName;
+    var lastName: String?,
 
-    // Username and password
-    @NonNull
     @ColumnInfo(name = "username")
-    private String mUsername;
+    var username: String,
 
-    @NonNull
     @ColumnInfo(name = "password")
-    private String mPassword;
+    var password: String
 
+) {
     // Constructor for creating a new user
-    public User(@NonNull String firstName, String lastName, @NonNull String username, @NonNull String password) {
-        this.mFirstName = firstName;
-        this.mLastName = lastName;
-        this.mUsername = username;
-        this.mPassword = password;
-    }
-
-    // Get username
-    @NonNull
-    public String getUsername() {
-        return mUsername;
-    }
-
-    // Get id
-    public long getId() {
-        return mId;
-    }
-
-    // Get first name
-    @NonNull
-    public String getFirstName() {
-        return mFirstName;
-    }
-
-    // Get last name
-    public String getLastName() {
-        return mLastName;
-    }
-
-    // Get password
-    @NonNull
-    public String getPassword() {
-        return mPassword;
-    }
-
-
-    // Set the id
-    public void setId(long id) {
-        mId = id;
-    }
-
-    // Set the first name
-    public void setFirstName(@NonNull String firstName) {
-        mFirstName = firstName;
-    }
-
-    // Set the last name
-    public void setLastName(String lastName) {
-        mLastName = lastName;
-    }
-
-    // Set the username
-    public void setUsername(@NonNull String username) {
-        mUsername = username;
-    }
-
-    // Set the password
-    public void setPassword(@NonNull String password) {
-        mPassword = password;
-    }
-
+    constructor(firstName: String, lastName: String?, username: String, password: String) : this (
+        id = 0L,
+        firstName = firstName,
+        lastName = lastName,
+        username = username,
+        password = password
+    )
 }

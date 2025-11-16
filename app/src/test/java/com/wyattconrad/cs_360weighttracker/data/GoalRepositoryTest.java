@@ -1,4 +1,4 @@
-package com.wyattconrad.cs_360weighttracker.repo;
+package com.wyattconrad.cs_360weighttracker.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,7 +14,6 @@ import org.jspecify.annotations.NonNull;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 public class GoalRepositoryTest {
 

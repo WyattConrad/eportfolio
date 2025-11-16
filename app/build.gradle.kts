@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -12,12 +14,13 @@ android {
 
     defaultConfig {
         applicationId = "com.wyattconrad.cs_360weighttracker"
-        minSdk = 23
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -26,18 +29,15 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures {
         viewBinding = true
         compose = true
     }
 
+}
+
+kotlin {
+    jvmToolchain(21)
 }
 
 dependencies {
@@ -51,14 +51,23 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.foundation)
     implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.compose.material3)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
     val roomVersion = "2.8.3"
 
     implementation(libs.legacy.support.v4)
     implementation(libs.preference)
 
     implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.2")
+
+    //Dagger - Hilt
+    implementation("com.google.dagger:hilt-android:2.57.2")
+    kapt("com.google.dagger:hilt-compiler:2.57.2")
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
 
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -89,4 +98,8 @@ dependencies {
 
     // Optional: For Android-specific integration
     androidTestImplementation(libs.mockito.android)
+}
+
+kapt {
+    correctErrorTypes = true
 }

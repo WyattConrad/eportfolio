@@ -1,65 +1,64 @@
-package com.wyattconrad.cs_360weighttracker;
+package com.wyattconrad.cs_360weighttracker
 
-import android.content.Intent;
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-import androidx.core.view.WindowCompat;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.wyattconrad.cs_360weighttracker.ui.components.AppTopBar
+import com.wyattconrad.cs_360weighttracker.ui.components.NavRow
+import com.wyattconrad.cs_360weighttracker.ui.theme.AppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-import com.wyattconrad.cs_360weighttracker.databinding.ActivityMainBinding;
-
-public class MainActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        // Initialize the view binding
-        com.wyattconrad.cs_360weighttracker.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_goal, R.id.navigation_login, R.id.navigation_logout)
-                .build();
-
-        // Initialize the NavController and set up the action bar
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        // Handle the Up button in the action bar
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        return navController.navigateUp() || super.onSupportNavigateUp();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.settings_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        if (item.getItemId() == R.id.settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            AppTheme {
+                CS360WeightTrackerApp()
+            }
         }
+    }
+}
 
-        return super.onOptionsItemSelected(item);
+@PreviewScreenSizes
+@Composable
+fun CS360WeightTrackerApp(){
+    val navController = rememberNavController()
+
+    val currentBackStack by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStack?.destination
+    val currentScreen =
+        appTabRowScreens.find { it.route == currentDestination?.route } ?: Home
+
+    Scaffold(
+        topBar = { AppTopBar(currentScreen) },
+        bottomBar = {
+            NavRow(
+                currentScreen = currentScreen,
+                navController = navController
+            )
+        }
+    ) { innerPadding ->
+        AppNavHost(
+            navController = navController,
+            modifier = Modifier.padding(innerPadding)
+        )
     }
 }

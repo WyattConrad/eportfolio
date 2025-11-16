@@ -1,4 +1,4 @@
-package com.wyattconrad.cs_360weighttracker.repo;
+package com.wyattconrad.cs_360weighttracker.data;
 
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.verify;
@@ -17,7 +17,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 

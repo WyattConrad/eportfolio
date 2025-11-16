@@ -1,38 +1,28 @@
-package com.wyattconrad.cs_360weighttracker.ui.login;
+package com.wyattconrad.cs_360weighttracker.ui.login
 
-import android.app.Application;
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import com.wyattconrad.cs_360weighttracker.data.UserRepository
+import com.wyattconrad.cs_360weighttracker.model.User
+import javax.inject.Inject
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+class LoginViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
 
-import com.wyattconrad.cs_360weighttracker.model.User;
-import com.wyattconrad.cs_360weighttracker.repo.UserRepository;
-
-public class LoginViewModel extends AndroidViewModel {
-
-    private final MutableLiveData<String> mText;
-    private final UserRepository userRepository;
-
-    public LoginViewModel(@NonNull Application application) {
-        super(application);
-        userRepository = new UserRepository(application);
-        mText = new MutableLiveData<>();
-        mText.setValue("Please Login");
+    fun getText() : LiveData<String> {
+        return MutableLiveData<String>("Please Login")
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    fun login(username: String?, password: String?): LiveData<User?> {
+        return userRepository.login(username, password).asLiveData()
     }
 
-
-    public LiveData<User> login(String username, String password) {
-        return userRepository.login(username, password);
+    fun getUserId(username: String?): LiveData<Long?> {
+        return userRepository.getUserId(username).asLiveData()
     }
-
-    public LiveData<Long> getUserId(String username) {
-        return userRepository.getUserId(username);
-    }
-
 }

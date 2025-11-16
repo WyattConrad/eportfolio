@@ -11,6 +11,9 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -21,3 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "CS-360 Weight Tracker"
 include ':app'
+//apply from: new URI("https://raw.githubusercontent.com/gradle/develocity-testing-annotations/main/settings-testing-annotations.gradle")
+apply plugin: 'org.gradle.toolchains.foojay-resolver-convention'

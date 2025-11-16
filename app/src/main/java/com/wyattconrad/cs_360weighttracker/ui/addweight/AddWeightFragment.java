@@ -138,7 +138,8 @@ public class AddWeightFragment extends Fragment {
             Weight newWeight = new Weight(weight, userId);
 
             // Add the new weight to the database
-            addWeightViewModel.addWeight(newWeight);
+            addWeightViewModel.insertWeight(newWeight);
+
             Log.d("AddWeightFragment", "Weight added to database");
 
             // Check if the user has reached their goal

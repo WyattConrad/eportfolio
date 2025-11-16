@@ -146,7 +146,7 @@ public class GoalFragment extends Fragment {
         goalValue.setTextColor(ContextCompat.getColor(requireContext(), R.color.dark_grey));
 
         // Save the new goal value to the database
-        mViewModel.saveGoal(newGoal);
+        mViewModel.saveGoalCoroutine(newGoal);
 
         // Reset the SMS sent flag
         sharedPreferences.saveUserData(userId, "sms_sent", false);

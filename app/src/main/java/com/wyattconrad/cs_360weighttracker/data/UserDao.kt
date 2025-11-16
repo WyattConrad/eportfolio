@@ -1,54 +1,53 @@
-package com.wyattconrad.cs_360weighttracker.repo;
+package com.wyattconrad.cs_360weighttracker.data
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Delete;
-import androidx.room.Insert;
-import androidx.room.Query;
-import androidx.room.Update;
-import com.wyattconrad.cs_360weighttracker.model.User;
-import java.util.List;
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.wyattconrad.cs_360weighttracker.model.User
+import kotlinx.coroutines.flow.Flow
 
 @Dao
-public interface UserDao {
-    @Query("SELECT * FROM user WHERE username = :username")
-    LiveData<User> getUserByUsername(String username);
+interface UserDao {
+    @Query("SELECT * FROM users WHERE username = :username")
+    fun getUserByUsername(username: String?): Flow<User?>
 
-    @Query("SELECT * FROM user")
-    LiveData<List<User>> getAllUsers();
+    @get:Query("SELECT * FROM users")
+    val allUsers: Flow<MutableList<User?>?>
 
-    @Query("SELECT COUNT(*) FROM user WHERE username = :username")
-    int countUsersByUsername(String username);
+    @Query("SELECT COUNT(*) FROM users WHERE username = :username")
+    fun countUsersByUsername(username: String?): Int
 
-    @Query("SELECT EXISTS (SELECT 1 FROM user WHERE username = :username)")
-    LiveData<Boolean> userExists(String username);
+    @Query("SELECT EXISTS (SELECT 1 FROM users WHERE username = :username)")
+    fun userExists(username: String?): Flow<Boolean?>
 
-    @Query("SELECT * FROM user WHERE username = :username AND password = :password LIMIT 1")
-    LiveData<User> login(String username, String password);
+    @Query("SELECT * FROM users WHERE username = :username AND password = :password LIMIT 1")
+    fun login(username: String?, password: String?): Flow<User?>
 
-    @Query("SELECT id FROM user WHERE username = :username")
-    LiveData<Long> getUserId(String username);
+    @Query("SELECT id FROM users WHERE username = :username")
+    fun getUserId(username: String?): Flow<Long?>
 
-    @Query("SELECT first_name FROM user WHERE id = :userId")
-    LiveData<String> getUserFirstName(long userId);
+    @Query("SELECT first_name FROM users WHERE id = :userId")
+    fun getUserFirstName(userId: Long): Flow<String?>
 
     @Insert
-    long insertUser(User user);
+    suspend fun insertUser(user: User): Long
 
     @Update
-    void updateUser(User user);
+    suspend fun updateUser(user: User)
 
     @Delete
-    void deleteUser(User user);
+    suspend fun deleteUser(user: User)
 
-    @Query("DELETE FROM user")
-    void deleteAll();
+    @Query("DELETE FROM users")
+    suspend fun deleteAll()
 
 
-    @Query("SELECT * FROM user WHERE id = :userId")
-    LiveData<User> fetchUser(long userId);
+    @Query("SELECT * FROM users WHERE id = :userId")
+    fun fetchUser(userId: Long): Flow<User?>
 
-    @Query("SELECT username FROM user WHERE id = :userId")
-    LiveData<String> getUsername(long userId);
-
+    @Query("SELECT username FROM users WHERE id = :userId")
+    fun getUsername(userId: Long): Flow<String?>
 }

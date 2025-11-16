@@ -1,45 +1,40 @@
-package com.wyattconrad.cs_360weighttracker.ui.addweight;
+package com.wyattconrad.cs_360weighttracker.ui.addweight
 
-import android.app.Application;
+import androidx.activity.result.launch
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.wyattconrad.cs_360weighttracker.data.GoalRepository
+import com.wyattconrad.cs_360weighttracker.data.WeightRepository
+import com.wyattconrad.cs_360weighttracker.model.Weight
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
-
-import com.wyattconrad.cs_360weighttracker.model.Weight;
-import com.wyattconrad.cs_360weighttracker.repo.GoalRepository;
-import com.wyattconrad.cs_360weighttracker.repo.WeightRepository;
-
-public class AddWeightViewModel extends AndroidViewModel {
-
-    // Declare variables
-    private final WeightRepository weightRepository;
-    private final GoalRepository goalRepository;
-
-    /**
-     * Constructor for the AddWeightViewModel class.
-     * @param application The application context.
-     */
-    public AddWeightViewModel(Application application) {
-        super(application);
-        // Initialize the repositories
-        weightRepository = new WeightRepository(application);
-        goalRepository = new GoalRepository(application);
-    }
+class AddWeightViewModel @Inject constructor(
+    private val weightRepository: WeightRepository,
+    private val goalRepository: GoalRepository
+) : ViewModel() {
 
     /**
      * Adds a new weight to the database.
      * @param weight The weight to add.
      */
-    public void addWeight(Weight weight) {
-        weightRepository.addWeight(weight);
+    suspend fun addWeight(weight: Weight) {
+        weightRepository.addWeight(weight)
+    }
+
+    // Launch a coroutine to add the weight
+    fun insertWeight(weight: Weight) = viewModelScope.launch {
+        addWeight(weight) // Call the suspend function from here
     }
 
     /**
      * Checks if the user has reached their goal.
      * @param userId The user ID.
      */
-    public LiveData<Double> checkGoalReached(long userId) {
+    fun checkGoalReached(userId: Long): LiveData<Double?> {
         // Get the user's goal
-        return goalRepository.getGoalValue(userId);
+        return goalRepository.getGoalValue(userId).asLiveData()
     }
 }

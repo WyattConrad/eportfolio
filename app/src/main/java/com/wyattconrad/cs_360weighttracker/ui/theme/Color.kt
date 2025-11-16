@@ -1,4 +1,5 @@
-package com.example.compose
+package com.wyattconrad.cs_360weighttracker.ui.theme
+
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF3E5F90)
