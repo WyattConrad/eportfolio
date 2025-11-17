@@ -21,38 +21,44 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.room.util.copy
 import com.wyattconrad.cs_360weighttracker.data.GoalRepository
 import com.wyattconrad.cs_360weighttracker.model.Goal
+import com.wyattconrad.cs_360weighttracker.service.LoginService
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
  * ViewModel for the GoalScreen
  * @property goalRepository The repository for goals
+ * @property loginService The service for logging in
  *
  * @author Wyatt Conrad
  * @version 1.0
  */
+@HiltViewModel
 class GoalViewModel @Inject constructor(
-    private val goalRepository: GoalRepository
+    private val goalRepository: GoalRepository,
+    loginService: LoginService
 ) : ViewModel() {
 
+    // Get the user ID from the login service
+    val userId: Long = loginService.userId
+
+    val currentGoal = goalRepository.getGoalByUserId(userId)
+
     // Function to update the goal value in the database
-    fun saveGoalCoroutine(goal: Goal) {
-        // Launch a coroutine to save the goal to the database
-        viewModelScope.launch {
-            goalRepository.saveGoal(goal)
+    fun saveGoal(newValue: Double) = viewModelScope.launch {
+        val existing = currentGoal.firstOrNull()
+
+        val updatedGoal = if (existing == null) {
+            Goal(goal = newValue, userId = userId)
+        } else {
+            existing.copy(goal = newValue)
         }
-    }
 
-    // Get the goal value for a user
-    fun getGoalValue(userId: Long): LiveData<Double?> {
-        // Observe the goal weight from the goal repository
-        return goalRepository.getGoalValue(userId).asLiveData()
-    }
-
-    // Get the goal ID for a user
-    fun getGoalId(userId: Long): LiveData<Long?> {
-        return goalRepository.getGoalId(userId).asLiveData()
+        goalRepository.saveGoal(updatedGoal)
     }
 }

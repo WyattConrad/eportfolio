@@ -5,19 +5,6 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
-    <!-- Home Fragment -->
-    <fragment
-        android:id="@+id/navigation_home"
-        tools:layout="@layout/fragment_home"
-        android:label="">
-        <action
-            android:id="@+id/action_navigation_home_to_navigation_login"
-            app:destination="@id/navigation_login" />
-        <action
-            android:id="@+id/action_navigation_home_to_navigation_logout"
-            app:destination="@id/navigation_logout" />
-    </fragment>
-
     <!-- Login Fragment -->
     <fragment
         android:id="@+id/navigation_login"
@@ -45,12 +32,5 @@
         android:name="com.wyattconrad.cs_360weighttracker.ui.addweight.AddWeightFragment"
         android:label="@string/title_addweight"
         tools:layout="@layout/fragment_add_weight" />
-
-    <!-- Goal Fragment -->
-    <fragment
-        android:id="@+id/navigation_goal"
-        android:name="com.wyattconrad.cs_360weighttracker.ui.goal.GoalFragment"
-        android:label="@string/title_goal"
-        tools:layout="@layout/fragment_goal" />
 
 </navigation>

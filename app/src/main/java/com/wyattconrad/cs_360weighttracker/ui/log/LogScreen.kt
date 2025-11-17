@@ -28,6 +28,9 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -36,13 +39,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.wyattconrad.cs_360weighttracker.model.Weight
+import com.wyattconrad.cs_360weighttracker.ui.components.EditWeight
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightLogList
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * LogScreen Composable
@@ -60,6 +68,18 @@ fun LogScreen(
     // Collect the Flow<List<Weight>> as state
     val weights by viewModel.weights.collectAsState(initial = emptyList())
 
+    // State to track the weight being edited
+    var weightToEdit by remember { mutableStateOf<Weight?>(null) }
+    var showEditDialog by remember { mutableStateOf(false) }
+
+    // State to track the weight being deleted
+    var weightToDelete by remember { mutableStateOf<Weight?>(null) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    // State for snackbar
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     // State to control dialog visibility
     var showDialog by remember { mutableStateOf(false) }
     // State to store user input
@@ -67,6 +87,8 @@ fun LogScreen(
 
     // Scaffold with floating action button
     Scaffold(
+        // Setup the snackbar host
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         // Add a floating action button for adding new weights
         floatingActionButton = {
             FloatingActionButton(
@@ -87,7 +109,17 @@ fun LogScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Weight Log List
-            WeightLogList(weights = weights, { }, {})
+            WeightLogList(
+                weights = weights,
+                onEditClick = { weight ->
+                    weightToEdit = weight
+                    showEditDialog = true
+                },
+                onDeleteClick = { weight ->
+                    weightToDelete = weight
+                    showDeleteDialog = true
+                }
+            )
         }
 
         // Add Weight Dialog
@@ -127,6 +159,69 @@ fun LogScreen(
                 dismissButton = {
                     // Cancel button
                     TextButton(onClick = { showDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
+        }
+
+        // Handle the edit dialog
+        if (showEditDialog && weightToEdit != null) {
+            EditWeight(
+                weight = weightToEdit!!,
+                onDismiss = {
+                    showEditDialog = false
+                    weightToEdit = null
+                },
+                onConfirm = { newValue ->
+                    val newWeight = newValue.toDoubleOrNull()
+                    if (newWeight != null) {
+                        viewModel.updateWeight(weightToEdit!!, newWeight)
+                    }
+                    showEditDialog = false
+                    weightToEdit = null
+                }
+            )
+        }
+
+        // Handle the delete dialog
+        if (showDeleteDialog && weightToDelete != null) {
+            AlertDialog(
+                onDismissRequest = {
+                    showDeleteDialog = false
+                    weightToDelete = null
+                },
+                title = { Text("Delete Weight") },
+                text = {
+                    Text("Are you sure you want to delete this weight entry?")
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            viewModel.deleteWeight(weightToDelete!!)
+                            showDeleteDialog = false
+
+                            // SHOW SNACKBAR
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = "Weight deleted",
+                                    duration = SnackbarDuration.Short
+                                )
+                            }
+
+                            weightToDelete = null
+                        }
+                    ) {
+                        Text("Delete")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showDeleteDialog = false
+                            weightToDelete = null
+                        }
+                    ) {
                         Text("Cancel")
                     }
                 }

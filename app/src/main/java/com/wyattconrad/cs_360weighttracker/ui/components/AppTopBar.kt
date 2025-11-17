@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import com.wyattconrad.cs_360weighttracker.AppDestination
 
 /**
@@ -38,7 +39,7 @@ import com.wyattconrad.cs_360weighttracker.AppDestination
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar(currentScreen: AppDestination) {
+fun AppTopBar(currentScreen: AppDestination, navController: NavHostController) {
     TopAppBar(
         title = {
             // Display the title for the current screen
@@ -52,7 +53,10 @@ fun AppTopBar(currentScreen: AppDestination) {
         ),
         actions = {
             // Settings button
-            IconButton(onClick = { /* TODO: Implement settings click */ }) {
+            IconButton(onClick = {
+                // Navigate to the settings screen
+                navController.navigate("settings")
+            }) {
                 Icon(
                     Icons.Default.Settings,
                     contentDescription = "Settings",

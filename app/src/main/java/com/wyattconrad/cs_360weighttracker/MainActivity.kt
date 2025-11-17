@@ -64,7 +64,7 @@ fun CS360WeightTrackerApp(){
 
     // Sets up the scaffold for the app.
     Scaffold(
-        topBar = { AppTopBar(currentScreen) },
+        topBar = { AppTopBar(currentScreen, navController) },
         bottomBar = {
             NavRow(
                 currentScreen = currentScreen,

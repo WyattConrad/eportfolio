@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
+    implementation(libs.androidx.room.ktx)
     val roomVersion = "2.8.3"
 
     implementation(libs.legacy.support.v4)

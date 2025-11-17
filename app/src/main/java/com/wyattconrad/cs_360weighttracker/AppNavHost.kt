@@ -27,6 +27,7 @@ import com.wyattconrad.cs_360weighttracker.ui.goal.GoalScreen
 import com.wyattconrad.cs_360weighttracker.ui.home.HomeScreen
 import com.wyattconrad.cs_360weighttracker.ui.log.LogScreen
 import com.wyattconrad.cs_360weighttracker.ui.login.LoginScreen
+import com.wyattconrad.cs_360weighttracker.ui.settings.SettingsScreen
 
 /**
  * AppNavHost is the navigation host for the app.
@@ -59,7 +60,9 @@ fun AppNavHost(
         composable(route = Login.route) {
             LoginScreen()
         }
-
+        composable(route = Settings.route) {
+            SettingsScreen()
+        }
     }
 }
 

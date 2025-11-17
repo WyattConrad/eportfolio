@@ -64,6 +64,21 @@ class LogViewModel @Inject constructor(// Inject your repository, which in turn 
         }
     }
 
+    // Update a weight in the database from the Edit screen
+    fun updateWeight(weight: Weight, newValue: Double) {
+        viewModelScope.launch {
+            val updated = weight.copy(weight = newValue)
+            weightRepository.updateWeight(updated)
+        }
+    }
+
+    //Delete a weight from the database
+    fun deleteWeight(weight: Weight) {
+        viewModelScope.launch {
+            weightRepository.deleteWeight(weight)
+        }
+    }
+
 }
 
 // Sealed class to define the events that can be sent from the UI

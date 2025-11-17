@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wyattconrad.cs_360weighttracker;
+package com.wyattconrad.cs_360weighttracker.ui.settings;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -37,6 +37,7 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.wyattconrad.cs_360weighttracker.R;
 import com.wyattconrad.cs_360weighttracker.service.LoginService;
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService;
 
@@ -54,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Set the content view to the settings activity layout
-        setContentView(R.layout.settings_activity);
+        //setContentView(R.layout.settings_activity);
 
         // If the saved instance state is null, replace the fragment container with the settings fragment
         if (savedInstanceState == null) {

@@ -36,7 +36,7 @@ import androidx.room.PrimaryKey
     indices = [Index(value = arrayOf("user_id"), unique = true)],
     foreignKeys = [ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["user_id"], onDelete = ForeignKey.CASCADE)]
 )
-class Goal(
+data class Goal(
 
     // Create the id as the primary key
     @PrimaryKey(autoGenerate = true)

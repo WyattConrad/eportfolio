@@ -27,9 +27,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,13 +40,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.wyattconrad.cs_360weighttracker.R
+import com.wyattconrad.cs_360weighttracker.ui.log.LogViewModel
 
 /**
  * A composable function representing the goal screen of the weight tracker app.
@@ -52,12 +60,21 @@ import com.wyattconrad.cs_360weighttracker.R
  * @version 1.0
  */
 @Composable
-fun GoalScreen() {
-    // State variables for goal value and editing state
-    val goalValue = remember { mutableStateOf("") }
+fun GoalScreen(
+    viewModel: GoalViewModel = hiltViewModel(),
+) {
+    val goal by viewModel.currentGoal.collectAsState(initial = null)
+
+    var goalValue by remember { mutableStateOf("") }
     var isEditing by remember { mutableStateOf(false) }
 
-    // Column layout for the goal screen
+    // When the DB goal changes AND we are not editing, update local text
+    LaunchedEffect(goal, isEditing) {
+        if (!isEditing) {
+            goalValue = goal?.goal?.toString() ?: ""
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,17 +82,16 @@ fun GoalScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // Goal Icon
+
         Image(
             painter = painterResource(id = R.drawable.baseline_monitor_weight_24),
             contentDescription = stringResource(R.string.scale_image),
-            modifier = Modifier
-                .size(150.dp)
+            colorFilter = ColorFilter.tint(Color(0xFF3B76F6)),
+            modifier = Modifier.size(150.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Goal Header Text
         Text(
             text = stringResource(R.string.your_current_goal),
             fontSize = 24.sp,
@@ -84,26 +100,31 @@ fun GoalScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Goal Value
         TextField(
-            value = goalValue.value,
-            onValueChange = { goalValue.value = it },
+            value = goalValue,
+            onValueChange = { goalValue = it },
             placeholder = { Text(text = stringResource(R.string.weight_in_lbs)) },
             singleLine = true,
-            enabled = false,
-            modifier = Modifier.wrapContentWidth()
+            enabled = isEditing,
+            modifier = Modifier.wrapContentWidth(),
+            textStyle = TextStyle(
+                fontSize = 24.sp,
+                textAlign = TextAlign.Center
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Save Button - Initially hidden
         if (isEditing) {
-            // Save Button
             Button(
-                onClick = { isEditing = false },
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .padding(horizontal = 8.dp)
+                onClick = {
+                    val weightVal = goalValue.toDoubleOrNull()
+                    if (weightVal != null) {
+                        viewModel.saveGoal(weightVal)
+                    }
+                    isEditing = false
+                },
+                modifier = Modifier.wrapContentWidth()
             ) {
                 Text(text = stringResource(R.string.save), fontSize = 18.sp)
             }
@@ -111,22 +132,17 @@ fun GoalScreen() {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        // Update Goal Button, enables the text field and save button
         Button(
             onClick = { isEditing = true },
-            modifier = Modifier
-                .wrapContentWidth()
-                .padding(horizontal = 8.dp),
-            // transparent background
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+            modifier = Modifier.wrapContentWidth(),
+            colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent
             )
         ) {
-            // Text on the button
             Text(
                 text = stringResource(R.string.update_goal),
                 fontSize = 18.sp,
-                color = Color(0xFF3B76F6) // French Blue
+                color = Color(0xFF3B76F6)
             )
         }
     }
