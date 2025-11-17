@@ -93,11 +93,16 @@ dependencies {
     testImplementation(libs.core.testing)
     testImplementation(libs.awaitility)
 
+    val mockkVersion = "1.14.6"
+
     // For unit testing with Mockito
-    testImplementation(libs.mockito.core)
+    testImplementation("io.mockk:mockk:${mockkVersion}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
 
     // Optional: For Android-specific integration
-    androidTestImplementation(libs.mockito.android)
+    androidTestImplementation("io.mockk:mockk-android:${mockkVersion}")
+    androidTestImplementation("io.mockk:mockk-agent:${mockkVersion}")
+
 }
 
 kapt {

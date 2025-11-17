@@ -38,6 +38,10 @@ class GoalRepository(
         return goalValue
     }
 
+    override fun getGoalByUserId(userId: Long): Flow<Goal?> {
+        return goalDao.getGoalByUserId(userId)
+    }
+
     // Get the goal ID for a user
     override fun getGoalId(userId: Long): Flow<Long?> {
         return goalDao.getGoalIdByUserId(userId)

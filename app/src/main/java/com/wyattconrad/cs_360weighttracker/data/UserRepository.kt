@@ -47,7 +47,7 @@ class UserRepository(
     }
 
     // Check if user exists
-    override fun userExists(username: String?): Flow<Boolean?> {
+    override fun userExists(username: String?): Flow<Boolean> {
         return userDao.userExists(username)
     }
 

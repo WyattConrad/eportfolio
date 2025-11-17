@@ -49,7 +49,7 @@ interface GoalDao {
 
     // Get the goal for a user.
     @Query("SELECT * FROM goals WHERE user_id= :userid")
-    fun getGoalByUserId(userid: Long): Goal?
+    fun getGoalByUserId(userid: Long): Flow<Goal?>
 
     // Suspend is used for the following functions to run them on a separate thread
     // Insert a new goal

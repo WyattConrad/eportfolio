@@ -47,7 +47,7 @@ interface UserDao {
 
     // Check if a user exists by their username
     @Query("SELECT EXISTS (SELECT 1 FROM users WHERE username = :username)")
-    fun userExists(username: String?): Flow<Boolean?>
+    fun userExists(username: String?): Flow<Boolean>
 
     // Login a user by their username and password
     @Query("SELECT * FROM users WHERE username = :username AND password = :password LIMIT 1")

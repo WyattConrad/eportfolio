@@ -6,8 +6,10 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.NoSuchElementException;
 
 public class WeightServiceTest {
 
@@ -25,11 +27,11 @@ public class WeightServiceTest {
 
     @Test
     public void calculateWeightToGoal_with_an_empty_weights_list() {
-        // Test for IndexOutOfBoundsException when the input 'weights' list is empty. [7, 8]
+        // Test for NoSuchElementException when the input 'weights' list is empty. [7, 8]
         ArrayList<Weight> weights = new ArrayList<>();
 
         WeightService weightService = new WeightService();
-        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
             weightService.calculateWeightToGoal(weights, 100.0);
         });
 
@@ -37,13 +39,13 @@ public class WeightServiceTest {
 
     @Test
     public void calculateWeightToGoal_with_a_null_goalValue() {
-        // Test for NullPointerException when the 'goalValue' is null, due to unboxing to a primitive double.
+        // Test for NoSuchElementException when the 'goalValue' is null, due to unboxing to a primitive double.
 
         ArrayList<Weight> weights = new ArrayList<>();
 
         WeightService weightService = new WeightService();
 
-        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
             weightService.calculateWeightToGoal(weights, null);
         });
     }
@@ -94,15 +96,21 @@ public class WeightServiceTest {
         // Test with the latest weight being equal to the goal weight, expecting a result of 0.0.
         ArrayList<Weight> weights = new ArrayList<>();
         LocalDateTime datetimelogged = LocalDateTime.now();
-        Weight weight = new Weight(100.0, -1, datetimelogged);
+        Weight weight = new Weight(0L,
+                100.0,
+                datetimelogged,
+                1);
         weights.add(weight);
 
         LocalDateTime datetimelogged2 = LocalDateTime.now().plusHours(1);
-        Weight weight2 = new Weight(90.0, -1, datetimelogged2);
+        Weight weight2 = new Weight(0L,
+                90.0,
+                datetimelogged2,
+                1);
         weights.add(weight2);
 
         // Order the weights by datetime logged
-        weights.sort((w1, w2) -> Long.compare(w2.getDateTimeLogged(), w1.getDateTimeLogged()));
+        weights.sort((w1, w2) -> Long.compare(w2.getDateTimeLogged().toEpochSecond(ZoneOffset.UTC), w1.getDateTimeLogged().toEpochSecond(ZoneOffset.UTC)));
 
 
         WeightService weightService = new WeightService();
@@ -148,7 +156,7 @@ public class WeightServiceTest {
 
         for (int i = 0; i <= 10; i++) {
 
-            Weight weight = new Weight(currentWeight, -1, datetimelogged);
+            Weight weight = new Weight(0L, currentWeight, datetimelogged, -1);
             weights.add(weight);
 
             datetimelogged = datetimelogged.plusDays(1);
@@ -177,11 +185,11 @@ public class WeightServiceTest {
 
     @Test
     public void calculateWeightLoss_with_an_empty_weights_list() {
-        // Test for IndexOutOfBoundsException as the code attempts to access elements from an empty list. [7, 8]
+        // Test for NoSuchElementException as the code attempts to access elements from an empty list. [7, 8]
         ArrayList<Weight> weights = new ArrayList<>();
         WeightService weightService = new WeightService();
 
-        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
             weightService.calculateWeightLoss(weights);
         });
     }
@@ -246,7 +254,7 @@ public class WeightServiceTest {
 
         for (int i = 0; i <= 10; i++) {
 
-            Weight weight = new Weight(currentWeight, -1, datetimelogged);
+            Weight weight = new Weight(0L, currentWeight, datetimelogged, -1);
             weights.add(weight);
 
             datetimelogged = datetimelogged.plusDays(1);
@@ -271,14 +279,14 @@ public class WeightServiceTest {
 
         for (int i = 0; i <= 10; i++) {
 
-            Weight weight = new Weight(currentWeight, -1, datetimelogged);
+            Weight weight = new Weight(0L, currentWeight, datetimelogged, -1);
             weights.add(weight);
 
             datetimelogged = datetimelogged.plusDays(1);
             currentWeight--;
         }
 
-        Weight weight = new Weight(100.0, -1, datetimelogged);
+        Weight weight = new Weight(0L, 100.0, datetimelogged, -1);
         weights.add(weight);
 
 
@@ -300,7 +308,7 @@ public class WeightServiceTest {
 
         for (int i = 0; i <= 8; i++) {
 
-            Weight weight = new Weight(currentWeight, -1, datetimelogged);
+            Weight weight = new Weight(0L, currentWeight, datetimelogged, -1);
             weights.add(weight);
 
             datetimelogged = datetimelogged.plusDays(1);
@@ -328,7 +336,7 @@ public class WeightServiceTest {
         for (int i = 0; i <10; i++) {
 
             System.out.println("Current Weight: " + currentWeight);
-            Weight weight = new Weight(currentWeight, -1, datetimelogged);
+            Weight weight = new Weight(0L, currentWeight, datetimelogged, -1);
             weights.add(weight);
 
             datetimelogged = datetimelogged.plusDays(1);

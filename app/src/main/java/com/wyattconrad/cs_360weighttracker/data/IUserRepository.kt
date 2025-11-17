@@ -36,7 +36,7 @@ interface IUserRepository {
     fun getUserFirstName(userId: Long): Flow<String?>
 
     // Check if the user exists in the database
-    fun userExists(username: String?): Flow<Boolean?>
+    fun userExists(username: String?): Flow<Boolean>
 
     // Get the user record for a given user ID.
     fun fetchUser(userId: Long): Flow<User?>

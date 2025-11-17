@@ -28,6 +28,9 @@ interface IGoalRepository {
     // Get the goal value for a user
     fun getGoalValue(userId: Long): Flow<Double?>
 
+    // Get the goal for a user
+    fun getGoalByUserId(userId: Long): Flow<Goal?>
+
     // Get the goal ID for a user
     fun getGoalId(userId: Long): Flow<Long?>
 
