@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.wyattconrad.cs_360weighttracker.AppDestination
 
@@ -49,7 +50,7 @@ fun AppTopBar(currentScreen: AppDestination, navController: NavHostController) {
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = Color(0xFF0075C4)
         ),
         actions = {
             // Settings button

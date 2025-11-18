@@ -56,6 +56,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.ui.graphics)
     val roomVersion = "2.8.3"
 
     implementation(libs.legacy.support.v4)
@@ -85,6 +86,9 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation("androidx.compose.material:material-icons-extended:1.6.7")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0-RC.2")
+
+    // Chart
+    implementation ("io.github.ehsannarmani:compose-charts:0.2.0")
 
     // For unit testing with JUnit
     testImplementation(libs.junit)

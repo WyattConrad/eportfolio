@@ -20,6 +20,11 @@ package com.wyattconrad.cs_360weighttracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -59,17 +64,28 @@ fun CS360WeightTrackerApp(){
     // Sets up the current destination variables for the app.
     val currentBackStack by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStack?.destination
+
     val currentScreen =
-        appTabRowScreens.find { it.route == currentDestination?.route } ?: Home
+        if (currentDestination?.route == Settings.route) {
+            Settings
+        } else {
+            appTabRowScreens.find { it.route == currentDestination?.route } ?: Home
+        }
 
     // Sets up the scaffold for the app.
     Scaffold(
         topBar = { AppTopBar(currentScreen, navController) },
         bottomBar = {
-            NavRow(
-                currentScreen = currentScreen,
-                navController = navController
-            )
+            AnimatedVisibility(
+                visible = currentDestination?.route != Settings.route,
+                enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
+                exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
+            ) {
+                NavRow(
+                    currentScreen = currentScreen,
+                    navController = navController
+                )
+            }
         }
     ) { innerPadding ->
         AppNavHost(

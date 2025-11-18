@@ -20,8 +20,10 @@ package com.wyattconrad.cs_360weighttracker.ui.components
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.wyattconrad.cs_360weighttracker.AppDestination
 import com.wyattconrad.cs_360weighttracker.appTabRowScreens
@@ -53,7 +55,12 @@ fun NavRow(
                         contentDescription = screen.route
                     )
                 },
-                label = { Text(screen.route) }
+                label = { Text(screen.route) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color.White,    // icon color when selected
+                    unselectedIconColor = Color.Gray,     // icon color when not selected
+                    indicatorColor = Color(0xFF0075C4)   // background highlight circle
+                )
             )
         }
     }

@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.wyattconrad.cs_360weighttracker.ui.components.GoalText
+import com.wyattconrad.cs_360weighttracker.ui.components.WeightLineChart
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightLogList
 
 /**
@@ -147,7 +148,13 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         // Lazy column for the recorded weights (WILL BE REPLACED)
-        WeightLogList(weights = weights, { }, {})
+        //WeightLogList(weights = weights, { }, {})
+        // Only show chart if there is data
+        if (weights.isNotEmpty()) {
+            WeightLineChart(weights = weights)
+        } else {
+            Text("No data yet", modifier = Modifier.padding(16.dp))
+        }
     }
 }
 

@@ -45,11 +45,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.ui.components.EditWeight
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightLogList
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -118,7 +118,8 @@ fun LogScreen(
                 onDeleteClick = { weight ->
                     weightToDelete = weight
                     showDeleteDialog = true
-                }
+                },
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
         }
 

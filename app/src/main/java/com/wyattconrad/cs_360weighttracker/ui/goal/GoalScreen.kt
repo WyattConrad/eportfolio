@@ -86,7 +86,7 @@ fun GoalScreen(
         Image(
             painter = painterResource(id = R.drawable.baseline_monitor_weight_24),
             contentDescription = stringResource(R.string.scale_image),
-            colorFilter = ColorFilter.tint(Color(0xFF3B76F6)),
+            colorFilter = ColorFilter.tint(Color(0xFF0075C4)),
             modifier = Modifier.size(150.dp)
         )
 

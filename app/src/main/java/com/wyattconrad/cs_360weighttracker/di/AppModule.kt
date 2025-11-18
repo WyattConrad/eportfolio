@@ -18,6 +18,7 @@
 package com.wyattconrad.cs_360weighttracker.di
 
 import android.content.Context
+import android.telephony.SmsManager
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -32,6 +33,7 @@ import com.wyattconrad.cs_360weighttracker.model.Goal
 import com.wyattconrad.cs_360weighttracker.model.User
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.LoginService
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -108,6 +110,18 @@ object AppModule {
     @Singleton
     fun provideLoginService(@ApplicationContext context: Context): LoginService {
         return LoginService(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSmsManager(@ApplicationContext context: Context): SmsManager {
+        return context.getSystemService(SmsManager::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserPreferenceService(@ApplicationContext context: Context): UserPreferencesService {
+        return UserPreferencesService(context)
     }
 
 }

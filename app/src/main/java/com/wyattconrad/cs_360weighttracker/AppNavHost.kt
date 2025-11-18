@@ -17,8 +17,16 @@
  */
 package com.wyattconrad.cs_360weighttracker
 
+import android.Manifest
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -28,6 +36,7 @@ import com.wyattconrad.cs_360weighttracker.ui.home.HomeScreen
 import com.wyattconrad.cs_360weighttracker.ui.log.LogScreen
 import com.wyattconrad.cs_360weighttracker.ui.login.LoginScreen
 import com.wyattconrad.cs_360weighttracker.ui.settings.SettingsScreen
+import com.wyattconrad.cs_360weighttracker.ui.settings.SettingsViewModel
 
 /**
  * AppNavHost is the navigation host for the app.
@@ -61,7 +70,34 @@ fun AppNavHost(
             LoginScreen()
         }
         composable(route = Settings.route) {
-            SettingsScreen()
+
+            val context = LocalContext.current
+            val viewModel: SettingsViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsState()
+
+            // Permission launcher
+            val smsPermissionLauncher =
+                rememberLauncherForActivityResult(
+                    ActivityResultContracts.RequestPermission()
+                ) { granted ->
+                    viewModel.onSmsPermissionResult(granted)
+                }
+
+            SettingsScreen(
+                uiState = uiState,
+                onSmsToggle = { enabled ->
+                    viewModel.toggleSms(enabled)
+
+                    if (enabled) {
+                        smsPermissionLauncher.launch(Manifest.permission.SEND_SMS)
+                    } else {
+                        viewModel.onSmsPermissionResult(false)
+                    }
+                },
+                onPhoneChange = viewModel::updatePhoneNumber,
+                onInAppToggle = viewModel::toggleInApp,
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }

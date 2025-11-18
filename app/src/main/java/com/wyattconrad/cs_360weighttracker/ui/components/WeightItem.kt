@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,7 +66,7 @@ fun WeightItem(
     // Card for the weight item
     Card(modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer)
+            containerColor = Color(0xFF0075C4))
     ) {
         // Row for the weight and actions
         Row(
@@ -79,7 +80,8 @@ fun WeightItem(
                 Text(
                     text = "${weight.weight} lbs",
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
                 // Date text
                 Text(
@@ -90,7 +92,8 @@ fun WeightItem(
                         amPmHour(); char(':'); minute()
                         amPmMarker("AM", "PM")
                     }),
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.White
                 )
             }
 
@@ -104,7 +107,7 @@ fun WeightItem(
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit Weight",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = Color.Green
                     )
                 }
                 // Delete button
