@@ -3,6 +3,7 @@ package com.wyattconrad.cs_360weighttracker.ui.components
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -25,34 +26,40 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun WeightLineChart(
-    weights: List<Weight>
+    weights: List<Weight>,
+    trendValues: List<Double>,
+    modifier: Modifier = Modifier
 ) {
 
     val now = LocalDateTime.now()
     val currentMonth = now.monthValue  // 1 = January, 12 = December
     val currentYear = now.year
 
-    val currentMonthWeights = weights.filter { weight ->
+    /*val recentWeights = weights.filter { weight ->
         val dt = weight.dateTimeLogged
         dt.monthValue == currentMonth && dt.year == currentYear
-    }
+    }*/
+    val maxPoints = 100
+    val recentWeights = weights
+        .take(maxPoints)
 
-    // Get the weight values and reverse them (since they are in descending order by date logged)
-    val weightValues = currentMonthWeights.reversed().map { it.weight }
+    // Get the weight values
+    val weightValues = recentWeights.map { it.weight }
 
 
     val dateFormatter = DateTimeFormatter.ofPattern("M/d") // day/month format
 
     // Create a reversed list of formatted day/month labels
-    val dateLabels: List<String> = currentMonthWeights
-        .reversed() // reverse to match reversed weightValues
+    val dateLabels: List<String> = recentWeights
         .map { weight ->
             weight.dateTimeLogged.format(dateFormatter)
         }
 
     // Create the Line Chart
     LineChart(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 22.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 0.dp, bottom = 16.dp, start = 8.dp, end = 8.dp ),
         data = remember {
             listOf(
                 Line(
@@ -66,10 +73,21 @@ fun WeightLineChart(
                     drawStyle = DrawStyle.Stroke(width = 2.dp),
                     dotProperties = DotProperties(
                         enabled = true,
-                        color = SolidColor(Color.White),
-                        strokeWidth = 1.dp,
+                        color = SolidColor(Color.Blue),
                         radius = 1.dp,
-                        strokeColor = SolidColor(Color.Black),
+                    )
+                ),
+                Line(
+                    label = "Trend",
+                    values = trendValues,
+                    color = SolidColor(Color.Green),
+                    strokeAnimationSpec = tween(2000, easing = EaseInOutCubic),
+                    gradientAnimationDelay = 1000,
+                    drawStyle = DrawStyle.Stroke(width = 2.dp),
+                    dotProperties = DotProperties(
+                        enabled = true,
+                        color = SolidColor(Color.Green),
+                        radius = 1.dp,
                     )
                 )
             )

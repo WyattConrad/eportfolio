@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface IWeightRepository {
 
-    // Get a Flow mutablelist of weights by User ID
+    // Get a Flow mutable list of weights by User ID
     fun getWeightByUserId(userid: Long): Flow<MutableList<Weight?>?>
 
     // Get a Flow List of weights by user ID

@@ -63,9 +63,4 @@ public class LoginService {
         editor.apply();
     }
 
-    // Method to check if a user is logged in
-    public boolean isLoggedIn() {
-        return getUserId() != -1;
-    }
-
 }

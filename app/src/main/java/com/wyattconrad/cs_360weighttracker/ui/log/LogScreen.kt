@@ -110,7 +110,7 @@ fun LogScreen(
         ) {
             // Weight Log List
             WeightLogList(
-                weights = weights,
+                weights = weights.reversed(),
                 onEditClick = { weight ->
                     weightToEdit = weight
                     showEditDialog = true

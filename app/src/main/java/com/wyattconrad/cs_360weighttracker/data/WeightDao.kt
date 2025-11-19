@@ -38,7 +38,7 @@ interface WeightDao {
     fun getWeightByUserId(userid: Long): Flow<MutableList<Weight?>?>
 
     // Get a Flow list of weights for a user
-    @Query("SELECT * FROM weights WHERE user_id = :userid ORDER BY date_time_logged DESC")
+    @Query("SELECT * FROM weights WHERE user_id = :userid ORDER BY date_time_logged")
     fun getWeightsByUserId(userid: Long): Flow<List<Weight>>
 
     /// Get a weight by its id

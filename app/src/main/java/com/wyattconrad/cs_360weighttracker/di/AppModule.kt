@@ -34,6 +34,7 @@ import com.wyattconrad.cs_360weighttracker.model.User
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.LoginService
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
+import com.wyattconrad.cs_360weighttracker.service.roundTo2
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +45,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Singleton
+import kotlin.math.round
 
 
 /**
@@ -153,10 +155,10 @@ suspend fun addStarterData(
     val userId = userDao.insertUser(user)
 
     // Generate weights from 160 → 141 (10 days)
-    val startDate = LocalDateTime.now().minusDays(20)
+    val startDate = LocalDateTime.now().minusDays(100)
 
     // Create the weights and add them to the database
-    (160 downTo 141).forEachIndexed { index, weightValue ->
+    /*(160 downTo 141).forEachIndexed { index, weightValue ->
         weightDao.insertWeight(
             Weight(
                 id = 0L,
@@ -165,7 +167,31 @@ suspend fun addStarterData(
                 userId = userId
             )
         )
+    }*/
+    val random = kotlin.random.Random
+    var weight = 200.0
+
+    for (i in 0 until 100) {
+        // base trend: slow decline
+        weight -= 0.25
+
+        // weekly wave (period ~ 7 days)
+        val wave = kotlin.math.sin(i / 7.0) * 7.8   // ±5.8 lbs
+
+        // small random daily noise
+        val noise = (random.nextDouble() * 0.4) - 1.8   // ±0.8 lbs
+
+        val dailyWeight = weight + wave + noise
+        weightDao.insertWeight(
+            Weight(
+                id = 0L,
+                weight = dailyWeight.roundTo2(),
+                dateTimeLogged = startDate.plusDays(i.toLong()),
+                userId = userId
+            )
+        )
     }
+
 
     // Add a sample goal
     goalDao.insertGoal(

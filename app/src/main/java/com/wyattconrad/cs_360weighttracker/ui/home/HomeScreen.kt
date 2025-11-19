@@ -25,7 +25,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -40,9 +43,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.wyattconrad.cs_360weighttracker.service.roundTo2
 import com.wyattconrad.cs_360weighttracker.ui.components.GoalText
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightLineChart
-import com.wyattconrad.cs_360weighttracker.ui.components.WeightLogList
+import com.wyattconrad.cs_360weighttracker.utilities.TrendAnalysis
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 /**
  * The main screen for the Weight Tracker app.
@@ -56,18 +63,32 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
 
+    // Establish a date formatter
+    val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+
     // Collect the weight and goal state from the view model
     val weights by viewModel.weights.collectAsState(initial = emptyList())
     val weightChange by viewModel.weightChange.collectAsState(initial = 0.0)
     val weightToGoal by viewModel.weightToGoal.collectAsState(initial = 0.0)
     val goalState by viewModel.goalState.collectAsState(initial = GoalState.Loading)
 
+    var slope : Double = 0.0
+    var intercept : Double = 0.0
+    var trendValues : List<Double> = emptyList()
+
+    if(weights.isNotEmpty()) {
+        val result = TrendAnalysis.calculateLinearRegression(weights)
+        slope = result.slope
+        intercept = result.intercept
+        trendValues = result.trendValues
+    }
 
     // Display the weights and goal state in a column
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         // Display the goal state
         when (val state = goalState) {
@@ -81,10 +102,20 @@ fun HomeScreen(
                 modifier = Modifier.padding(vertical = 16.dp)
             )
             // Goal set, display the weight
-            is GoalState.Set -> GoalText(
-                "Your Goal Weight Is: ${state.value} lbs",
-                modifier = Modifier.padding(vertical = 16.dp)
-            )
+            is GoalState.Set -> {
+                GoalText(
+                    "Your Goal Weight Is: ${state.value} lbs",
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+                val estimatedX = ((state.value - intercept) / slope)
+                val estimatedDate = Instant.ofEpochSecond(estimatedX.toLong())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+                GoalText(
+                    "Estimated Date To Reach Goal: ${estimatedDate.format(formatter)}",
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -101,14 +132,14 @@ fun HomeScreen(
                 // Display the weight change and weight to goal in a column
                 Column(
                     modifier = Modifier
-                        .background(Color.Black)
+                        .background(Color(0xFF0075C4))
                         .fillMaxWidth()
                         .padding(horizontal = 2.dp, vertical = 12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Text views in the box
                     Text("Weight Lost:", color = Color.White)
-                    Text(weightChange.toString(), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                    Text(weightChange?.roundTo2().toString(), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
                     Text("lbs.", color = Color.White)
                 }
             }
@@ -120,14 +151,14 @@ fun HomeScreen(
                 // Display the weight change and weight to goal in a column
                 Column(
                     modifier = Modifier
-                        .background(Color.Black)
+                        .background(Color(0xFF0075C4))
                         .fillMaxWidth()
                         .padding(horizontal = 2.dp, vertical = 12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Text views in the box
                     Text("Left To Goal:", color = Color.White)
-                    Text(weightToGoal.toString(), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                    Text(weightToGoal?.roundTo2().toString(), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
                     Text("lbs.", color = Color.White)
                 }
             }
@@ -147,11 +178,15 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Lazy column for the recorded weights (WILL BE REPLACED)
-        //WeightLogList(weights = weights, { }, {})
         // Only show chart if there is data
         if (weights.isNotEmpty()) {
-            WeightLineChart(weights = weights)
+
+            WeightLineChart (
+                weights = weights,
+                trendValues = trendValues,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 200.dp, max = 400.dp))
         } else {
             Text("No data yet", modifier = Modifier.padding(16.dp))
         }
