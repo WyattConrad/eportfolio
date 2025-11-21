@@ -118,6 +118,7 @@ public class RegistrationFragment extends Fragment {
                 return;
             }
 
+/*
             // Create new user
             User newUser = new User(firstName.getText().toString(),
                     lastName.getText().toString(),
@@ -126,9 +127,10 @@ public class RegistrationFragment extends Fragment {
 
             // Register user
             registrationViewModel.registerUserCoroutine(newUser);
+*/
 
             // Login user
-            registrationViewModel.login(username.getText().toString(), password.getText().toString()).observe(getViewLifecycleOwner(), user -> {
+            /*registrationViewModel.login(username.getText().toString(), password.getText().toString()).observe(getViewLifecycleOwner(), user -> {
                 if(user != null) {
 
                     long userId = user.getId();
@@ -169,6 +171,6 @@ public class RegistrationFragment extends Fragment {
                     binding.password.setError("Invalid username or password");
                 }
 
-        });
+            });*/
     }
 }

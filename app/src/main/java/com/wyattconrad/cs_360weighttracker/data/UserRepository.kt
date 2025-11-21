@@ -19,7 +19,9 @@ package com.wyattconrad.cs_360weighttracker.data
 
 
 import com.wyattconrad.cs_360weighttracker.model.User
+import com.wyattconrad.cs_360weighttracker.service.HashingService
 import kotlinx.coroutines.flow.Flow
+import java.io.IOException
 
 /**
  * Implementation of the user repository interface.
@@ -28,13 +30,23 @@ import kotlinx.coroutines.flow.Flow
  */
 class UserRepository(
     private val userDao: UserDao,
+    private val hashService: HashingService
 
 ) : IUserRepository {
 
     //Login method
-    override fun login(username: String?, password: String?): Flow<User?> {
-        return userDao.login(username, password)
+    override suspend fun login(username: String, password: String): LoginResult {
+        val user = userDao.getUserByUsernameOrEmail(username) ?: return LoginResult.UserNotFound
+
+        //val verified = hashService.verifyPassword(password, user.hashedPassword)
+
+        //if (!verified) {
+            //return LoginResult.InvalidCredentials
+        //}
+
+        return LoginResult.Success(user.id)
     }
+
 
     // Get User Id
     override fun getUserId(username: String?): Flow<Long?> {

@@ -17,6 +17,25 @@
  */
 package com.wyattconrad.cs_360weighttracker.service
 
-import kotlin.math.round
+import at.favre.lib.crypto.bcrypt.BCrypt
 
-fun Double.roundTo2(): Double = round(this * 100) / 100
+
+/**
+ * HashingService is a class that provides methods for hashing and verifying passwords.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
+class HashingService() {
+
+    // Hash the password
+    fun hashPassword(password: String): String {
+        return BCrypt.withDefaults().hashToString(12, password.toCharArray())
+    }
+
+    // Verify the password
+    fun verifyPassword(password: String, hash: String): Boolean {
+        return BCrypt.verifyer().verify(password.toCharArray(), hash).verified
+    }
+
+}

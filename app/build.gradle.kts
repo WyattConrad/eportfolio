@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
+    id("androidx.room")
 }
 
 android {
@@ -21,6 +22,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+
+
+    }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
     }
 
     buildTypes {
@@ -57,13 +64,18 @@ dependencies {
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.compose.runtime.livedata)
     val roomVersion = "2.8.3"
 
     implementation(libs.legacy.support.v4)
     implementation(libs.preference)
 
     implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
+
+    implementation("at.favre.lib:bcrypt:0.10.2")
+
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.2")
 
     //Dagger - Hilt
@@ -107,6 +119,8 @@ dependencies {
     // Optional: For Android-specific integration
     androidTestImplementation("io.mockk:mockk-android:${mockkVersion}")
     androidTestImplementation("io.mockk:mockk-agent:${mockkVersion}")
+    androidTestImplementation("androidx.room:room-testing:$roomVersion")
+    androidTestImplementation("com.google.truth:truth:1.1.5")
 
 }
 

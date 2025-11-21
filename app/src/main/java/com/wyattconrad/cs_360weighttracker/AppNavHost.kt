@@ -20,6 +20,7 @@ package com.wyattconrad.cs_360weighttracker
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,10 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.wyattconrad.cs_360weighttracker.ui.goal.GoalScreen
 import com.wyattconrad.cs_360weighttracker.ui.home.HomeScreen
 import com.wyattconrad.cs_360weighttracker.ui.log.LogScreen
@@ -49,6 +52,7 @@ import com.wyattconrad.cs_360weighttracker.ui.settings.SettingsViewModel
 @Composable
 fun AppNavHost(
     navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
     // Create a navigation graph for the app.
@@ -67,7 +71,10 @@ fun AppNavHost(
             LogScreen()
         }
         composable(route = Login.route) {
-            LoginScreen()
+            LoginScreen(
+                navController = navController,
+                snackbarHostState = snackbarHostState
+            )
         }
         composable(route = Settings.route) {
 

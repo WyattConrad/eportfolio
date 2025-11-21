@@ -24,29 +24,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.wyattconrad.cs_360weighttracker.R
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.wyattconrad.cs_360weighttracker.Home
+import com.wyattconrad.cs_360weighttracker.Login
 
 /**
  * Composable function representing the login screen of the application.
@@ -55,79 +50,79 @@ import com.wyattconrad.cs_360weighttracker.R
  * @version 1.0
  */
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    navController: NavController,
+    snackbarHostState: SnackbarHostState,
+    loginViewModel: LoginViewModel = hiltViewModel()
+) {
+    val uiState by loginViewModel.uiState.collectAsState()
 
-    // State variables for username and password
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    // When login succeeds, navigate away
+    LaunchedEffect(uiState.isLoggedIn) {
+        if (uiState.isLoggedIn) {
+            snackbarHostState.showSnackbar("Login successful!")
+            navController.navigate(Home.route) {
+                popUpTo(Login.route) { inclusive = true }
+            }
+        }
+    }
 
-    // Column layout for the login screen
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        // Header Text
         Text(
-            text = stringResource(R.string.login),
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            text = "Login",
+            style = MaterialTheme.typography.headlineMedium
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Username TextField
-        TextField(
-            value = username,
-            onValueChange = { username = it },
-            placeholder = { Text(text = stringResource(R.string.username)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(0.8f),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text)
+        OutlinedTextField(
+            value = uiState.email,
+            onValueChange = { loginViewModel.onEmailChanged(it) },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Password TextField
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            placeholder = { Text(text = stringResource(R.string.password)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(0.8f),
+        OutlinedTextField(
+            value = uiState.password,
+            onValueChange = { loginViewModel.onPasswordChanged(it) },
+            label = { Text("Password") },
+            modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password)
+            singleLine = true
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // Login Button
         Button(
-            onClick = { /* TODO: Handle login */ },
-            modifier = Modifier
-                .width(150.dp)
-                .height(50.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00A86B)) // green_blue
+            onClick = { loginViewModel.login(uiState.email, uiState.password) },
+            enabled = !uiState.isLoading,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(R.string.login))
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Text("Sign In")
+            }
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // Register Link
-        TextButton(
-            onClick = { /* TODO: Navigate to registration */ },
-            modifier = Modifier
-                .wrapContentWidth()
-        ) {
+        uiState.errorMessage?.let {
             Text(
-                text = stringResource(R.string.register_a_new_account),
-                fontSize = 18.sp,
-                color = Color(0xFF3B76F6) // French Blue
+                text = it,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = 8.dp)
             )
         }
     }

@@ -25,12 +25,16 @@ import androidx.room.PrimaryKey
 /**
  * The user entity
  * @author Wyatt Conrad
- * @version 1.0
+ * @version 3.0
  */
 // Set the username as unique
 @Entity(
     tableName = "users",
-    indices = [Index(value = arrayOf("username"), unique = true)])
+    indices = [
+        Index(value = arrayOf("username"), unique = true),
+        Index(value = arrayOf("email"), unique = true)
+    ]
+)
 data class User (
 
     // Create the id as the primary key
@@ -45,25 +49,36 @@ data class User (
     @ColumnInfo(name = "last_name")
     var lastName: String?,
 
+    @ColumnInfo(name = "email", defaultValue = "")
+    var email: String,
+
     @ColumnInfo(name = "username")
     var username: String,
 
-    @ColumnInfo(name = "password")
-    var password: String
+    @ColumnInfo(name = "hashed_password", defaultValue = "")
+    val hashedPassword: String
 
 ) {
     /**
      * Constructor for the user entity
      * @param firstName The first name of the user
      * @param lastName The last name of the user
+     * @param email The email of the user
      * @param username The username of the user
-     * @param password The password of the user
+     * @param hashedPassword The hashed password of the user
      */
-    constructor(firstName: String, lastName: String?, username: String, password: String) : this (
+    constructor(
+        firstName: String,
+        lastName: String?,
+        email: String,
+        username: String,
+        hashedPassword: String
+    ) : this (
         id = 0L,
         firstName = firstName,
         lastName = lastName,
+        email = email,
         username = username,
-        password = password
+        hashedPassword = hashedPassword
     )
 }

@@ -35,6 +35,7 @@ import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.LoginService
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import com.wyattconrad.cs_360weighttracker.service.roundTo2
+import com.wyattconrad.cs_360weighttracker.service.HashingService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,7 +46,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Singleton
-import kotlin.math.round
 
 
 /**
@@ -63,34 +63,39 @@ object AppModule {
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
-        // Create the database
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
             "weight_database.db"
-            // Add a callback to add starter data to the database
-        ).addCallback(object : RoomDatabase.Callback() {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
-                // Launch a coroutine to add starter data to the database
-                CoroutineScope(Dispatchers.IO).launch {
-                    val database = provideAppDatabase(context)
-                    // Add starter data to the database
-                    addStarterData(
-                        database.userDao,
-                        database.weightDao,
-                        database.goalDao
-                    )
+        )
+            .addCallback(object : RoomDatabase.Callback() {
+
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+
+                    // Add seed data to the database
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val database =
+                            Room.databaseBuilder(context, AppDatabase::class.java, "weight_database.db")
+                                .build()
+                        addStarterData(
+                            database.userDao,
+                            database.weightDao,
+                            database.goalDao
+                        )
+                    }
                 }
-            }
-        }).build()
+            })
+            .addMigrations(AppDatabase.MIGRATION_2_3)
+            .build()
     }
+
 
     // Singleton instances of User Repository
     @Provides
     @Singleton
     fun provideUserRepository(db: AppDatabase): UserRepository {
-        return UserRepository(db.userDao)
+        return UserRepository(db.userDao, HashingService())
     }
 
     // Singleton instances of Goal Repository
@@ -126,7 +131,14 @@ object AppModule {
         return UserPreferencesService(context)
     }
 
+    @Provides
+    @Singleton
+    fun provideHashingService(): HashingService {
+        return HashingService()
+    }
+
 }
+
 
 /**
  * Add starter data to the database
@@ -141,14 +153,16 @@ object AppModule {
 suspend fun addStarterData(
     userDao: UserDao,
     weightDao: WeightDao,
-    goalDao: GoalDao
+    goalDao: GoalDao,
+    hashPassword: (String) -> String = { password -> HashingService().hashPassword(password) }
 ) {
     // Create sample user
     val user = User(
         firstName = "Guest",
         lastName = "User",
+        email = "guest.user@email.com",
         username = "guest",
-        password = "password@123"
+        hashedPassword = hashPassword("password@123")
     )
 
     // Insert user into database and get the user ID
@@ -158,16 +172,6 @@ suspend fun addStarterData(
     val startDate = LocalDateTime.now().minusDays(100)
 
     // Create the weights and add them to the database
-    /*(160 downTo 141).forEachIndexed { index, weightValue ->
-        weightDao.insertWeight(
-            Weight(
-                id = 0L,
-                weight = weightValue.toDouble(),
-                dateTimeLogged = startDate.plusDays(index.toLong()),
-                userId = userId
-            )
-        )
-    }*/
     val random = kotlin.random.Random
     var weight = 200.0
 
@@ -176,10 +180,10 @@ suspend fun addStarterData(
         weight -= 0.25
 
         // weekly wave (period ~ 7 days)
-        val wave = kotlin.math.sin(i / 7.0) * 7.8   // ±5.8 lbs
+        val wave = kotlin.math.sin(i / 7.0) * 6.8   // ±6.8 lbs
 
         // small random daily noise
-        val noise = (random.nextDouble() * 0.4) - 1.8   // ±0.8 lbs
+        val noise = (random.nextDouble() * 0.4) - 1.2   // ±0.8 lbs
 
         val dailyWeight = weight + wave + noise
         weightDao.insertWeight(

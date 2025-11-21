@@ -33,9 +33,18 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
 
-    // Get a user by their username
-    @Query("SELECT * FROM users WHERE username = :username")
-    fun getUserByUsername(username: String?): Flow<User?>
+    // Get a user by their username case insensitive
+    @Query("SELECT * FROM users WHERE LOWER(username) = LOWER(:username) LIMIT 1")
+    fun getUserByUsername(username: String?): User?
+
+    // Get a user by username or email case insensitive
+    @Query("""
+    SELECT * FROM users 
+    WHERE LOWER(username) = LOWER(:input) 
+
+    LIMIT 1
+""")
+    suspend fun getUserByUsernameOrEmail(input: String): User?
 
     // Get all users
     @get:Query("SELECT * FROM users")
@@ -48,10 +57,6 @@ interface UserDao {
     // Check if a user exists by their username
     @Query("SELECT EXISTS (SELECT 1 FROM users WHERE username = :username)")
     fun userExists(username: String?): Flow<Boolean>
-
-    // Login a user by their username and password
-    @Query("SELECT * FROM users WHERE username = :username AND password = :password LIMIT 1")
-    fun login(username: String?, password: String?): Flow<User?>
 
     // Get the id of a user by their username
     @Query("SELECT id FROM users WHERE username = :username")

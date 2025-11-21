@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.wyattconrad.cs_360weighttracker.data.LoginResult
 import com.wyattconrad.cs_360weighttracker.data.UserRepository
 import com.wyattconrad.cs_360weighttracker.data.UserRepository.UsernameCallback
 import com.wyattconrad.cs_360weighttracker.model.User
@@ -51,8 +52,8 @@ class RegistrationViewModel @Inject constructor(
     }
 
     // Login user
-    fun login(username: String?, password: String?): LiveData<User?> {
-        return userRepository.login(username, password).asLiveData()
+    suspend fun login(username: String, password: String): LoginResult {
+        return userRepository.login(username, password)
     }
 
     // Check if username already exists

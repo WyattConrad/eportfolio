@@ -21,8 +21,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.wyattconrad.cs_360weighttracker.data.LoginResult
 import com.wyattconrad.cs_360weighttracker.data.UserRepository
 import com.wyattconrad.cs_360weighttracker.model.User
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -32,22 +39,37 @@ import javax.inject.Inject
  * @author Wyatt Conrad
  * @version 1.0
  */
+@HiltViewModel
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    // Get the text for the login button
-    fun getText() : LiveData<String> {
-        return MutableLiveData<String>("Please Login")
+    private val _uiState = MutableStateFlow(LoginUiState())
+    val uiState = _uiState.asStateFlow()
+
+    private val _loginState = MutableStateFlow<LoginResult?>(null)
+    val loginState = _loginState.asStateFlow()
+
+    fun onEmailChanged(value: String) {
+        _uiState.update { it.copy(email = value) }
     }
 
-    // Login a user
-    fun login(username: String?, password: String?): LiveData<User?> {
-        return userRepository.login(username, password).asLiveData()
+    fun onPasswordChanged(value: String) {
+        _uiState.update { it.copy(password = value) }
     }
 
-    // Get the user id for a username
-    fun getUserId(username: String?): LiveData<Long?> {
-        return userRepository.getUserId(username).asLiveData()
+    fun login(username: String, password: String) {
+        viewModelScope.launch {
+            val result = userRepository.login(username, password)
+            _loginState.value = result
+        }
     }
 }
+
+data class LoginUiState(
+    val email: String = "",
+    val password: String = "",
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val isLoggedIn: Boolean = false
+)

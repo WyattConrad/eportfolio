@@ -20,6 +20,7 @@ package com.wyattconrad.cs_360weighttracker.data
 import com.wyattconrad.cs_360weighttracker.data.UserRepository.UsernameCallback
 import com.wyattconrad.cs_360weighttracker.model.User
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Sets up the interface for the UserRepository.
@@ -27,7 +28,7 @@ import kotlinx.coroutines.flow.Flow
 interface IUserRepository {
 
     // Logs a user into the application.
-    fun login(username: String?, password: String?): Flow<User?>
+    suspend fun login(username: String, password: String): LoginResult
 
     // Get the User ID for a given username.
     fun getUserId(username: String?): Flow<Long?>

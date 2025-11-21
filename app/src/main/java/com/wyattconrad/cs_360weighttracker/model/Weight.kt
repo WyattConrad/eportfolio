@@ -20,6 +20,7 @@ package com.wyattconrad.cs_360weighttracker.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
@@ -31,7 +32,9 @@ import java.time.LocalDateTime
 // Set a foreign key to the user table
 @Entity(
     tableName = "weights",
-    foreignKeys = [ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["user_id"], onDelete = ForeignKey.CASCADE)])
+    foreignKeys = [ForeignKey(entity = User::class, parentColumns = ["id"], childColumns = ["user_id"], onDelete = ForeignKey.CASCADE)],
+    indices = [Index(value = ["user_id"])]
+)
 data class Weight (
 
     // Create the id as the primary key
