@@ -33,11 +33,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.wyattconrad.cs_360weighttracker.ui.components.AppTopBar
 import com.wyattconrad.cs_360weighttracker.ui.components.NavRow
 import com.wyattconrad.cs_360weighttracker.ui.theme.AppTheme
+import com.wyattconrad.cs_360weighttracker.viewmodels.SessionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -70,6 +72,8 @@ fun CS360WeightTrackerApp(){
 
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val sessionViewModel: SessionViewModel = hiltViewModel()
+
     val currentScreen =
         if (currentDestination?.route == Settings.route) {
             Settings
@@ -79,16 +83,17 @@ fun CS360WeightTrackerApp(){
 
     // Sets up the scaffold for the app.
     Scaffold(
-        topBar = { AppTopBar(currentScreen, navController) },
+        topBar = { AppTopBar(currentScreen, navController, sessionViewModel) },
         bottomBar = {
             AnimatedVisibility(
-                visible = currentDestination?.route !in listOf(Settings.route, Login.route),
+                visible = true,
                 enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
                 exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
             ) {
                 NavRow(
                     currentScreen = currentScreen,
-                    navController = navController
+                    navController = navController,
+                    sessionViewModel = sessionViewModel
                 )
             }
         },

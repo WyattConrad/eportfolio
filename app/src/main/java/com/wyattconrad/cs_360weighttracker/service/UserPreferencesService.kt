@@ -34,6 +34,36 @@ class UserPreferencesService
  */(// Define Variables
     private val context: Context
 ) {
+
+    // Global SharedPreferences (Not specific to a user)
+    private val globalPrefs: SharedPreferences =
+        context.getSharedPreferences("global_prefs", Context.MODE_PRIVATE)
+
+    // GLOBAL Getter and Setters
+    fun getGlobalString(key: String, defaultValue: String? = null): String? {
+        return globalPrefs.getString(key, defaultValue)
+    }
+
+    fun putGlobalString(key: String, value: String?) {
+        globalPrefs.edit { putString(key, value) }
+    }
+
+    fun putGlobalLong(key: String, value: Long) {
+        globalPrefs.edit { putLong(key, value) }
+    }
+
+    fun getGlobalLong(key: String, defaultValue: Long = -1L): Long {
+        return globalPrefs.getLong(key, defaultValue)
+    }
+
+    fun getGlobalBoolean(key: String, defaultValue: Boolean = false): Boolean {
+        return globalPrefs.getBoolean(key, defaultValue)
+    }
+
+    fun putGlobalBoolean(key: String, value: Boolean) {
+        globalPrefs.edit { putBoolean(key, value) }
+    }
+
     //Method to get the SharedPreferences file for each user id
     private fun getPreferences(userId: Long): String {
         return "user_prefs_$userId"
@@ -71,10 +101,6 @@ class UserPreferencesService
         getUserPreferences(userId)!!.edit { putString(key, value) }
     }
 
-    fun putBoolean(userId: Long, key: String?, value: Boolean) {
-        getUserPreferences(userId)!!.edit { putBoolean(key, value) }
-    }
-
     //Method to retrieve boolean data for a specific user
     fun getBoolean(userId: Long, key: String?, defaultValue: Boolean): Boolean {
         return getUserPreferences(userId)!!.getBoolean(key, defaultValue)
@@ -85,10 +111,5 @@ class UserPreferencesService
         getUserPreferences(userId)!!.edit {
             clear()
         }
-    }
-
-    //Method to delete the user preferences file.
-    fun deleteUserPreferences(userId: Long): Boolean {
-        return context.deleteSharedPreferences(getPreferences(userId))
     }
 }

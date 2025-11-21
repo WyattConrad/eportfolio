@@ -36,6 +36,7 @@ import com.wyattconrad.cs_360weighttracker.service.LoginService
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import com.wyattconrad.cs_360weighttracker.service.roundTo2
 import com.wyattconrad.cs_360weighttracker.service.HashingService
+import com.wyattconrad.cs_360weighttracker.viewmodels.SessionViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -183,8 +184,9 @@ suspend fun addStarterData(
         val wave = kotlin.math.sin(i / 7.0) * 6.8   // ±6.8 lbs
 
         // small random daily noise
-        val noise = (random.nextDouble() * 0.4) - 1.2   // ±0.8 lbs
+        val noise = (random.nextDouble() * 0.4) - 1.2   // ±1.2 lbs
 
+        // Calculate the daily weight
         val dailyWeight = weight + wave + noise
         weightDao.insertWeight(
             Weight(

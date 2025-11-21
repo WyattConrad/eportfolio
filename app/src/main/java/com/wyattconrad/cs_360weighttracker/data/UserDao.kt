@@ -40,8 +40,8 @@ interface UserDao {
     // Get a user by username or email case insensitive
     @Query("""
     SELECT * FROM users 
-    WHERE LOWER(username) = LOWER(:input) 
-
+    WHERE LOWER(username) = LOWER(:input)
+    OR LOWER(email) = LOWER(:input)
     LIMIT 1
 """)
     suspend fun getUserByUsernameOrEmail(input: String): User?

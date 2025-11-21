@@ -17,17 +17,26 @@
  */
 package com.wyattconrad.cs_360weighttracker.ui.components
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.wyattconrad.cs_360weighttracker.AppDestination
+import com.wyattconrad.cs_360weighttracker.Login
+import com.wyattconrad.cs_360weighttracker.Logout
 import com.wyattconrad.cs_360weighttracker.appTabRowScreens
 import com.wyattconrad.cs_360weighttracker.navigateSingleTopTo
+import com.wyattconrad.cs_360weighttracker.viewmodels.SessionViewModel
 
 /**
  * Navigation Row Composable for the app
@@ -40,8 +49,22 @@ import com.wyattconrad.cs_360weighttracker.navigateSingleTopTo
 @Composable
 fun NavRow(
     currentScreen: AppDestination,
-    navController: NavHostController
+    navController: NavHostController,
+    sessionViewModel: SessionViewModel
 ) {
+
+    val loggedInUserId = sessionViewModel.loggedInUserId.collectAsState()
+
+    val isLoggedIn = loggedInUserId.value != -1L
+
+
+    val navItems =
+        if (isLoggedIn) {
+            appTabRowScreens + Logout    // append Logout
+        } else {
+            appTabRowScreens + Login     // append Login
+        }
+
     // The navigation bar to be displayed
     NavigationBar {
         // Loop through the navigation items and add them to the navigation bar
@@ -63,5 +86,7 @@ fun NavRow(
                 )
             )
         }
+
+
     }
 }

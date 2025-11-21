@@ -38,13 +38,13 @@ class UserRepository(
     override suspend fun login(username: String, password: String): LoginResult {
         val user = userDao.getUserByUsernameOrEmail(username) ?: return LoginResult.UserNotFound
 
-        //val verified = hashService.verifyPassword(password, user.hashedPassword)
+        val verified = hashService.verifyPassword(password, user.hashedPassword)
 
-        //if (!verified) {
-            //return LoginResult.InvalidCredentials
-        //}
+        if (!verified) {
+            return LoginResult.InvalidCredentials
+        }
 
-        return LoginResult.Success(user.id)
+        return LoginResult.Success(user.id, user.firstName)
     }
 
 

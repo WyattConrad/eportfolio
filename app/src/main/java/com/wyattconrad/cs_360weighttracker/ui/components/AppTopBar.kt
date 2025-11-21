@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.wyattconrad.cs_360weighttracker.AppDestination
+import com.wyattconrad.cs_360weighttracker.viewmodels.SessionViewModel
 
 /**
  * Top Bar Composable for the app.
@@ -40,12 +41,23 @@ import com.wyattconrad.cs_360weighttracker.AppDestination
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar(currentScreen: AppDestination, navController: NavHostController) {
+fun AppTopBar(
+    currentScreen: AppDestination,
+    navController: NavHostController,
+    sessionViewModel: SessionViewModel
+) {
+
+    val userFirstName = sessionViewModel.userFirstName
+
     TopAppBar(
         title = {
             // Display the title for the current screen
             Text(
-                text = currentScreen.title,
+                text = if (userFirstName != null) {
+                    "Welcome, $userFirstName"
+                } else {
+                    currentScreen.title
+                },
                 color = MaterialTheme.colorScheme.onPrimary
             )
         },

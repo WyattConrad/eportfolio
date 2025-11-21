@@ -35,9 +35,9 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun loadPrefs() {
-        val smsEnabled = prefs.getBoolean(userId, "sms_enabled", false)
-        val inApp = prefs.getBoolean(userId, "in_app_messaging", false)
-        val number = prefs.getString(userId, "sms_number", "") ?: ""
+        val smsEnabled = prefs.getGlobalBoolean("sms_enabled", false)
+        val inApp = prefs.getGlobalBoolean("in_app_messaging", false)
+        val number = prefs.getGlobalString( "sms_number", "") ?: ""
 
         _uiState.value = SettingsUiState(
             smsEnabled = smsEnabled,
@@ -61,7 +61,7 @@ class SettingsViewModel @Inject constructor(
     // Called AFTER permission result arrives
     fun onSmsPermissionResult(granted: Boolean) {
         if (granted) {
-            prefs.saveUserData(userId, "sms_enabled", true)
+            prefs.putGlobalBoolean("sms_enabled", true)
 
             _uiState.update {
                 it.copy(
@@ -71,7 +71,7 @@ class SettingsViewModel @Inject constructor(
                 )
             }
         } else {
-            prefs.saveUserData(userId, "sms_enabled", false)
+            prefs.putGlobalBoolean("sms_enabled", false)
 
             _uiState.update {
                 it.copy(
@@ -84,7 +84,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleInApp(enabled: Boolean) {
-        prefs.saveUserData(userId, "in_app_messaging", enabled)
+        prefs.putGlobalBoolean("in_app_messaging", enabled)
 
         _uiState.update {
             it.copy(inAppEnabled = enabled)
@@ -92,7 +92,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun updatePhoneNumber(newNumber: String) {
-        prefs.saveUserData(userId, "sms_number", newNumber)
+        prefs.putGlobalString("sms_number", newNumber)
 
         _uiState.update { it.copy(phoneNumber = newNumber) }
 

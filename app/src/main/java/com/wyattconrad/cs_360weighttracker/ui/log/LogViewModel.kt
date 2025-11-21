@@ -17,7 +17,6 @@
  */
 package com.wyattconrad.cs_360weighttracker.ui.log
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wyattconrad.cs_360weighttracker.data.WeightRepository
@@ -30,7 +29,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 /**
  * ViewModel for the LogFragment.
  * @param weightRepository Repository for managing weights.
@@ -40,7 +38,7 @@ import javax.inject.Inject
  * @version 1.0
  */
 @HiltViewModel
-class LogViewModel @Inject constructor(// Inject your repository, which in turn uses your DAO
+class LogViewModel @Inject constructor(
     private val weightRepository: WeightRepository,
     loginService: LoginService
 ) : ViewModel() {
@@ -79,12 +77,4 @@ class LogViewModel @Inject constructor(// Inject your repository, which in turn 
         }
     }
 
-}
-
-// Sealed class to define the events that can be sent from the UI
-sealed class LogEvent {
-    data class DeleteWeight(val weight: Weight) : LogEvent()
-    data class EditWeight(val weight: Weight) : LogEvent()
-    data class UpdateWeight(val newWeightValue: String) : LogEvent()
-    object DismissEditDialog : LogEvent()
 }

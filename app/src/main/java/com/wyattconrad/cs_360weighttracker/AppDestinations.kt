@@ -18,6 +18,7 @@
 package com.wyattconrad.cs_360weighttracker
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -60,6 +61,12 @@ data object Login : AppDestination {
     override val icon = Icons.Filled.Person
     override val route: String = "login"
     override val title: String = "Login"
+}
+
+data object Logout : AppDestination {
+    override val icon = Icons.AutoMirrored.Filled.ExitToApp
+    override val route: String = "logout"
+    override val title: String = "Logout"
 }
 
 data object Settings : AppDestination {

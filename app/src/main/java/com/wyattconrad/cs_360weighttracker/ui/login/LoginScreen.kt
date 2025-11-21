@@ -42,6 +42,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wyattconrad.cs_360weighttracker.Home
 import com.wyattconrad.cs_360weighttracker.Login
+import com.wyattconrad.cs_360weighttracker.viewmodels.SessionViewModel
 
 /**
  * Composable function representing the login screen of the application.
@@ -56,10 +57,12 @@ fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by loginViewModel.uiState.collectAsState()
+    val sessionViewModel: SessionViewModel = hiltViewModel()
 
-    // When login succeeds, navigate away
     LaunchedEffect(uiState.isLoggedIn) {
         if (uiState.isLoggedIn) {
+
+            sessionViewModel.setUserSession(uiState.userId, uiState.firstName)
             snackbarHostState.showSnackbar("Login successful!")
             navController.navigate(Home.route) {
                 popUpTo(Login.route) { inclusive = true }
