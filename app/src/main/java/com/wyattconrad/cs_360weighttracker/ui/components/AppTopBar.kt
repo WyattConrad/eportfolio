@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import com.wyattconrad.cs_360weighttracker.AppDestination
@@ -47,14 +48,14 @@ fun AppTopBar(
     sessionViewModel: SessionViewModel
 ) {
 
-    val userFirstName = sessionViewModel.userFirstName
+    val userFirstName = sessionViewModel.userFirstName.collectAsState()
 
     TopAppBar(
         title = {
             // Display the title for the current screen
             Text(
-                text = if (userFirstName != null) {
-                    "Welcome, $userFirstName"
+                text = if (currentScreen.route == "home") {
+                    "Welcome, ${userFirstName.value}"
                 } else {
                     currentScreen.title
                 },

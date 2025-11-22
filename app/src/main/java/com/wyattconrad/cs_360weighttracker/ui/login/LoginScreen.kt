@@ -17,6 +17,8 @@
  */
 package com.wyattconrad.cs_360weighttracker.ui.login
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +28,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -35,13 +38,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.wyattconrad.cs_360weighttracker.Home
 import com.wyattconrad.cs_360weighttracker.Login
+import com.wyattconrad.cs_360weighttracker.R
 import com.wyattconrad.cs_360weighttracker.viewmodels.SessionViewModel
 
 /**
@@ -74,8 +84,16 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.baseline_monitor_weight_24),
+            contentDescription = stringResource(R.string.scale_image),
+            colorFilter = ColorFilter.tint(Color(0xFF0075C4)),
+            modifier = Modifier.size(150.dp)
+        )
+
         Text(
             text = "Login",
             style = MaterialTheme.typography.headlineMedium
@@ -106,6 +124,9 @@ fun LoginScreen(
 
         Button(
             onClick = { loginViewModel.login(uiState.email, uiState.password) },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF0075C4),
+            ),
             enabled = !uiState.isLoading,
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -128,5 +149,14 @@ fun LoginScreen(
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
+        Text(
+            text = "Register a new account",
+            color = MaterialTheme.colorScheme.primary,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                textDecoration = TextDecoration.Underline // Apply underline
+            ),
+            modifier = Modifier
+                .clickable(onClick = { navController.navigate("register") })
+        )
     }
 }

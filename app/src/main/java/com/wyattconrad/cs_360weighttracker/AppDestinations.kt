@@ -69,6 +69,12 @@ data object Logout : AppDestination {
     override val title: String = "Logout"
 }
 
+data object Register : AppDestination {
+    override val icon = Icons.Filled.Person
+    override val route: String = "register"
+    override val title: String = "Register"
+}
+
 data object Settings : AppDestination {
     override val icon = Icons.Filled.Settings
     override val route: String = "settings"
@@ -76,4 +82,5 @@ data object Settings : AppDestination {
 }
 
 // List of destinations that go on the bottom navigation bar
-val appTabRowScreens = listOf(Home, Goal, Log, Login)
+val appTabRowScreens = listOf(Home, Goal, Log)
+val appAllScreens = listOf(Home, Goal, Log, Login, Logout, Register, Settings)

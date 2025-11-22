@@ -15,9 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wyattconrad.cs_360weighttracker.ui.logout;
+package com.wyattconrad.cs_360weighttracker.ui.logout
 
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
+import com.wyattconrad.cs_360weighttracker.viewmodels.SessionViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 /**
  * LogoutViewModel for the Logout Screen
@@ -25,6 +29,14 @@ import androidx.lifecycle.ViewModel;
  * @author Wyatt Conrad
  * @version 1.0
  */
-public class LogoutViewModel extends ViewModel {
-    // TODO: Implement the ViewModel
+@HiltViewModel
+class LogoutViewModel @Inject constructor(
+    private val prefs: UserPreferencesService
+) : ViewModel() {
+
+    // Clear the user session
+    fun logout() {
+        prefs.putGlobalLong("userId", -1L)
+    }
+
 }

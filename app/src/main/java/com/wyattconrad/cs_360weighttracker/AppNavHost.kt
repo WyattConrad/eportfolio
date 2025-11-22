@@ -25,19 +25,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.wyattconrad.cs_360weighttracker.ui.goal.GoalScreen
 import com.wyattconrad.cs_360weighttracker.ui.home.HomeScreen
 import com.wyattconrad.cs_360weighttracker.ui.log.LogScreen
 import com.wyattconrad.cs_360weighttracker.ui.login.LoginScreen
+import com.wyattconrad.cs_360weighttracker.ui.logout.LogoutScreen
 import com.wyattconrad.cs_360weighttracker.ui.settings.SettingsScreen
 import com.wyattconrad.cs_360weighttracker.ui.settings.SettingsViewModel
 
@@ -76,9 +73,13 @@ fun AppNavHost(
                 snackbarHostState = snackbarHostState
             )
         }
+        composable(route = Logout.route) {
+            LogoutScreen(
+                navController = navController
+            )
+        }
         composable(route = Settings.route) {
 
-            val context = LocalContext.current
             val viewModel: SettingsViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
 

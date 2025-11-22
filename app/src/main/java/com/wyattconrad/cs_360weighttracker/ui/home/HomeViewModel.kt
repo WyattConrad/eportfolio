@@ -21,7 +21,6 @@ import androidx.lifecycle.ViewModel
 import com.wyattconrad.cs_360weighttracker.data.GoalRepository
 import com.wyattconrad.cs_360weighttracker.data.UserRepository
 import com.wyattconrad.cs_360weighttracker.data.WeightRepository
-import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.LoginService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -67,16 +66,6 @@ class HomeViewModel @Inject constructor(
 
     // Observe the Flow for the weight to goal from the database
     val weightToGoal = weightRepository.getWeightToGoalByUserId(userId)
-
-    // Update the weight in the database
-    suspend fun updateWeight(weight: Weight) {
-        weightRepository.updateWeight(weight)
-    }
-
-    // Delete the weight from the database
-    suspend fun deleteWeight(weight: Weight) {
-        weightRepository.deleteWeight(weight)
-    }
 
 }
 

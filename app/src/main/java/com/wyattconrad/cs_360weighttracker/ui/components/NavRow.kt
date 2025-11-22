@@ -19,7 +19,6 @@ package com.wyattconrad.cs_360weighttracker.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -28,9 +27,10 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.wyattconrad.cs_360weighttracker.AppDestination
 import com.wyattconrad.cs_360weighttracker.Login
 import com.wyattconrad.cs_360weighttracker.Logout
@@ -57,20 +57,23 @@ fun NavRow(
 
     val isLoggedIn = loggedInUserId.value != -1L
 
+    // Get the current back stack entry (which is nullable)
+    val currentNavBackStackEntry by navController.currentBackStackEntryAsState()
 
-    val navItems =
-        if (isLoggedIn) {
-            appTabRowScreens + Logout    // append Logout
-        } else {
-            appTabRowScreens + Login     // append Login
-        }
+    // Dynamic Login/Logout Item
+    val authItemLabel = if (isLoggedIn) "Logout" else "Login"
+    val authIcon = if (isLoggedIn) Icons.AutoMirrored.Filled.ExitToApp else Icons.Filled.Person
+    val currentRoute = currentNavBackStackEntry?.destination?.route
+
+    // Check if the user is logged in and set routing accordingly
+    val isAuthItemSelected = currentRoute == Login.route || currentRoute == Logout.route
 
     // The navigation bar to be displayed
     NavigationBar {
         // Loop through the navigation items and add them to the navigation bar
         appTabRowScreens.forEach { screen ->
             NavigationBarItem(
-                selected = screen.route == currentScreen.route,
+                selected = !isAuthItemSelected && screen.route == currentScreen.route,
                 onClick = { navController.navigateSingleTopTo(screen.route) },
                 icon = {
                     Icon(
@@ -87,6 +90,27 @@ fun NavRow(
             )
         }
 
+        NavigationBarItem(
+            selected = isAuthItemSelected,
+            onClick = {
+                if (isLoggedIn) {
+                    sessionViewModel.clearSession()
+                    // Navigate to Home or Login screen after logout
+                    navController.navigateSingleTopTo(Logout.route)
+                } else {
+                    navController.navigateSingleTopTo(Login.route)
+                }
+            },
+            icon = {
+                Icon(imageVector = authIcon, contentDescription = authItemLabel)
+            },
+            label = { Text(authItemLabel) },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color.White,    // icon color when selected
+                unselectedIconColor = Color.Gray,     // icon color when not selected
+                indicatorColor = Color(0xFF0075C4)   // background highlight circle
+            )
+        )
 
     }
 }

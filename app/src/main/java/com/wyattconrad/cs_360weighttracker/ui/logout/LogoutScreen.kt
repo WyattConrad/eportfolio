@@ -20,25 +20,38 @@ package com.wyattconrad.cs_360weighttracker.ui.logout
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.wyattconrad.cs_360weighttracker.Home
+import com.wyattconrad.cs_360weighttracker.Login
 import com.wyattconrad.cs_360weighttracker.R
+import com.wyattconrad.cs_360weighttracker.ui.login.LoginViewModel
+import com.wyattconrad.cs_360weighttracker.viewmodels.SessionViewModel
 
 /**
  * Composable function for the logout screen.
- *
- * @param onLogoutClick Callback function to handle the logout action.
+ * @param navController The navigation controller.
+ * @param logoutViewModel The logout view model.
  *
  * @author Wyatt Conrad
  * @version 1.0
  */
 @Composable
-fun LogoutScreen(onLogoutClick: () -> Unit) {
+fun LogoutScreen(
+    navController: NavController,
+    logoutViewModel: LogoutViewModel = hiltViewModel()
+) {
+
+    val sessionViewModel: SessionViewModel = hiltViewModel()
 
     // Column layout for the logout screen
     Column(
@@ -61,7 +74,13 @@ fun LogoutScreen(onLogoutClick: () -> Unit) {
 
         // Logout button
         Button(
-            onClick = onLogoutClick,
+            onClick = {
+                logoutViewModel.logout()
+                navController.navigate(Home.route)
+                },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF0075C4),
+            ),
             modifier = Modifier.wrapContentWidth()
         ) {
             Text(text = stringResource(R.string.logout))

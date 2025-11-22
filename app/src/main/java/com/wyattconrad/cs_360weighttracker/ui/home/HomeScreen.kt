@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -72,8 +71,8 @@ fun HomeScreen(
     val weightToGoal by viewModel.weightToGoal.collectAsState(initial = 0.0)
     val goalState by viewModel.goalState.collectAsState(initial = GoalState.Loading)
 
-    var slope : Double = 0.0
-    var intercept : Double = 0.0
+    var slope = 0.0
+    var intercept = 0.0
     var trendValues : List<Double> = emptyList()
 
     if(weights.isNotEmpty()) {
@@ -186,7 +185,8 @@ fun HomeScreen(
                 trendValues = trendValues,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(min = 200.dp, max = 400.dp))
+                    .weight(1f)
+            )
         } else {
             Text("No data yet", modifier = Modifier.padding(16.dp))
         }

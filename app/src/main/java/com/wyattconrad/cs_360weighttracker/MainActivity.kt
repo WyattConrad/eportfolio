@@ -74,12 +74,7 @@ fun CS360WeightTrackerApp(){
 
     val sessionViewModel: SessionViewModel = hiltViewModel()
 
-    val currentScreen =
-        if (currentDestination?.route == Settings.route) {
-            Settings
-        } else {
-            appTabRowScreens.find { it.route == currentDestination?.route } ?: Home
-        }
+    val currentScreen = appAllScreens.find { it.route == currentDestination?.route } ?: Home
 
     // Sets up the scaffold for the app.
     Scaffold(
