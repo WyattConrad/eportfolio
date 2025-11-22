@@ -74,25 +74,6 @@ class UserPreferencesService
         return context.getSharedPreferences(getPreferences(userId), Context.MODE_PRIVATE)
     }
 
-    //Method to save data for a specific user
-    fun saveUserData(userId: Long, key: String?, value: String?) {
-        getUserPreferences(userId)!!.edit {
-            putString(key, value)
-        }
-    }
-
-    //Method to retrieve data for a specific user
-    fun getUserData(userId: Long, key: String?, defaultValue: String?): String? {
-        return getUserPreferences(userId)!!.getString(key, defaultValue)
-    }
-
-    //Method to save boolean data for a specific user
-    fun saveUserData(userId: Long, key: String?, value: Boolean) {
-        getUserPreferences(userId)!!.edit {
-            putBoolean(key, value)
-        }
-    }
-
     fun getString(userId: Long, key: String?, defaultValue: String?): String? {
         return getUserPreferences(userId)!!.getString(key, defaultValue)
     }
@@ -101,15 +82,4 @@ class UserPreferencesService
         getUserPreferences(userId)!!.edit { putString(key, value) }
     }
 
-    //Method to retrieve boolean data for a specific user
-    fun getBoolean(userId: Long, key: String?, defaultValue: Boolean): Boolean {
-        return getUserPreferences(userId)!!.getBoolean(key, defaultValue)
-    }
-
-    //Method to clear all user data
-    fun clearUserData(userId: Long) {
-        getUserPreferences(userId)!!.edit {
-            clear()
-        }
-    }
 }

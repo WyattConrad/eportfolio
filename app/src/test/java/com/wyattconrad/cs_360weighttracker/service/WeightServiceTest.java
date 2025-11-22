@@ -38,19 +38,6 @@ public class WeightServiceTest {
     }
 
     @Test
-    public void calculateWeightToGoal_with_a_null_goalValue() {
-        // Test for NoSuchElementException when the 'goalValue' is null, due to unboxing to a primitive double.
-
-        ArrayList<Weight> weights = new ArrayList<>();
-
-        WeightService weightService = new WeightService();
-
-        Assertions.assertThrows(NoSuchElementException.class, () -> {
-            weightService.calculateWeightToGoal(weights, null);
-        });
-    }
-
-    @Test
     public void calculateWeightToGoal_with_a_single_weight_entry() {
         // Test with a list containing a single Weight object to ensure it correctly retrieves the first and only element.
 

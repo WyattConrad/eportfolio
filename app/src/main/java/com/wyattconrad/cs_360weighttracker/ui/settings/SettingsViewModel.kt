@@ -2,7 +2,6 @@ package com.wyattconrad.cs_360weighttracker.ui.settings
 
 import android.telephony.SmsManager
 import androidx.lifecycle.ViewModel
-import com.wyattconrad.cs_360weighttracker.service.LoginService
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,11 +20,8 @@ data class SettingsUiState(
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val prefs: UserPreferencesService,
-    loginService: LoginService,
     private val smsManager: SmsManager
 ) : ViewModel() {
-
-    private val userId = loginService.userId
 
     private val _uiState = MutableStateFlow(SettingsUiState())
     val uiState = _uiState.asStateFlow()

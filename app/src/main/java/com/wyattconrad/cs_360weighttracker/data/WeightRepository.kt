@@ -19,6 +19,7 @@ package com.wyattconrad.cs_360weighttracker.data
 
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 /**
  * Implementation of the WeightRepository interface.
@@ -57,13 +58,27 @@ class WeightRepository(
     }
 
     // Get the weight lost for a user ID from the database and return it as a Flow object
-    override fun getWeightLostByUserId(userId: Long): Flow<Double?> {
-        return weightDao.getWeightLostByUserId(userId)
+    override fun getWeightLostByUserId(userId: Long): Flow<Double> {
+
+        // Get the weight lost from the database and return it as a Flow object
+        val nullableFlow: Flow<Double?> = weightDao.getWeightLostByUserId(userId)
+
+        // If the return is null, return 0.0 in a Flow<Double>
+        return nullableFlow.map { totalWeightLost ->
+            totalWeightLost ?: 0.0
+        }
     }
 
     // Get the weight to goal for a user ID from the database and return it as a Flow object
-    override fun getWeightToGoalByUserId(userId: Long): Flow<Double?> {
-        return weightDao.getWeightToGoalByUserId(userId)
+    override fun getWeightToGoalByUserId(userId: Long): Flow<Double> {
+
+        // Get the weight to goal from the database and return it as a Flow object
+        val nullableFlow: Flow<Double?> = weightDao.getWeightToGoalByUserId(userId)
+
+        // If the return is null, return 0.0 in a Flow<Double>
+        return nullableFlow.map { totalWeightToGoal ->
+            totalWeightToGoal ?: 0.0
+        }
     }
 
     // Suspend is used for the following functions to run them on a separate thread

@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModel
 import com.wyattconrad.cs_360weighttracker.data.GoalRepository
 import com.wyattconrad.cs_360weighttracker.data.UserRepository
 import com.wyattconrad.cs_360weighttracker.data.WeightRepository
-import com.wyattconrad.cs_360weighttracker.service.LoginService
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -44,11 +44,11 @@ class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val goalRepository: GoalRepository,
     private val weightRepository: WeightRepository,
-    loginService: LoginService
+    prefs: UserPreferencesService,
 ) : ViewModel() {
 
-    // Get the user's id from the login service
-    val userId: Long = loginService.userId
+    // Get the user ID from user preferences
+    val userId: Long = prefs.getGlobalLong("userId")
 
     // Observe the Flow of the user's goal from the database
     val goalState: Flow<GoalState> = goalRepository.getGoalValue(userId)

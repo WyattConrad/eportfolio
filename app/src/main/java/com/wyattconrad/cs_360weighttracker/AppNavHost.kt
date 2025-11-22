@@ -18,6 +18,7 @@
 package com.wyattconrad.cs_360weighttracker
 
 import android.Manifest
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.SnackbarHostState
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -35,6 +37,8 @@ import com.wyattconrad.cs_360weighttracker.ui.home.HomeScreen
 import com.wyattconrad.cs_360weighttracker.ui.log.LogScreen
 import com.wyattconrad.cs_360weighttracker.ui.login.LoginScreen
 import com.wyattconrad.cs_360weighttracker.ui.logout.LogoutScreen
+import com.wyattconrad.cs_360weighttracker.ui.registration.RegistrationScreen
+import com.wyattconrad.cs_360weighttracker.ui.registration.RegistrationViewModel
 import com.wyattconrad.cs_360weighttracker.ui.settings.SettingsScreen
 import com.wyattconrad.cs_360weighttracker.ui.settings.SettingsViewModel
 
@@ -75,6 +79,26 @@ fun AppNavHost(
         }
         composable(route = Logout.route) {
             LogoutScreen(
+                navController = navController
+            )
+        }
+        composable(route = Register.route) { backStackEntry ->
+            // Get the ViewModel, scoped to the current composable lifecycle
+            val viewModel: RegistrationViewModel = hiltViewModel()
+
+            // Define the side-effect (Toast function) for the composable to use
+            val context = LocalContext.current
+            val showToast: (String) -> Unit = { message ->
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+
+            RegistrationScreen(
+                onBackToLoginClick = {
+                    // Navigate back to the Login destination.
+                    navController.navigate(Login.route)
+                },
+                showToast = showToast,
+                viewModel = viewModel,
                 navController = navController
             )
         }

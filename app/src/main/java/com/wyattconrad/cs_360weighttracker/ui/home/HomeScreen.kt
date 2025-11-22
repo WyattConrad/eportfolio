@@ -67,15 +67,15 @@ fun HomeScreen(
 
     // Collect the weight and goal state from the view model
     val weights by viewModel.weights.collectAsState(initial = emptyList())
-    val weightChange by viewModel.weightChange.collectAsState(initial = 0.0)
-    val weightToGoal by viewModel.weightToGoal.collectAsState(initial = 0.0)
+    val weightChange by viewModel.weightChange.collectAsState(initial = 0.00)
+    val weightToGoal by viewModel.weightToGoal.collectAsState(initial = 0.00)
     val goalState by viewModel.goalState.collectAsState(initial = GoalState.Loading)
 
     var slope = 0.0
     var intercept = 0.0
     var trendValues : List<Double> = emptyList()
 
-    if(weights.isNotEmpty()) {
+    if(weights.count() > 2) {
         val result = TrendAnalysis.calculateLinearRegression(weights)
         slope = result.slope
         intercept = result.intercept
@@ -106,14 +106,16 @@ fun HomeScreen(
                     "Your Goal Weight Is: ${state.value} lbs",
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
-                val estimatedX = ((state.value - intercept) / slope)
-                val estimatedDate = Instant.ofEpochSecond(estimatedX.toLong())
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-                GoalText(
-                    "Estimated Date To Reach Goal: ${estimatedDate.format(formatter)}",
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
+                if(weights.count() > 2) {
+                    val estimatedX = ((state.value - intercept) / slope)
+                    val estimatedDate = Instant.ofEpochSecond(estimatedX.toLong())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                    GoalText(
+                        "Estimated Date To Reach Goal: ${estimatedDate.format(formatter)}",
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
             }
         }
 
@@ -167,18 +169,17 @@ fun HomeScreen(
             .fillMaxWidth()
             .height(64.dp))
 
-        // Header for the recorded weights list
-        Text(
-            text = "Recorded Weights",
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
         // Only show chart if there is data
-        if (weights.isNotEmpty()) {
+        if (weights.count() > 2) {
+            // Header for the recorded weights list
+            Text(
+                text = "Recorded Weights",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             WeightLineChart (
                 weights = weights,

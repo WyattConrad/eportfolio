@@ -52,7 +52,7 @@ interface UserDao {
 
     // Get the count of users by username
     @Query("SELECT COUNT(*) FROM users WHERE username = :username")
-    fun countUsersByUsername(username: String?): Int
+    suspend fun countUsersByUsername(username: String?): Int
 
     // Check if a user exists by their username
     @Query("SELECT EXISTS (SELECT 1 FROM users WHERE username = :username)")

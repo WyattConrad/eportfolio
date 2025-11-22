@@ -134,7 +134,7 @@ fun LogScreen(
                     TextField(
                         value = inputWeight,
                         onValueChange = { inputWeight = it },
-                        label = { Text("Weight (kg)") },
+                        label = { Text("Weight (lbs)") },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )

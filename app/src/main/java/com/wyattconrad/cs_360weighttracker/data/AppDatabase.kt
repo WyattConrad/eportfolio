@@ -20,7 +20,6 @@ package com.wyattconrad.cs_360weighttracker.data
 import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.DeleteColumn
-import androidx.room.RenameColumn
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.AutoMigrationSpec
@@ -31,7 +30,6 @@ import com.wyattconrad.cs_360weighttracker.model.Goal
 import com.wyattconrad.cs_360weighttracker.model.User
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.Converters
-
 
 /**
  * The Room database for this app
@@ -69,7 +67,7 @@ abstract class AppDatabase : RoomDatabase() {
 
                     db.execSQL(
                         "UPDATE users SET hashed_password = ? WHERE id = ?",
-                        arrayOf(hashed, id)
+                        arrayOf<Any>(hashed, id)
                     )
                 }
                 cursor.close()
@@ -79,8 +77,9 @@ abstract class AppDatabase : RoomDatabase() {
     }
 }
 
+// Migration from version 3 to version 4
 @DeleteColumn(tableName = "users", columnName = "password")
-class Migration3To4 : AutoMigrationSpec {}
+class Migration3To4 : AutoMigrationSpec
 
 // Hash a password using bcrypt
 fun hash(password: String): String {

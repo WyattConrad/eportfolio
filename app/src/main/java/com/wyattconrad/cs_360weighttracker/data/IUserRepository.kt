@@ -20,7 +20,6 @@ package com.wyattconrad.cs_360weighttracker.data
 import com.wyattconrad.cs_360weighttracker.data.UserRepository.UsernameCallback
 import com.wyattconrad.cs_360weighttracker.model.User
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 /**
  * Sets up the interface for the UserRepository.
@@ -49,10 +48,10 @@ interface IUserRepository {
     suspend fun registerUser(user: User)
 
     // Check if the username already exists in the database, including a callback function
-    fun checkForExistingUsername(username: String?, callback: UsernameCallback)
+    suspend fun checkForExistingUsername(username: String?, callback: UsernameCallback)
 
     // Check if the username already exists in the database
-    fun checkForExistingUsername(username: String) : Boolean
+    suspend fun checkForExistingUsername(username: String) : Boolean
 
     // Delete all users from the database
     suspend fun deleteAll()

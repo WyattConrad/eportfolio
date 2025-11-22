@@ -38,10 +38,10 @@ interface IWeightRepository {
     fun getLastWeightByUserId(userId: Long): Flow<Weight?>
 
     // Get the weight lost by user ID
-    fun getWeightLostByUserId(userId: Long): Flow<Double?>
+    fun getWeightLostByUserId(userId: Long): Flow<Double>
 
     // Get the weight to goal by user ID
-    fun getWeightToGoalByUserId(userId: Long): Flow<Double?>
+    fun getWeightToGoalByUserId(userId: Long): Flow<Double>
 
     // Suspend is used for the following functions to run them on a separate thread
     // Add a weight to the database

@@ -1,6 +1,7 @@
 package com.wyattconrad.cs_360weighttracker.data
 
 import com.wyattconrad.cs_360weighttracker.model.Goal
+import com.wyattconrad.cs_360weighttracker.service.HashingService
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,6 +20,7 @@ class GoalRepositoryTest {
 
     private lateinit var goalDao: GoalDao
     private lateinit var userDao: UserDao
+    private lateinit var hashingService: HashingService
     private lateinit var goalRepository: GoalRepository
     private lateinit var userRepository: UserRepository
 
@@ -28,9 +30,11 @@ class GoalRepositoryTest {
 
         goalDao = mockk()
         userDao = mockk()
+        hashingService = HashingService()
+
 
         goalRepository = GoalRepository(goalDao)
-        userRepository = UserRepository(userDao)
+        userRepository = UserRepository(userDao, hashingService)
     }
 
     @Test

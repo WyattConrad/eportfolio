@@ -21,7 +21,6 @@ package com.wyattconrad.cs_360weighttracker.data
 import com.wyattconrad.cs_360weighttracker.model.User
 import com.wyattconrad.cs_360weighttracker.service.HashingService
 import kotlinx.coroutines.flow.Flow
-import java.io.IOException
 
 /**
  * Implementation of the user repository interface.
@@ -76,25 +75,33 @@ class UserRepository(
     // Suspend is used for the following functions to run them on a separate thread
     // Register New User
     override suspend fun registerUser(user: User) {
-            val userId = userDao.insertUser(user)
-            user.id = userId
+
+        // Hash the password before saving it
+        val hashedPassword = hashService.hashPassword(user.hashedPassword)
+
+        // Update the user with the hashed password
+        val userToRegister = user.copy(hashedPassword = hashedPassword)
+
+        // Insert the user into the database
+        val userId = userDao.insertUser(userToRegister)
+        user.id = userId
     }
 
 
     // Create an interface for the callback
-    interface UsernameCallback {
+    fun interface UsernameCallback {
         fun onUsernameExists(exists: Boolean)
     }
 
     // Check if username already exists
-    override fun checkForExistingUsername(username: String?, callback: UsernameCallback) {
+    override suspend fun checkForExistingUsername(username: String?, callback: UsernameCallback) {
             // Check if the username already exists in the database
             val count = userDao.countUsersByUsername(username)
             callback.onUsernameExists(count > 0)
     }
 
     // Check if username already exists
-    override fun checkForExistingUsername(username: String): Boolean {
+    override suspend fun checkForExistingUsername(username: String): Boolean {
             return userDao.countUsersByUsername(username) > 0
     }
 

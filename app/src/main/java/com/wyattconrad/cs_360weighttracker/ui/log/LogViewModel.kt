@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wyattconrad.cs_360weighttracker.data.WeightRepository
 import com.wyattconrad.cs_360weighttracker.model.Weight
-import com.wyattconrad.cs_360weighttracker.service.LoginService
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import com.wyattconrad.cs_360weighttracker.utilities.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -40,11 +40,11 @@ import javax.inject.Inject
 @HiltViewModel
 class LogViewModel @Inject constructor(
     private val weightRepository: WeightRepository,
-    loginService: LoginService
+    prefs: UserPreferencesService,
 ) : ViewModel() {
 
-    // Get the user ID from the login service
-    val userId: Long = loginService.userId
+    // Get the user ID from user preferences
+    val userId: Long = prefs.getGlobalLong("userId")
 
     // Setup a channel for sending UI events
     private val _uiEvent =  Channel<UiEvent>()

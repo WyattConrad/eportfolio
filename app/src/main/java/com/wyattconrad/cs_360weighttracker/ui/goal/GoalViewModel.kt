@@ -17,14 +17,11 @@
  */
 package com.wyattconrad.cs_360weighttracker.ui.goal
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.room.util.copy
 import com.wyattconrad.cs_360weighttracker.data.GoalRepository
 import com.wyattconrad.cs_360weighttracker.model.Goal
-import com.wyattconrad.cs_360weighttracker.service.LoginService
+import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -41,11 +38,11 @@ import javax.inject.Inject
 @HiltViewModel
 class GoalViewModel @Inject constructor(
     private val goalRepository: GoalRepository,
-    loginService: LoginService
+    prefs: UserPreferencesService,
 ) : ViewModel() {
 
-    // Get the user ID from the login service
-    val userId: Long = loginService.userId
+    // Get the user ID from user preferences
+    val userId: Long = prefs.getGlobalLong("userId")
 
     val currentGoal = goalRepository.getGoalByUserId(userId)
 

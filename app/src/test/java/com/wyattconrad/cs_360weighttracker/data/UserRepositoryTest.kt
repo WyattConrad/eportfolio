@@ -1,37 +1,26 @@
 package com.wyattconrad.cs_360weighttracker.data
 
 import android.content.SharedPreferences
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.wyattconrad.cs_360weighttracker.model.User
+import com.wyattconrad.cs_360weighttracker.service.HashingService
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.awaitility.Awaitility
-import org.awaitility.core.ThrowingRunnable
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 
 class UserRepositoryTest {
     // Setup mock dependencies
     private lateinit var userDao: UserDao
     private lateinit var userRepository: UserRepository
+    private lateinit var hashingService: HashingService
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -41,8 +30,10 @@ class UserRepositoryTest {
 
         userDao = mockk()
         sharedPreferences = mockk()
+        hashingService = HashingService()
 
-        userRepository = UserRepository(userDao)
+
+        userRepository = UserRepository(userDao, hashingService)
 
     }
 
@@ -146,7 +137,7 @@ class UserRepositoryTest {
     @Test
     fun register_a_new_unique_user() = runTest {
         // 1. Create a new user
-        val newUser = User("Mock", "User", "mockuser", "password")
+        val newUser = User("Mock", "User", "mock.user@email.com", "mockuser", "password")
 
         // 2. Mock DAO insertUser to return an ID (e.g., 42L)
         coEvery { userDao.insertUser(newUser) } returns 42L

@@ -32,16 +32,14 @@ import com.wyattconrad.cs_360weighttracker.data.WeightRepository
 import com.wyattconrad.cs_360weighttracker.model.Goal
 import com.wyattconrad.cs_360weighttracker.model.User
 import com.wyattconrad.cs_360weighttracker.model.Weight
-import com.wyattconrad.cs_360weighttracker.service.LoginService
+import com.wyattconrad.cs_360weighttracker.service.HashingService
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import com.wyattconrad.cs_360weighttracker.service.roundTo2
-import com.wyattconrad.cs_360weighttracker.service.HashingService
-import com.wyattconrad.cs_360weighttracker.viewmodels.SessionViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -111,13 +109,6 @@ object AppModule {
     @Singleton
     fun provideWeightRepository(db: AppDatabase): WeightRepository {
         return WeightRepository(db.weightDao)
-    }
-
-    // Singleton instance of LoginService
-    @Provides
-    @Singleton
-    fun provideLoginService(@ApplicationContext context: Context): LoginService {
-        return LoginService(context)
     }
 
     @Provides

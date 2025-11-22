@@ -15,11 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.wyattconrad.cs_360weighttracker.service;
+package com.wyattconrad.cs_360weighttracker.service
 
-import com.wyattconrad.cs_360weighttracker.model.Weight;
-
-import java.util.List;
+import com.wyattconrad.cs_360weighttracker.model.Weight
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 /**
  * A service to help manage the Weights
@@ -27,30 +27,29 @@ import java.util.List;
  * @author Wyatt Conrad
  * @version 1.0
  */
-public class WeightService {
-
+class WeightService {
     // Method to calculate the weight to reach the goal
-    public double calculateWeightToGoal(List<Weight> weights, Double goalValue) {
+    fun calculateWeightToGoal(weights: MutableList<Weight>, goalValue: Double): Double {
         // Get the last weight from the list
-        Weight last = weights.getFirst();
+        val last: Weight = weights.first()
 
         // Restrict the weight to goal to two decimal places
-        double factor = Math.pow(10, 2);
+        val factor = 10.0.pow(2.0)
 
         // Calculate the weight to goal and return it
-        return Math.round((last.getWeight() - goalValue) * factor) / factor;
+        return ((last.weight - goalValue) * factor).roundToInt() / factor
     }
 
     // Method to calculate the weight loss
-    public double calculateWeightLoss(List<Weight> weights) {
+    fun calculateWeightLoss(weights: MutableList<Weight>): Double {
         // Get the first and last weights from the list
-        Weight last = weights.getFirst();
-        Weight first = weights.getLast();
+        val last: Weight = weights.first()
+        val first: Weight = weights.last()
 
         // Restrict the weight loss to two decimal places
-        double factor = Math.pow(10, 2);
+        val factor = 10.0.pow(2.0)
 
         // Calculate the weight loss and return it
-        return Math.round((first.getWeight() - last.getWeight()) * factor) / factor;
+        return ((first.weight - last.weight) * factor).roundToInt() / factor
     }
 }

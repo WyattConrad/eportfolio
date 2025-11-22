@@ -17,9 +17,6 @@
  */
 package com.wyattconrad.cs_360weighttracker.viewmodels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
@@ -32,7 +29,7 @@ import javax.inject.Inject
 
 /**
  * A ViewModel for the Login Screen
- * @param userRepository The repository for the User data
+ * @param prefs The UserPreferencesService
  *
  * @author Wyatt Conrad
  * @version 1.0
@@ -43,7 +40,7 @@ class SessionViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Variables to hold the first name and logged in state of the user
-    private val _loggedInUserId = MutableStateFlow<Long>(-1L)
+    private val _loggedInUserId = MutableStateFlow(-1L)
     val loggedInUserId: StateFlow<Long> = _loggedInUserId.asStateFlow()
 
     // StateFlow for user first name
