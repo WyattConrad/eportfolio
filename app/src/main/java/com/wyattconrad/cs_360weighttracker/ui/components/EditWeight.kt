@@ -28,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import com.wyattconrad.cs_360weighttracker.model.Weight
 
 /**
@@ -78,5 +79,15 @@ fun EditWeight(
                 Text("Cancel")
             }
         }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EditWeightPreview() {
+    EditWeight(
+        weight = Weight(1, 165.0, 0L),
+        onDismiss = {},
+        onConfirm = {}
     )
 }

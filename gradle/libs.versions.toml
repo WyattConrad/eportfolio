@@ -3,8 +3,8 @@ agp = "8.13.1"
 awaitility = "4.3.0"
 coreTesting = "2.2.0"
 junit = "4.13.2"
-junitVersion = "1.3.0"
-espressoCore = "3.7.0"
+junitVersion = "1.1.5"
+espressoCore = "3.5.0"
 appcompat = "1.7.1"
 material = "1.13.0"
 constraintlayout = "2.2.1"
@@ -32,10 +32,13 @@ roomKtx = "2.8.3"
 uiGraphics = "1.9.4"
 runtimeLivedata = "1.9.4"
 ui = "1.9.5"
+uiTestJunit4 = "1.9.5"
 
 [libraries]
+androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
 awaitility = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
 core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -72,6 +75,7 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "uiTestJunit4" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

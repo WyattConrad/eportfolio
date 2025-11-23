@@ -26,6 +26,21 @@ android {
 
     }
 
+    packaging {
+        resources {
+            // Use pickFirsts for the new conflicting file
+            pickFirsts += "META-INF/LICENSE-notice.md"
+
+            // Retain fix for the previous LICENSE.md file
+            pickFirsts += "META-INF/LICENSE.md"
+
+            // Common exclusions often needed for JUnit/testing libraries
+            excludes += "META-INF/AL2.0"
+            excludes += "META-INF/LGPL2.1"
+            excludes += "**/*.SF"
+            excludes += "**/*.DSA"
+        }
+    }
     room {
         schemaDirectory("$projectDir/schemas")
     }
@@ -66,6 +81,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.compose.runtime.livedata)
     implementation(libs.androidx.ui)
+    implementation(libs.androidx.compose.ui.test.junit4)
     val roomVersion = "2.8.4"
 
     implementation(libs.legacy.support.v4)
@@ -122,6 +138,11 @@ dependencies {
     androidTestImplementation("io.mockk:mockk-agent:${mockkVersion}")
     androidTestImplementation("androidx.room:room-testing:$roomVersion")
     androidTestImplementation("com.google.truth:truth:1.1.5")
+
+    // Test rules and transitive dependencies:
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 }
