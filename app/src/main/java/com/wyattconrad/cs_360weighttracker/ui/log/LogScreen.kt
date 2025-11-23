@@ -20,7 +20,6 @@ package com.wyattconrad.cs_360weighttracker.ui.log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
@@ -33,24 +32,25 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.ui.components.EditWeight
+import com.wyattconrad.cs_360weighttracker.ui.components.WeightInputBottomSheet
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightLogList
 import kotlinx.coroutines.launch
+import java.time.Instant
 
 /**
  * LogScreen Composable
@@ -80,10 +80,14 @@ fun LogScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    // State to control dialog visibility
-    var showDialog by remember { mutableStateOf(false) }
-    // State to store user input
-    var inputWeight by remember { mutableStateOf("") }
+    // State to control the bottom sheet visibility
+    var showWeightSheet by rememberSaveable { mutableStateOf(false) }
+
+    // State method to save the updated weight
+    val onSaveWeight: (Double, Instant) -> Unit = { weight, dateTime ->
+        viewModel.addWeight(weight, dateTime)
+        showWeightSheet = false
+    }
 
     // Scaffold with floating action button
     Scaffold(
@@ -92,7 +96,7 @@ fun LogScreen(
         // Add a floating action button for adding new weights
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { showDialog = true },
+                onClick = { showWeightSheet = true },
                 containerColor = Color(0xFF4CAF50),
                 content = {
                     Icon(imageVector = Icons.Default.Add, contentDescription = "Add Weight")
@@ -123,48 +127,13 @@ fun LogScreen(
             )
         }
 
-        // Add Weight Dialog
-        if (showDialog) {
-            // AlertDialog for adding a new weight
-            AlertDialog(
-                onDismissRequest = { showDialog = false },
-                title = { Text(text = "Add Weight") },
-                text = {
-                    // Text field for entering weight
-                    TextField(
-                        value = inputWeight,
-                        onValueChange = { inputWeight = it },
-                        label = { Text("Weight (lbs)") },
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                    )
-                },
-                confirmButton = {
-                    // Button to confirm weight addition
-                    TextButton(
-                        onClick = {
-                            val weightValue = inputWeight.toDoubleOrNull()
-                            if (weightValue != null) {
-                                viewModel.addWeight(weightValue)
-                                inputWeight = ""
-                                showDialog = false
-                            } else {
-                                // If weight value is null, show error message
-
-                            }
-                        }
-                    ) {
-                        Text("Add")
-                    }
-                },
-                dismissButton = {
-                    // Cancel button
-                    TextButton(onClick = { showDialog = false }) {
-                        Text("Cancel")
-                    }
-                }
-            )
-        }
+        WeightInputBottomSheet(
+            isVisible = showWeightSheet,
+            onDismiss = { showWeightSheet = false },
+            onSaveWeight = onSaveWeight,
+            inputWeight = 0.0,
+            selectedDateTime = Instant.now()
+        )
 
         // Handle the edit dialog
         if (showEditDialog && weightToEdit != null) {

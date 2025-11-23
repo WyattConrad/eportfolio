@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wyattconrad.cs_360weighttracker.model.Weight
+import com.wyattconrad.cs_360weighttracker.ui.theme.AppTheme
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
@@ -127,17 +128,20 @@ fun WeightItem(
 @Preview(showBackground = true)
 @Composable
 fun WeightItemPreview() {
-    // Create a fake Weight object for the preview.
-    val sampleWeight = Weight(
-        185.5,
-        1L
-    )
+    AppTheme {
+        // Create a fake Weight object for the preview.
+        val sampleWeight = Weight(
+            id = 1,
+            weight = 180.0,
+            userId = 1,
+        )
 
-    // Call WeightItem with the sample data and empty lambdas for the clicks.
-    WeightItem(
-        weight = sampleWeight,
-        onEditClick = { /* Clicks do nothing in preview */ },
-        onDeleteClick = { /* Clicks do nothing in preview */ },
-        modifier = Modifier.padding(16.dp)
-    )
+        // Call WeightItem with the sample data and empty lambdas for the clicks.
+        WeightItem(
+            weight = sampleWeight,
+            onEditClick = { /* Clicks do nothing in preview */ },
+            onDeleteClick = { /* Clicks do nothing in preview */ },
+            modifier = Modifier.padding(16.dp)
+        )
+    }
 }

@@ -28,12 +28,24 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.wyattconrad.cs_360weighttracker.service.roundTo2
 import com.wyattconrad.cs_360weighttracker.ui.components.GoalText
+import com.wyattconrad.cs_360weighttracker.ui.components.WeightInputBottomSheet
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightLineChart
 import com.wyattconrad.cs_360weighttracker.utilities.TrendAnalysis
 import java.time.Instant
@@ -62,6 +75,18 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
 
+    // State for snackbar
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // State to control the bottom sheet visibility
+    var showWeightSheet by rememberSaveable { mutableStateOf(false) }
+
+    // State method to save the updated weight
+    val onSaveWeight: (Double, Instant) -> Unit = { weight, dateTime ->
+        viewModel.addWeight(weight, dateTime)
+        showWeightSheet = false
+    }
+
     // Establish a date formatter
     val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
 
@@ -73,127 +98,153 @@ fun HomeScreen(
 
     var slope = 0.0
     var intercept = 0.0
-    var trendValues : List<Double> = emptyList()
+    var trendValues: List<Double> = emptyList()
 
-    if(weights.count() > 2) {
+    if (weights.count() > 2) {
         val result = TrendAnalysis.calculateLinearRegression(weights)
         slope = result.slope
         intercept = result.intercept
         trendValues = result.trendValues
     }
 
-    // Display the weights and goal state in a column
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        // Display the goal state
-        when (val state = goalState) {
-            // Loading state
-            GoalState.Loading -> CircularProgressIndicator()
-
-            // Goal not set message
-            GoalState.NotSet -> GoalText(
-                "Your Goal HAS NOT BEEN SET!",
-                Color.Red,
-                modifier = Modifier.padding(vertical = 16.dp)
+    // Scaffold with floating action button
+    Scaffold(
+        // Setup the snackbar host
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        // Add a floating action button for adding new weights
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { showWeightSheet = true },
+                containerColor = Color(0xFF4CAF50),
+                content = {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add Weight")
+                }
             )
-            // Goal set, display the weight
-            is GoalState.Set -> {
-                GoalText(
-                    "Your Goal Weight Is: ${state.value} lbs",
-                    modifier = Modifier.padding(vertical = 4.dp)
+        },
+        floatingActionButtonPosition = FabPosition.End
+    ) {
+        // Display the weights and goal state in a column
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            // Display the goal state
+            when (val state = goalState) {
+                // Loading state
+                GoalState.Loading -> CircularProgressIndicator()
+
+                // Goal not set message
+                GoalState.NotSet -> GoalText(
+                    "Your Goal HAS NOT BEEN SET!",
+                    Color.Red,
+                    modifier = Modifier.padding(vertical = 16.dp)
                 )
-                if(weights.count() > 2) {
-                    val estimatedX = ((state.value - intercept) / slope)
-                    val estimatedDate = Instant.ofEpochSecond(estimatedX.toLong())
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
+                // Goal set, display the weight
+                is GoalState.Set -> {
                     GoalText(
-                        "Estimated Date To Reach Goal: ${estimatedDate.format(formatter)}",
+                        "Your Goal Weight Is: ${state.value} lbs",
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
+                    if (weights.count() > 2) {
+                        val estimatedX = ((state.value - intercept) / slope)
+                        val estimatedDate = Instant.ofEpochSecond(estimatedX.toLong())
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                        GoalText(
+                            "Estimated Date To Reach Goal: ${estimatedDate.format(formatter)}",
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+                    }
                 }
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Display the weight change and weight to goal
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Weight change card
-            Card(
-                modifier = Modifier.weight(1f)
+            // Display the weight change and weight to goal
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Display the weight change and weight to goal in a column
-                Column(
-                    modifier = Modifier
-                        .background(Color(0xFF0075C4))
-                        .fillMaxWidth()
-                        .padding(horizontal = 2.dp, vertical = 12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                // Weight change card
+                Card(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    // Text views in the box
-                    Text("Weight Lost:", color = Color.White)
-                    Text(weightChange?.roundTo2().toString(), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
-                    Text("lbs.", color = Color.White)
+                    // Display the weight change and weight to goal in a column
+                    Column(
+                        modifier = Modifier
+                            .background(Color(0xFF0075C4))
+                            .fillMaxWidth()
+                            .padding(horizontal = 2.dp, vertical = 12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Text views in the box
+                        Text("Weight Lost:", color = Color.White)
+                        Text(weightChange.roundTo2().toString(), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                        Text("lbs.", color = Color.White)
+                    }
+                }
+
+                // Weight to goal card
+                Card(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    // Display the weight change and weight to goal in a column
+                    Column(
+                        modifier = Modifier
+                            .background(Color(0xFF0075C4))
+                            .fillMaxWidth()
+                            .padding(horizontal = 2.dp, vertical = 12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // Text views in the box
+                        Text("Left To Goal:", color = Color.White)
+                        Text(weightToGoal.roundTo2().toString(), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                        Text("lbs.", color = Color.White)
+                    }
                 }
             }
 
-            // Weight to goal card
-            Card(
-                modifier = Modifier.weight(1f)
-            ) {
-                // Display the weight change and weight to goal in a column
-                Column(
-                    modifier = Modifier
-                        .background(Color(0xFF0075C4))
-                        .fillMaxWidth()
-                        .padding(horizontal = 2.dp, vertical = 12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Text views in the box
-                    Text("Left To Goal:", color = Color.White)
-                    Text(weightToGoal?.roundTo2().toString(), fontSize = 32.sp, color = Color.White, fontWeight = FontWeight.Bold)
-                    Text("lbs.", color = Color.White)
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(64.dp))
-
-        // Only show chart if there is data
-        if (weights.count() > 2) {
-            // Header for the recorded weights list
-            Text(
-                text = "Recorded Weights",
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            WeightLineChart (
-                weights = weights,
-                trendValues = trendValues,
+            Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
+                    .height(64.dp)
             )
-        } else {
-            Text("No data yet", modifier = Modifier.padding(16.dp))
+
+            // Only show chart if there is data
+            if (weights.count() > 2) {
+                // Header for the recorded weights list
+                Text(
+                    text = "Recorded Weights",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                WeightLineChart(
+                    weights = weights,
+                    trendValues = trendValues,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                )
+            } else {
+                Text("No data yet", modifier = Modifier.padding(16.dp))
+            }
+
+            WeightInputBottomSheet(
+                isVisible = showWeightSheet,
+                onDismiss = { showWeightSheet = false },
+                onSaveWeight = onSaveWeight,
+                inputWeight = 0.0,
+                selectedDateTime = Instant.now()
+            )
         }
     }
 }
-
 
 @Preview
 @Composable

@@ -51,7 +51,7 @@ class GoalViewModel @Inject constructor(
         val existing = currentGoal.firstOrNull()
 
         val updatedGoal = if (existing == null) {
-            Goal(goal = newValue, userId = userId)
+            Goal(id = 0L, dateTimeSet = System.currentTimeMillis(), goal = newValue, userId = userId)
         } else {
             existing.copy(goal = newValue)
         }

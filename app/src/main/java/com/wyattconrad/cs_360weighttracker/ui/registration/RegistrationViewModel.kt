@@ -114,7 +114,7 @@ class RegistrationViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 // Create User and save it to the database
-                val newUser = User(state.firstName, state.lastName, state.email, state.username, state.password)
+                val newUser = User(-1L, state.firstName, state.lastName, state.email, state.username, state.password)
                 userRepository.registerUser(newUser)
 
                 // Login User to get ID

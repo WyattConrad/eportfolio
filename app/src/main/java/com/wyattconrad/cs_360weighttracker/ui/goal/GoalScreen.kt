@@ -51,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.wyattconrad.cs_360weighttracker.R
-import com.wyattconrad.cs_360weighttracker.ui.log.LogViewModel
 
 /**
  * A composable function representing the goal screen of the weight tracker app.

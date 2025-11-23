@@ -40,45 +40,22 @@ data class User (
     // Create the id as the primary key
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    var id: Long = 0L,
+    var id: Long = -1L,
 
     // Create the first name, last name, username, and password
     @ColumnInfo(name = "first_name")
-    var firstName: String,
+    val firstName: String,
 
     @ColumnInfo(name = "last_name")
-    var lastName: String?,
+    val lastName: String?,
 
     @ColumnInfo(name = "email", defaultValue = "")
-    var email: String,
+    val email: String,
 
     @ColumnInfo(name = "username")
-    var username: String,
+    val username: String,
 
     @ColumnInfo(name = "hashed_password", defaultValue = "")
     val hashedPassword: String
 
-) {
-    /**
-     * Constructor for the user entity
-     * @param firstName The first name of the user
-     * @param lastName The last name of the user
-     * @param email The email of the user
-     * @param username The username of the user
-     * @param hashedPassword The hashed password of the user
-     */
-    constructor(
-        firstName: String,
-        lastName: String?,
-        email: String,
-        username: String,
-        hashedPassword: String
-    ) : this (
-        id = 0L,
-        firstName = firstName,
-        lastName = lastName,
-        email = email,
-        username = username,
-        hashedPassword = hashedPassword
-    )
-}
+)

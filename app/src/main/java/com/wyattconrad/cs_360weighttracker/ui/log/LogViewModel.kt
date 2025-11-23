@@ -22,17 +22,14 @@ import androidx.lifecycle.viewModelScope
 import com.wyattconrad.cs_360weighttracker.data.WeightRepository
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
-import com.wyattconrad.cs_360weighttracker.utilities.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.time.Instant
 import javax.inject.Inject
 
 /**
- * ViewModel for the LogFragment.
+ * ViewModel for the Log screen.
  * @param weightRepository Repository for managing weights.
- * @param loginService Service for handling user login.
  *
  * @author Wyatt Conrad
  * @version 1.0
@@ -46,18 +43,18 @@ class LogViewModel @Inject constructor(
     // Get the user ID from user preferences
     val userId: Long = prefs.getGlobalLong("userId")
 
-    // Setup a channel for sending UI events
-    private val _uiEvent =  Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
-
     // Observe the Flow of weights from the database
     val weights = weightRepository.getAllWeightsByUserId(userId)
 
     // Add a weight to the database
-    fun addWeight(weightValue: Double) {
+    fun addWeight(weightValue: Double, dateTime: Instant) {
         // Launch a coroutine to perform the database operation
         viewModelScope.launch {
-            val weight = Weight(weight = weightValue, userId = userId)
+            val weight = Weight(
+                weight = weightValue,
+                userId = userId,
+                dateTimeLogged = dateTime.atZone(java.time.ZoneId.systemDefault()).toLocalDateTime()
+            )
             weightRepository.addWeight(weight)
         }
     }

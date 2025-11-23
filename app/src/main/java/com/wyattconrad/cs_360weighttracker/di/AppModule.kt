@@ -193,6 +193,8 @@ suspend fun addStarterData(
     // Add a sample goal
     goalDao.insertGoal(
         Goal(
+            id = 0L,
+            dateTimeSet = System.currentTimeMillis(),
             goal = 135.0,
             userId = userId
         )

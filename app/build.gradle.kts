@@ -65,7 +65,8 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.compose.runtime.livedata)
-    val roomVersion = "2.8.3"
+    implementation(libs.androidx.ui)
+    val roomVersion = "2.8.4"
 
     implementation(libs.legacy.support.v4)
     implementation(libs.preference)
@@ -122,6 +123,7 @@ dependencies {
     androidTestImplementation("androidx.room:room-testing:$roomVersion")
     androidTestImplementation("com.google.truth:truth:1.1.5")
 
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }
 
 kapt {

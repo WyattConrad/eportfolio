@@ -38,9 +38,9 @@ fun WeightLineChart(
         val dt = weight.dateTimeLogged
         dt.monthValue == currentMonth && dt.year == currentYear
     }*/
-    val maxPoints = 100
+    val maxPoints = 30
     val recentWeights = weights
-        .take(maxPoints)
+        .takeLast(maxPoints)
 
     // Get the weight values
     val weightValues = recentWeights.map { it.weight }

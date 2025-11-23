@@ -44,24 +44,13 @@ data class Weight (
 
     // Create the weight column
     @ColumnInfo(name = "weight")
-    var weight: Double,
-
-    // Create the date time logged column
-    @ColumnInfo(name = "date_time_logged")
-    val dateTimeLogged: LocalDateTime,
+    val weight: Double,
 
     // Create the user id column
     @ColumnInfo(name = "user_id")
     val userId: Long,
-) {
-    /**
-     * Constructor for the weight entity
-     * @param weight The weight
-     * @param userId The user id
-     */
-    constructor(weight: Double, userId: Long) : this(
-        weight = weight,
-        userId = userId,
-        dateTimeLogged = LocalDateTime.now()
-    )
-}
+
+    // Create the date time logged column
+    @ColumnInfo(name = "date_time_logged")
+    val dateTimeLogged: LocalDateTime = LocalDateTime.now()
+)

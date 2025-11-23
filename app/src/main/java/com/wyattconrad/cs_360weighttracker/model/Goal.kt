@@ -45,26 +45,14 @@ data class Goal(
 
     // Create the date time set
     @ColumnInfo(name = "date_time_set")
-    var dateTimeSet: Long,
+    val dateTimeSet: Long,
 
     // Create the goal
     @field:ColumnInfo(name = "goal")
-    var goal: Double,
+    val goal: Double,
 
     // Create the user id
     @field:ColumnInfo(name = "user_id")
-    var userId: Long
+    val userId: Long
 
-) {
-    /**
-     * Default constructor
-     * @param goal The goal value
-     * @param userId The user Id
-     */
-    constructor(goal: Double, userId: Long) : this(
-        id = 0L,
-        goal = goal,
-        dateTimeSet = System.currentTimeMillis(),
-        userId = userId
-    )
-}
+)

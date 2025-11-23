@@ -31,8 +31,10 @@ material3AdaptiveNavigationSuite = "1.4.0"
 roomKtx = "2.8.3"
 uiGraphics = "1.9.4"
 runtimeLivedata = "1.9.4"
+ui = "1.9.5"
 
 [libraries]
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 awaitility = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
 core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
@@ -69,6 +71,7 @@ androidx-compose-material3-adaptive-navigation-suite = { group = "androidx.compo
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -18,13 +18,17 @@
 package com.wyattconrad.cs_360weighttracker.ui.home
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.wyattconrad.cs_360weighttracker.data.GoalRepository
 import com.wyattconrad.cs_360weighttracker.data.UserRepository
 import com.wyattconrad.cs_360weighttracker.data.WeightRepository
+import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import java.time.Instant
 import javax.inject.Inject
 
 /**
@@ -34,7 +38,6 @@ import javax.inject.Inject
  * @property userRepository the user repository
  * @property goalRepository the goal repository
  * @property weightRepository the weight repository
- * @property loginService the login service
  *
  * @author Wyatt Conrad
  * @version 1.0
@@ -66,6 +69,18 @@ class HomeViewModel @Inject constructor(
 
     // Observe the Flow for the weight to goal from the database
     val weightToGoal = weightRepository.getWeightToGoalByUserId(userId)
+
+    fun addWeight(weightValue: Double, dateTime: Instant) {
+        // Launch a coroutine to perform the database operation
+        viewModelScope.launch {
+            val weight = Weight(
+                weight = weightValue,
+                userId = userId,
+                dateTimeLogged = dateTime.atZone(java.time.ZoneId.systemDefault()).toLocalDateTime()
+            )
+            weightRepository.addWeight(weight)
+        }
+    }
 
 }
 
