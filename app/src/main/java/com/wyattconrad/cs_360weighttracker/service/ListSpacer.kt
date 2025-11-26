@@ -40,3 +40,11 @@ fun <T> listSpacer(list: List<T>, count: Int): List<T> {
     // Return the list of selected items
     return selectedItems
 }
+
+fun spacedIndexes(listSize: Int, count: Int): List<Int> {
+    if (listSize == 0) return emptyList()
+    if (listSize <= count) return (0 until listSize).toList()
+
+    val interval = (listSize - 1).toFloat() / (count - 1)
+    return (0 until count).map { (it * interval).roundToInt() }
+}
