@@ -118,6 +118,7 @@ fun WeightInputBottomSheet(
     }
 }
 
+// Preview for the WeightInputBottomSheet composable
 @Preview(showBackground = true)
 @Composable
 fun WeightInputBottomSheetPreview() {

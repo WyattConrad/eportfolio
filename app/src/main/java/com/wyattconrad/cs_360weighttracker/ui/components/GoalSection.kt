@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.wyattconrad.cs_360weighttracker.ui.home.GoalState
 import java.time.LocalDate
@@ -58,26 +59,36 @@ fun GoalSection(
 
             GoalState.NotSet -> {
                 GoalText(
+                    modifier = Modifier.padding(vertical = 16.dp),
                     text = "Your Goal HAS NOT BEEN SET!",
-                    color = Color.Red,
-                    modifier = Modifier.padding(vertical = 16.dp)
+                    color = Color.Red
                 )
             }
 
             is GoalState.Set -> {
                 GoalText(
+                    modifier = Modifier.padding(vertical = 4.dp),
                     text = "Your Goal Weight Is: ${goalState.value} lbs",
-                    modifier = Modifier.padding(vertical = 4.dp)
                 )
 
                 if (estimatedGoalDate != null) {
                     val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
                     GoalText(
-                        text = "Estimated Date To Reach Goal: ${estimatedGoalDate.format(formatter)}",
-                        modifier = Modifier.padding(vertical = 4.dp)
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        text = "Estimated Date To Reach Goal: ${estimatedGoalDate.format(formatter)}"
                     )
                 }
             }
         }
     }
+}
+
+// Preview for the GoalSection composable
+@Preview(showBackground = true)
+@Composable
+fun GoalSectionPreview(){
+    GoalSection(
+        goalState = GoalState.Set(135.0),
+        estimatedGoalDate = LocalDate.now()
+    )
 }

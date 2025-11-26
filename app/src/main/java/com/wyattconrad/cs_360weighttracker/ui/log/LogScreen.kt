@@ -104,7 +104,7 @@ fun LogScreen(
             )
         },
         floatingActionButtonPosition = FabPosition.End
-    ) { paddingValues ->
+    ) { padding ->
         // Column to hold the weight log list
         Column(
             modifier = Modifier
@@ -127,6 +127,7 @@ fun LogScreen(
             )
         }
 
+        // Weight Input Bottom Sheet
         WeightInputBottomSheet(
             isVisible = showWeightSheet,
             onDismiss = { showWeightSheet = false },

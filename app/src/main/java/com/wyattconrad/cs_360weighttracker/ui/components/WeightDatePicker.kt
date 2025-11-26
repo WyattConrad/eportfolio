@@ -72,6 +72,7 @@ fun WeightDatePicker(
     }
 }
 
+// Preview for the WeightDatePicker composable
 @Preview(showBackground = true)
 @Composable
 fun DatePickerPreview() {

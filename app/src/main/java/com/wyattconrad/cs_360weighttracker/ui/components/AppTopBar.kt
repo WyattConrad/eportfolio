@@ -59,11 +59,11 @@ fun AppTopBar(
                 } else {
                     currentScreen.title
                 },
-                color = MaterialTheme.colorScheme.onPrimary
+                color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFF0075C4)
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
         ),
         actions = {
             // Settings button
@@ -74,7 +74,7 @@ fun AppTopBar(
                 Icon(
                     Icons.Default.Settings,
                     contentDescription = "Settings",
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }

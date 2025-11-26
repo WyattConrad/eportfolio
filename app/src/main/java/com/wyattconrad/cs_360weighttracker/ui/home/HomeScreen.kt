@@ -17,7 +17,9 @@
  */
 package com.wyattconrad.cs_360weighttracker.ui.home
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +29,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -35,11 +36,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.wyattconrad.cs_360weighttracker.ui.components.FilterButton
 import com.wyattconrad.cs_360weighttracker.ui.components.GoalSection
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightInputBottomSheet
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightLineChart
@@ -66,20 +73,15 @@ fun HomeScreen(
     val weightToGoal by viewModel.weightToGoal.collectAsState()
     val trendData by viewModel.trendData.collectAsState()
     val reachGoalDate by viewModel.estimatedGoalDate.collectAsState()
+    var filter by rememberSaveable { mutableStateOf(ChartFilter.Last30) }
+    val filteredWeights = remember(weights, filter) {
+        viewModel.filterWeights(weights, filter)
+    }
+
 
     // Scaffold with floating action button
     Scaffold(
-        // Add a floating action button for adding new weights
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { viewModel.setShowWeightSheet(true) },
-                containerColor = Color(0xFF4CAF50),
-                content = {
-                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add Weight")
-                }
-            )
-        },
-        floatingActionButtonPosition = FabPosition.End
+
     ) { padding ->
         // Display the weights and goal state in a column
         Column(
@@ -88,6 +90,8 @@ fun HomeScreen(
                 .padding(top = 8.dp, bottom = 8.dp, start = 16.dp, end = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
+            // Add the goal section and weight summary section
+            // to the column
             GoalSection(goalState, reachGoalDate)
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -97,20 +101,44 @@ fun HomeScreen(
 
             Spacer(
                 modifier = Modifier
-                    .height(64.dp)
+                    .height(16.dp)
             )
 
-            // Only show chart if there is data
-            if (trendData.trendValues.isNotEmpty()) {
+            // Add a floating action button to add a new weight
+            FloatingActionButton(
+                onClick = { viewModel.setShowWeightSheet(true) },
+                containerColor = Color(0xFF4CAF50),
+                modifier = Modifier.align(Alignment.End).padding(bottom = 16.dp),
+                content = {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Add Weight")
+                }
+            )
+            
+            // Only show chart if there are logged weights
+            if (weights.isNotEmpty()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    // Add the filter buttons
+                    FilterButton("This Month", ChartFilter.CurrentMonth, filter) { filter = it }
+                    FilterButton("Last 30", ChartFilter.Last30, filter) { filter = it }
+                    FilterButton("Last 100", ChartFilter.Last100, filter) { filter = it }
+                    FilterButton("All", ChartFilter.All, filter) { filter = it }
+                }
+
+                // Display the weight chart
                 WeightLineChart(
-                    weights = weights,
+                    weights = filteredWeights,
                     trendValues = trendData.trendValues,
                     modifier = Modifier.fillMaxWidth().height(300.dp)
                 )
             } else {
+                // Display no data yet when there are no weights
                 Text("No data yet")
             }
 
+            // Display the weight input bottom sheet if it is visible
             WeightInputBottomSheet(
                 isVisible = showWeightSheet,
                 onDismiss = { viewModel.setShowWeightSheet(false) },
@@ -120,10 +148,4 @@ fun HomeScreen(
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
 }

@@ -70,13 +70,14 @@ fun WeightLogList(
 // Preview the WeightLogList composable
 @Preview(showBackground = true)
 @Composable
-fun WeightListPreview() {
+fun WeightLogListPreview() {
     WeightLogList(
         weights = listOf(
             Weight(weight = 150.0, userId = 1),
-            Weight(weight = 149.0, userId = 1)
+            Weight(weight = 149.0, userId = 1),
+            Weight(weight = 148.0, userId = 1)
         ),
-        onEditClick = {},
-        onDeleteClick = {}
+        onEditClick = { },
+        onDeleteClick = { }
     )
 }

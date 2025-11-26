@@ -56,6 +56,7 @@ fun WeightTimePicker(
     }
 }
 
+// Preview for the WeightTimePicker composable
 @Preview(showBackground = true)
 @Composable
 fun WeightTimePickerPreview() {

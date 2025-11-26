@@ -36,7 +36,6 @@ object TrendAnalysis {
     fun calculateLinearRegression(weights: List<Weight>): RegressionResult {
 
         // Establish Constants
-        val WEIGHTSTOEVALUATE = 100
         val MINWEIGHTSTOEVALUATE = 3
 
         // Initialize Variables
@@ -45,13 +44,10 @@ object TrendAnalysis {
         var totalXYProduct = 0.0
         var totalXSquared = 0.0
 
-        // Take the last 100 weights
-        val filteredWeights = weights.takeLast(WEIGHTSTOEVALUATE)
-
         // Get all the date/time stamps of logged weights for the X axis
-        val xValues = filteredWeights.map { it.dateTimeLogged.toEpochSecond(ZoneOffset.UTC) }
+        val xValues = weights.map { it.dateTimeLogged.toEpochSecond(ZoneOffset.UTC) }
         // Get all the weight values for the Y axis
-        val yValues = filteredWeights.map { it.weight }
+        val yValues = weights.map { it.weight }
 
         // Get teh count of weight values that have been logged (could be less than 100)
         val count = xValues.size

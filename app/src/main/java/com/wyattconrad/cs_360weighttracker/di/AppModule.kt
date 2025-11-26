@@ -148,6 +148,9 @@ suspend fun addStarterData(
     goalDao: GoalDao,
     hashPassword: (String) -> String = { password -> HashingService().hashPassword(password) }
 ) {
+    // Establish Constants
+    val WEIGHTSTOCREATE = 200
+
     // Create sample user
     val user = User(
         firstName = "Guest",
@@ -161,13 +164,13 @@ suspend fun addStarterData(
     val userId = userDao.insertUser(user)
 
     // Generate weights from 160 → 141 (10 days)
-    val startDate = LocalDateTime.now().minusDays(100)
+    val startDate = LocalDateTime.now().minusDays(WEIGHTSTOCREATE.toLong())
 
     // Create the weights and add them to the database
     val random = kotlin.random.Random
     var weight = 200.0
 
-    for (i in 0 until 100) {
+    for (i in 0 until WEIGHTSTOCREATE) {
         // base trend: slow decline
         weight -= 0.25
 

@@ -17,49 +17,74 @@
  */
 package com.wyattconrad.cs_360weighttracker.ui.components
 
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun GoalText(
+    modifier: Modifier = Modifier,
     text: String,
     color: Color = MaterialTheme.colorScheme.onSurface, // default
-    modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.bodyLarge,
     maxFontSize: TextUnit = 24.sp,  // largest font size
     minFontSize: TextUnit = 14.sp   // smallest font size
 ){
-    BoxWithConstraints(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        // Adjust font size based on maxWidth
-        val fontSize = (maxWidth.value / 20).coerceIn(minFontSize.value, maxFontSize.value).sp
+    // Track the width of the text
+    var widthPx by remember { mutableStateOf(0) }
 
-        Text(
-            text = text,
-            fontSize = fontSize,
-            color = color,
-            style = style,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold
-        )
+    // Convert px → dp → sp math using local density
+    val density = LocalDensity.current
+    // Calculate the font size based on the width of the text
+    val fontSize = remember(widthPx) {
+
+        if (widthPx > 0) {
+            // convert px to dp
+            with(density) {
+                val widthDp = widthPx.toDp().value
+                (widthDp / 20).coerceIn(minFontSize.value, maxFontSize.value).sp
+            }
+        } else {
+            maxFontSize
+        }
     }
+
+    // Display the text with the calculated font size
+    Text(
+        text = text,
+        fontSize = fontSize,
+        color = color,
+        style = style,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .onSizeChanged { widthPx = it.width },
+        textAlign = TextAlign.Center,
+        fontWeight = FontWeight.Bold
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GoalTextPreview() {
-    GoalText("This is a preview")
+
+    GoalText(modifier = Modifier,
+        "Your Goal Weight Is: 135.0 lbs")
 }

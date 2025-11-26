@@ -160,6 +160,22 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun filterWeights(weights: List<Weight>, filter: ChartFilter): List<Weight> {
+        return when (filter) {
+            ChartFilter.CurrentMonth -> {
+                val now = LocalDate.now()
+                weights.filter { w ->
+                    w.dateTimeLogged.monthValue == now.monthValue &&
+                            w.dateTimeLogged.year == now.year
+                }
+            }
+            ChartFilter.Last30 -> weights.takeLast(30)
+            ChartFilter.Last100 -> weights.takeLast(100)
+            ChartFilter.All -> weights
+        }
+    }
+
+
 }
 
 // Sealed class for the goal state
@@ -167,4 +183,11 @@ sealed class GoalState {
     object Loading : GoalState()
     object NotSet : GoalState()
     data class Set(val value: Double) : GoalState()
+}
+
+enum class ChartFilter {
+    CurrentMonth,
+    Last30,
+    Last100,
+    All
 }

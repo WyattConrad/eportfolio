@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wyattconrad.cs_360weighttracker.service.roundTo2
+import com.wyattconrad.cs_360weighttracker.ui.theme.AppTheme
 
 @Composable
 fun WeightToGoalCard(
@@ -65,7 +67,7 @@ fun WeightToGoalCard(
         // Display the weight change and weight to goal in a column
         Column(
             modifier = Modifier
-                .background(Color(0xFF0075C4))
+                .background(MaterialTheme.colorScheme.primaryContainer)
                 .fillMaxWidth()
                 .padding(horizontal = 2.dp, vertical = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -78,20 +80,17 @@ fun WeightToGoalCard(
     }
 }
 
+// Preview for the WeightToGoalCard composable
 @Preview(showBackground = true)
 @Composable
 fun WeightToGoalCardPreview() {
     WeightToGoalCard(weightToGoal = 10.0)
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun WeightToGoalCardPreview2() {
-    WeightToGoalCard(weightToGoal = 0.0)
-}
-
-@Preview(showBackground = true)
-@Composable
-fun WeightToGoalCardPreview3() {
-    WeightToGoalCard(weightToGoal = -3.75)
+    AppTheme(dynamicColor = false) {
+        WeightToGoalCard(weightToGoal = 0.0)
+    }
 }
