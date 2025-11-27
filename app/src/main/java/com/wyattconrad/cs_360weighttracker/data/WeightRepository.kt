@@ -18,8 +18,11 @@
 package com.wyattconrad.cs_360weighttracker.data
 
 import com.wyattconrad.cs_360weighttracker.model.Weight
+import com.wyattconrad.cs_360weighttracker.ui.home.ChartFilter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
+import java.time.ZoneOffset
 
 /**
  * Implementation of the WeightRepository interface.
@@ -28,7 +31,7 @@ import kotlinx.coroutines.flow.map
  * @param weightDao The Data Access Object for the Weight entity.
  *
  * @author Wyatt Conrad
- * @version 1.0
+ * @version 2.0
  */
 class WeightRepository(
     private val weightDao: WeightDao) : IWeightRepository {
@@ -43,6 +46,24 @@ class WeightRepository(
     override fun getAllWeightsByUserId(userId: Long): Flow<List<Weight>> {
         // Get Flow from the DAO and convert it to a Flow
         return weightDao.getWeightsByUserId(userId)
+    }
+
+    // Get weights for a user ID from the database and return them as a Flow List object
+    // Uses the filter to determine which weights to return
+    override fun getAllWeightsByUserId(userId: Long, filter: ChartFilter): Flow<List<Weight>> {
+
+        val startEpoch = LocalDate.now()
+            .withDayOfMonth(1)          // first day of this month
+            .atStartOfDay()             // midnight
+            .toEpochSecond(ZoneOffset.UTC)
+
+        // Get Flow from the DAO and convert it to a Flow
+            return when (filter) {
+                ChartFilter.CurrentMonth -> weightDao.getCurrentMonthWeights(userId, startEpoch)
+                ChartFilter.Last30 -> weightDao.getLast30Weights(userId)
+                ChartFilter.Last100 -> weightDao.getLast100Weights(userId)
+                ChartFilter.All -> weightDao.getWeightsByUserId(userId)
+            }
     }
 
     // Get the first weight for a user ID from the database and return it as a Flow object

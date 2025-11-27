@@ -18,6 +18,7 @@
 package com.wyattconrad.cs_360weighttracker.data
 
 import com.wyattconrad.cs_360weighttracker.model.Weight
+import com.wyattconrad.cs_360weighttracker.ui.home.ChartFilter
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -30,6 +31,9 @@ interface IWeightRepository {
 
     // Get a Flow List of weights by user ID
     fun getAllWeightsByUserId(userId: Long): Flow<List<Weight>>
+
+    // Get a Flow List of weights by user ID
+    fun getAllWeightsByUserId(userId: Long, filter: ChartFilter): Flow<List<Weight>>
 
     // Get the first weight by user ID
     fun getFirstWeightByUserId(userId: Long): Flow<Weight?>

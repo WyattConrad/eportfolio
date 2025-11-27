@@ -74,9 +74,6 @@ fun HomeScreen(
     val trendData by viewModel.trendData.collectAsState()
     val reachGoalDate by viewModel.estimatedGoalDate.collectAsState()
     var filter by rememberSaveable { mutableStateOf(ChartFilter.Last30) }
-    val filteredWeights = remember(weights, filter) {
-        viewModel.filterWeights(weights, filter)
-    }
 
 
     // Scaffold with floating action button
@@ -121,15 +118,15 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     // Add the filter buttons
-                    FilterButton("This Month", ChartFilter.CurrentMonth, filter) { filter = it }
-                    FilterButton("Last 30", ChartFilter.Last30, filter) { filter = it }
-                    FilterButton("Last 100", ChartFilter.Last100, filter) { filter = it }
-                    FilterButton("All", ChartFilter.All, filter) { filter = it }
+                    FilterButton("This Month", ChartFilter.CurrentMonth, filter) { viewModel.setFilter(it) }
+                    FilterButton("Last 30", ChartFilter.Last30, filter) { viewModel.setFilter(it) }
+                    FilterButton("Last 100", ChartFilter.Last100, filter) { viewModel.setFilter(it) }
+                    FilterButton("All", ChartFilter.All, filter) { viewModel.setFilter(it) }
                 }
 
                 // Display the weight chart
                 WeightLineChart(
-                    weights = filteredWeights,
+                    weights = weights,
                     trendValues = trendData.trendValues,
                     modifier = Modifier.fillMaxWidth().height(300.dp)
                 )

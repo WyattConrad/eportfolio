@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Data access object for weight.
  * @author Wyatt Conrad
- * @version 1.0
+ * @version 2.0
  */
 @Dao
 interface WeightDao {
@@ -53,26 +53,56 @@ interface WeightDao {
     @Query("SELECT * FROM weights WHERE user_id = :userId ORDER BY date_time_logged DESC LIMIT 1")
     fun getLastWeightByUserId(userId: Long): Flow<Weight?>
 
+    // Get all weights for a user logged this month
+    @Query("""
+        SELECT * FROM weights
+        WHERE user_id = :userId 
+          AND date_time_logged >= :startOfMonthEpoch
+        ORDER BY date_time_logged
+    """)
+    fun getCurrentMonthWeights(userId: Long, startOfMonthEpoch: Long): Flow<List<Weight>>
+
+    // Get the last 30 weights logged for the user
+    @Query("""
+        SELECT * FROM weights 
+        WHERE user_id = :userId 
+        ORDER BY date_time_logged DESC 
+        LIMIT 30
+    """)
+    fun getLast30Weights(userId: Long): Flow<List<Weight>>
+
+    // Get the last 100 weights logged for the user
+    @Query("""
+        SELECT * FROM weights 
+        WHERE user_id = :userId 
+        ORDER BY date_time_logged DESC 
+        LIMIT 100
+    """)
+    fun getLast100Weights(userId: Long): Flow<List<Weight>>
+
     // Get the total weight lost by a user
     @Query(
-        ("SELECT\n" +
-                "    -- First, get the weight from the earliest entry\n" +
-                "    (SELECT weight FROM weights WHERE user_id = :userId ORDER BY date_time_logged ASC LIMIT 1) -\n" +
-                "    -- Then, subtract the weight from the most recent entry\n" +
-                "    (SELECT weight FROM weights WHERE user_id = :userId ORDER BY date_time_logged DESC LIMIT 1)\n" +
-                "AS weight_lost\n")
+        """
+            SELECT
+                -- First, get the weight from the earliest entry
+                    (SELECT weight FROM weights WHERE user_id = :userId ORDER BY date_time_logged ASC LIMIT 1) -
+                    -- Then, subtract the weight from the most recent entry
+                    (SELECT weight FROM weights WHERE user_id = :userId ORDER BY date_time_logged DESC LIMIT 1)
+                AS weight_lost
+        """
     )
     fun getWeightLostByUserId(userId: Long): Flow<Double?>
 
     // Get the weight to goal for a user
     @Query(
-        ("SELECT\n" +
-                "    -- First, get the most recent weight logged\n" +
-                "    (SELECT weight FROM weights WHERE user_id = :userId ORDER BY date_time_logged DESC LIMIT 1)-\n" +
-                "    -- Then, subtract the goal weight from the goal table\n" +
-                "    (SELECT goal FROM goals WHERE user_id = :userId LIMIT 1)\n" +
-                "AS weight_to_goal")
-    )
+        """
+            SELECT
+                    -- First, get the most recent weight logged
+                    (SELECT weight FROM weights WHERE user_id = :userId ORDER BY date_time_logged DESC LIMIT 1)-
+                   -- Then, subtract the goal weight from the goal table
+                    (SELECT goal FROM goals WHERE user_id = :userId LIMIT 1)
+                AS weight_to_goal
+          """)
     fun getWeightToGoalByUserId(userId: Long): Flow<Double?>
 
     // Suspend is used for the following functions to run them on a separate thread

@@ -27,12 +27,14 @@ import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import com.wyattconrad.cs_360weighttracker.utilities.TrendAnalysis
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -64,6 +66,11 @@ class HomeViewModel @Inject constructor(
     private val _showWeightSheet = MutableStateFlow(false)
     val showWeightSheet = _showWeightSheet.asStateFlow()
 
+    // State method to set the filter
+    private val _filter = MutableStateFlow(ChartFilter.Last30)
+    val filter: StateFlow<ChartFilter> = _filter
+    fun setFilter(f: ChartFilter) { _filter.value = f }
+
     // Get the user ID from user preferences
     val userId: Long = prefs.getGlobalLong("userId")
 
@@ -85,10 +92,17 @@ class HomeViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), GoalState.Loading)
 
     // Observe the Flow of weights from the database
+    @OptIn(ExperimentalCoroutinesApi::class)
     val weights: StateFlow<List<Weight>> =
-        weightRepository.getAllWeightsByUserId(userId)
-            .map { list -> list.sortedBy { it.dateTimeLogged } } // <- ensure deterministic ordering
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        filter.flatMapLatest { filterValue ->
+            weightRepository.getAllWeightsByUserId(userId, filterValue)
+        }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                emptyList()
+            )
+
     // Observe the Flow for the weight change from the database
     val weightChange: StateFlow<Double> =
         weightRepository.getWeightLostByUserId(userId)
@@ -103,8 +117,10 @@ class HomeViewModel @Inject constructor(
     // Calculate the trend data
     val trendData: StateFlow<TrendAnalysis.RegressionResult> =
         weights.map { list ->
-            if (list.size > 2) {
-                val result = TrendAnalysis.calculateLinearRegression(list)
+            val ordered = list.sortedBy { it.dateTimeLogged }
+
+            if (ordered.size > 2) {
+                val result = TrendAnalysis.calculateLinearRegression(ordered)
                 TrendAnalysis.RegressionResult(
                     slope = result.slope,
                     intercept = result.intercept,
@@ -113,8 +129,11 @@ class HomeViewModel @Inject constructor(
             } else {
                 TrendAnalysis.RegressionResult()
             }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), TrendAnalysis.RegressionResult())
-
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            TrendAnalysis.RegressionResult()
+        )
     // Calculate date goal may be reached
     val estimatedGoalDate: StateFlow<LocalDate?> = combine(
         goalState,
@@ -159,22 +178,6 @@ class HomeViewModel @Inject constructor(
             weightRepository.addWeight(weight)
         }
     }
-
-    fun filterWeights(weights: List<Weight>, filter: ChartFilter): List<Weight> {
-        return when (filter) {
-            ChartFilter.CurrentMonth -> {
-                val now = LocalDate.now()
-                weights.filter { w ->
-                    w.dateTimeLogged.monthValue == now.monthValue &&
-                            w.dateTimeLogged.year == now.year
-                }
-            }
-            ChartFilter.Last30 -> weights.takeLast(30)
-            ChartFilter.Last100 -> weights.takeLast(100)
-            ChartFilter.All -> weights
-        }
-    }
-
 
 }
 
