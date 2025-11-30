@@ -1,26 +1,22 @@
 package com.wyattconrad.cs_360weighttracker.ui.settings
 
-import androidx.compose.foundation.layout.Arrangement
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -28,30 +24,54 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.wyattconrad.cs_360weighttracker.R
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import kotlinx.coroutines.flow.Flow
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    uiState: SettingsUiState,
-    onSmsToggle: (Boolean) -> Unit,
-    onPhoneChange: (String) -> Unit,
-    onInAppToggle: (Boolean) -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel(),
+    onPhoneComplete: (String) -> Unit,
+    events: Flow<SettingsEvent>,
     onBack: () -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    var isFocused by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
+    // Collect events
+    LaunchedEffect(Unit) {
+        events.collect { event ->
+            when (event) {
+                SettingsEvent.SmsFailed -> {
+                    Toast.makeText(context, "Failed to send SMS", Toast.LENGTH_LONG).show()
+                }
+                SettingsEvent.SmsSent -> {
+                    Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -90,15 +110,33 @@ fun SettingsScreen(
                 title = "SMS Notifications",
                 description = "Enable/Disable SMS Notifications",
                 checked = uiState.smsEnabled,
-                onCheckedChange = onSmsToggle
+                onCheckedChange = { viewModel.toggleSms(it) }
             )
 
+            // Phone Number Field If SMS enabled
             if (uiState.showPhoneInput) {
                 OutlinedTextField(
                     value = uiState.phoneNumber,
-                    onValueChange = onPhoneChange,
+                    minLines = 1,
+                    maxLines = 1,
+                    onValueChange = { viewModel.onPhoneNumberChange(it) },
                     label = { Text("Phone Number") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                    modifier = Modifier.onFocusChanged { focusState ->
+                        if (isFocused && !focusState.isFocused) {
+                            // Focus was lost → field was completed
+                            onPhoneComplete(uiState.phoneNumber)
+                        }
+                        isFocused = focusState.isFocused
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            onPhoneComplete(uiState.phoneNumber)
+                        }
+                    )
                 )
             }
 
@@ -111,35 +149,9 @@ fun SettingsScreen(
                 title = "In-App Notifications",
                 description = "Enable/Disable In-App Notifications",
                 checked = uiState.inAppEnabled,
-                onCheckedChange = onInAppToggle
+                onCheckedChange = { viewModel.toggleInApp(it) }
             )
         }
-    }
-}
-
-
-@Composable
-fun SettingTextField(
-    title: String,
-    description: String,
-    value: String,
-    onValueChange: (String) -> Unit
-) {
-    Column(Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
-        Text(text = title, fontWeight = FontWeight.Medium)
-
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
-        )
-
-        Text(
-            text = description,
-            fontSize = 12.sp,
-            color = Color.Gray
-        )
     }
 }
 
@@ -182,22 +194,6 @@ private fun SettingItem(
                 checkedTrackColor = Color(0xFF0075C4),
                 uncheckedThumbColor = Color.White,
                 uncheckedTrackColor = Color.LightGray)
-        )
-    }
-}
-
-@Composable
-private fun SettingDescriptionItem(title: String, description: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp)
-    ) {
-        Text(text = title, fontWeight = FontWeight.Medium)
-        Text(
-            text = description,
-            fontSize = 12.sp,
-            color = Color.Gray
         )
     }
 }

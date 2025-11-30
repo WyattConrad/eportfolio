@@ -33,6 +33,7 @@ import com.wyattconrad.cs_360weighttracker.model.Goal
 import com.wyattconrad.cs_360weighttracker.model.User
 import com.wyattconrad.cs_360weighttracker.model.Weight
 import com.wyattconrad.cs_360weighttracker.service.HashingService
+import com.wyattconrad.cs_360weighttracker.service.SMSService
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import com.wyattconrad.cs_360weighttracker.service.roundTo2
 import dagger.Module
@@ -127,6 +128,12 @@ object AppModule {
     @Singleton
     fun provideHashingService(): HashingService {
         return HashingService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSmsService(@ApplicationContext context: Context): SMSService {
+        return SMSService(context)
     }
 
 }

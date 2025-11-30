@@ -17,14 +17,9 @@
  */
 package com.wyattconrad.cs_360weighttracker
 
-import android.Manifest
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -82,7 +77,7 @@ fun AppNavHost(
                 navController = navController
             )
         }
-        composable(route = Register.route) { backStackEntry ->
+        composable(route = Register.route) {
             // Get the ViewModel, scoped to the current composable lifecycle
             val viewModel: RegistrationViewModel = hiltViewModel()
 
@@ -105,29 +100,11 @@ fun AppNavHost(
         composable(route = Settings.route) {
 
             val viewModel: SettingsViewModel = hiltViewModel()
-            val uiState by viewModel.uiState.collectAsState()
-
-            // Permission launcher
-            val smsPermissionLauncher =
-                rememberLauncherForActivityResult(
-                    ActivityResultContracts.RequestPermission()
-                ) { granted ->
-                    viewModel.onSmsPermissionResult(granted)
-                }
 
             SettingsScreen(
-                uiState = uiState,
-                onSmsToggle = { enabled ->
-                    viewModel.toggleSms(enabled)
-
-                    if (enabled) {
-                        smsPermissionLauncher.launch(Manifest.permission.SEND_SMS)
-                    } else {
-                        viewModel.onSmsPermissionResult(false)
-                    }
-                },
-                onPhoneChange = viewModel::updatePhoneNumber,
-                onInAppToggle = viewModel::toggleInApp,
+                viewModel = viewModel,
+                onPhoneComplete = {},
+                events = viewModel.events,
                 onBack = { navController.popBackStack() }
             )
         }
