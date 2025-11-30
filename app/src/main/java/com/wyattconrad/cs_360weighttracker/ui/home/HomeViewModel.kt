@@ -17,21 +17,26 @@
  */
 package com.wyattconrad.cs_360weighttracker.ui.home
 
-import androidx.compose.runtime.remember
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wyattconrad.cs_360weighttracker.R
 import com.wyattconrad.cs_360weighttracker.data.GoalRepository
 import com.wyattconrad.cs_360weighttracker.data.UserRepository
 import com.wyattconrad.cs_360weighttracker.data.WeightRepository
 import com.wyattconrad.cs_360weighttracker.model.Weight
+import com.wyattconrad.cs_360weighttracker.service.SMSService
 import com.wyattconrad.cs_360weighttracker.service.UserPreferencesService
 import com.wyattconrad.cs_360weighttracker.utilities.TrendAnalysis
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -59,12 +64,19 @@ class HomeViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val goalRepository: GoalRepository,
     private val weightRepository: WeightRepository,
+    private val smsService: SMSService,
     prefs: UserPreferencesService,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     // State method to show the weight input bottom sheet
     private val _showWeightSheet = MutableStateFlow(false)
     val showWeightSheet = _showWeightSheet.asStateFlow()
+
+    // SharedFlow to hold events
+    private val _events = MutableSharedFlow<HomeEvent>()
+    val events = _events.asSharedFlow()
+
 
     // State method to set the filter
     private val _filter = MutableStateFlow(ChartFilter.Last30)
@@ -110,9 +122,10 @@ class HomeViewModel @Inject constructor(
 
 
     // Observe the Flow for the weight to goal from the database
-    val weightToGoal: StateFlow<Double> =
+    val weightToGoal: StateFlow<Double?> =
         weightRepository.getWeightToGoalByUserId(userId)
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
 
     // Calculate the trend data
     val trendData: StateFlow<TrendAnalysis.RegressionResult> =
@@ -158,6 +171,32 @@ class HomeViewModel @Inject constructor(
             .toLocalDate()
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
+    // Initialize the view model
+    init {
+        viewModelScope.launch {
+            // Collect the weightToGoal flow
+            weightToGoal.collect { difference ->
+
+                // 1. Check if difference is not null (meaning data has loaded)
+                // 2. Check if difference <= 0 (meaning goal is met or exceeded)
+                if (difference != null && difference <= 0.0) {
+
+                    // Double check that a goal is actually set using your existing goalState
+                    if (goalState.value is GoalState.Set) {
+                        // GOAL REACHED!
+                        if (prefs.getGlobalBoolean("sms_enabled", false) && prefs.getGlobalString("sms_number") != null) {
+                            smsService.sendSMS(prefs.getGlobalString("sms_number") ?: "", context.getString(R.string.congrats))
+                        }
+
+                        // Emit the event
+                        _events.emit(HomeEvent.GoalReached)
+
+                    }
+                }
+            }
+        }
+    }
+
     // Save a weight to the database
     fun onSaveWeight(weight: Double, dateTime: Instant) {
         // Call your existing logic
@@ -173,7 +212,7 @@ class HomeViewModel @Inject constructor(
             val weight = Weight(
                 weight = weightValue,
                 userId = userId,
-                dateTimeLogged = dateTime.atZone(java.time.ZoneId.systemDefault()).toLocalDateTime()
+                dateTimeLogged = dateTime.atZone(ZoneId.systemDefault()).toLocalDateTime()
             )
             weightRepository.addWeight(weight)
         }
@@ -188,6 +227,12 @@ sealed class GoalState {
     data class Set(val value: Double) : GoalState()
 }
 
+// Class to hold home events
+sealed class HomeEvent {
+    object GoalReached : HomeEvent()
+}
+
+// Enum for the chart filter
 enum class ChartFilter {
     CurrentMonth,
     Last30,

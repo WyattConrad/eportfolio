@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.wyattconrad.cs_360weighttracker.ui.goal.GoalScreen
 import com.wyattconrad.cs_360weighttracker.ui.home.HomeScreen
+import com.wyattconrad.cs_360weighttracker.ui.home.HomeViewModel
 import com.wyattconrad.cs_360weighttracker.ui.log.LogScreen
 import com.wyattconrad.cs_360weighttracker.ui.login.LoginScreen
 import com.wyattconrad.cs_360weighttracker.ui.logout.LogoutScreen
@@ -58,7 +59,11 @@ fun AppNavHost(
         modifier = modifier
     ) {
         composable(route = Home.route) {
-            HomeScreen()
+            val viewModel: HomeViewModel = hiltViewModel()
+            HomeScreen(
+                viewModel = viewModel,
+                events = viewModel.events
+            )
         }
         composable(route = Goal.route) {
             GoalScreen()

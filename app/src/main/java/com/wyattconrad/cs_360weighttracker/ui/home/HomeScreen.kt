@@ -17,6 +17,7 @@
  */
 package com.wyattconrad.cs_360weighttracker.ui.home
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,26 +32,27 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.wyattconrad.cs_360weighttracker.R
 import com.wyattconrad.cs_360weighttracker.ui.components.FilterButton
 import com.wyattconrad.cs_360weighttracker.ui.components.GoalSection
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightInputBottomSheet
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightLineChart
 import com.wyattconrad.cs_360weighttracker.ui.components.WeightSummarySection
+import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
 /**
@@ -63,6 +65,7 @@ import java.time.Instant
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
+    events: Flow<HomeEvent>,
 ) {
 
     // Initialize the state values
@@ -75,11 +78,20 @@ fun HomeScreen(
     val reachGoalDate by viewModel.estimatedGoalDate.collectAsState()
     var filter by rememberSaveable { mutableStateOf(ChartFilter.Last30) }
 
+    val context = LocalContext.current
 
-    // Scaffold with floating action button
-    Scaffold(
 
-    ) { padding ->
+    // Collect events
+    LaunchedEffect(Unit) {
+        events.collect { event ->
+            when (event) {
+                HomeEvent.GoalReached -> {
+                    Toast.makeText(context, R.string.congrats, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
         // Display the weights and goal state in a column
         Column(
             modifier = Modifier
@@ -94,7 +106,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Display the weight change and weight to goal
-            WeightSummarySection(weightChange, weightToGoal)
+            WeightSummarySection(weightChange, if (weightToGoal == null) 0.0 else weightToGoal!!)
 
             Spacer(
                 modifier = Modifier
@@ -145,4 +157,3 @@ fun HomeScreen(
             )
         }
     }
-}
