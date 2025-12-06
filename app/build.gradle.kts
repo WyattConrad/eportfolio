@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
-    id("kotlin-kapt")
     id("androidx.room")
 }
 
@@ -21,9 +21,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-
-
     }
 
     packaging {
@@ -41,8 +38,14 @@ android {
             excludes += "**/*.DSA"
         }
     }
+
     room {
         schemaDirectory("$projectDir/schemas")
+    }
+
+    sourceSets {
+        // Adds exported schema location as test app assets.
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
     }
 
     buildTypes {
@@ -51,6 +54,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     buildFeatures {
         viewBinding = true
         compose = true
@@ -82,14 +86,14 @@ dependencies {
     implementation(libs.androidx.compose.runtime.livedata)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.compose.ui.test.junit4)
-    val roomVersion = "2.8.4"
-
     implementation(libs.legacy.support.v4)
     implementation(libs.preference)
 
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
+    val roomVersion = "2.8.4"
+    implementation("androidx.room:room-runtime:${roomVersion}")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:${roomVersion}")
+
 
     implementation("at.favre.lib:bcrypt:0.10.2")
 
@@ -97,7 +101,7 @@ dependencies {
 
     //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.57.2")
-    kapt("com.google.dagger:hilt-compiler:2.57.2")
+    ksp("com.google.dagger:hilt-compiler:2.57.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
 
     implementation(libs.appcompat)
@@ -128,7 +132,6 @@ dependencies {
     testImplementation(libs.awaitility)
 
     val mockkVersion = "1.14.6"
-
     // For unit testing with Mockito
     testImplementation("io.mockk:mockk:${mockkVersion}")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
@@ -139,14 +142,18 @@ dependencies {
     androidTestImplementation("androidx.room:room-testing:$roomVersion")
     androidTestImplementation("com.google.truth:truth:1.1.5")
 
+    testImplementation(platform("org.jetbrains.kotlinx:kotlinx-serialization-bom:1.9.0"))
+
     // Test rules and transitive dependencies:
     androidTestImplementation(libs.androidx.ui.test.junit4)
-// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+    // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 }
 
-kapt {
-    correctErrorTypes = true
+kotlin {
+    sourceSets.all {
+        languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
+    }
 }
