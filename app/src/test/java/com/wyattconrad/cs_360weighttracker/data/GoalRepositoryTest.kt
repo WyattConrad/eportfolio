@@ -40,7 +40,13 @@ class GoalRepositoryTest {
     @Test
     fun getGoalValue_returns_correct_goal_for_existing_user() = runTest {
         val userId = 1L
-        val mockGoal = Goal(goal = 100.0, userId = userId)
+        val dateTimeSet = System.currentTimeMillis()
+        val goalValue = 100.0.toDouble()
+
+        val mockGoal = Goal(0L,
+            dateTimeSet,
+            goalValue,
+            userId)
 
         // Mock the DAO to return a Flow emitting the mockGoal
         coEvery { goalDao.getGoalByUserId(userId) } returns flowOf(mockGoal)

@@ -137,10 +137,10 @@ class UserRepositoryTest {
     @Test
     fun register_a_new_unique_user() = runTest {
         // 1. Create a new user
-        val newUser = User("Mock", "User", "mock.user@email.com", "mockuser", "password")
+        val newUser = User(1L,"Mock", "User", "mock.user@email.com", "mockuser", "password")
 
-        // 2. Mock DAO insertUser to return an ID (e.g., 42L)
-        coEvery { userDao.insertUser(newUser) } returns 42L
+        // 2. Mock DAO insertUser to return an ID (e.g., 1L)
+        coEvery { userDao.insertUser(newUser) } returns 1L
 
         // 3. Call the repository method
         userRepository.registerUser(newUser)
@@ -149,7 +149,7 @@ class UserRepositoryTest {
         coVerify(exactly = 1) { userDao.insertUser(newUser) }
 
         // 5. Optionally assert that the user ID was set correctly
-        assertEquals(42L, newUser.id)
+        assertEquals(1L, newUser.id)
     }
 
 

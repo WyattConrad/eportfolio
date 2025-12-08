@@ -42,7 +42,7 @@ public class WeightServiceTest {
         // Test with a list containing a single Weight object to ensure it correctly retrieves the first and only element.
 
         ArrayList<Weight> weights = new ArrayList<>();
-        Weight weight = new Weight(100.0, -1);
+        Weight weight = new Weight(1L, 100.0, 1, LocalDateTime.now());
         weights.add(weight);
 
         WeightService weightService = new WeightService();
@@ -56,7 +56,7 @@ public class WeightServiceTest {
     public void calculateWeightToGoal_where_current_weight_is_greater_than_goal() {
         // Test with the latest weight being greater than the goal weight, expecting a positive result.
         ArrayList<Weight> weights = new ArrayList<>();
-        Weight weight = new Weight(100.0, -1);
+        Weight weight = new Weight(1L, 100.0, 1, LocalDateTime.now());
         weights.add(weight);
 
         WeightService weightService = new WeightService();
@@ -69,7 +69,7 @@ public class WeightServiceTest {
     public void calculateWeightToGoal_where_current_weight_is_less_than_goal() {
         // Test with the latest weight being less than the goal weight, expecting a negative result.
         ArrayList<Weight> weights = new ArrayList<>();
-        Weight weight = new Weight(100.0, -1);
+        Weight weight = new Weight(1L, 100.0, 1, LocalDateTime.now());
         weights.add(weight);
 
         WeightService weightService = new WeightService();
@@ -85,15 +85,13 @@ public class WeightServiceTest {
         LocalDateTime datetimelogged = LocalDateTime.now();
         Weight weight = new Weight(0L,
                 100.0,
-                datetimelogged,
-                1);
+                1, datetimelogged);
         weights.add(weight);
 
         LocalDateTime datetimelogged2 = LocalDateTime.now().plusHours(1);
         Weight weight2 = new Weight(0L,
                 90.0,
-                datetimelogged2,
-                1);
+                1, datetimelogged2);
         weights.add(weight2);
 
         // Order the weights by datetime logged
@@ -110,7 +108,9 @@ public class WeightServiceTest {
     public void calculateWeightToGoal_with_large_weight_and_goal_values() {
         // Test with large double values for weight and goal to check for precision issues or overflow.
         ArrayList<Weight> weights = new ArrayList<>();
-        Weight weight = new Weight(999.0, -1);
+        Weight weight = new Weight(0L,
+                999.0,
+                1, LocalDateTime.now());
         weights.add(weight);
 
         WeightService weightService = new WeightService();
@@ -124,7 +124,7 @@ public class WeightServiceTest {
         // Test the rounding logic by using input values that result in more than two decimal places before rounding. [2, 18]
 
         ArrayList<Weight> weights = new ArrayList<>();
-        Weight weight = new Weight(100.123456789, -1);
+        Weight weight = new Weight(0L, 100.123456789, 1, LocalDateTime.now());
         weights.add(weight);
 
         WeightService weightService = new WeightService();
@@ -143,7 +143,7 @@ public class WeightServiceTest {
 
         for (int i = 0; i <= 10; i++) {
 
-            Weight weight = new Weight(0L, currentWeight, datetimelogged, -1);
+            Weight weight = new Weight(0L, currentWeight, 1, datetimelogged);
             weights.add(weight);
 
             datetimelogged = datetimelogged.plusDays(1);
@@ -185,7 +185,7 @@ public class WeightServiceTest {
     public void calculateWeightLoss_with_a_single_weight_entry() {
         // Test with a list containing only one Weight object, which should result in an IndexOutOfBoundsException due to weights.get(weights.size() - 1) logic if not handled.
         ArrayList<Weight> weights = new ArrayList<>();
-        Weight weight = new Weight(100.0, -1);
+        Weight weight = new Weight(0L,100.0, -1, LocalDateTime.now());
         weights.add(weight);
 
         WeightService weightService = new WeightService();
@@ -200,10 +200,10 @@ public class WeightServiceTest {
         // NOTE: The implementation has a bug, it uses get(0) as last and get(size-1) as first.
 
         ArrayList<Weight> weights = new ArrayList<>();
-        Weight weight = new Weight(100.0, -1);
+        Weight weight = new Weight(0L,100.0, -1, LocalDateTime.now());
         weights.add(weight);
 
-        Weight weight2 = new Weight(90.0, -1);
+        Weight weight2 = new Weight(0L, 90.0, -1, LocalDateTime.now());
         weights.add(weight2);
 
 
@@ -218,10 +218,10 @@ public class WeightServiceTest {
         // Test with a list of two weights where the first weight is less than the last, expecting a negative result. 
 
         ArrayList<Weight> weights = new ArrayList<>();
-        Weight weight = new Weight(100.0, -1);
+        Weight weight = new Weight(0L,100.0, -1, LocalDateTime.now());
         weights.add(weight);
 
-        Weight weight2 = new Weight(110.0, -1);
+        Weight weight2 = new Weight(0L, 110.0, -1, LocalDateTime.now());
         weights.add(weight2);
 
 
@@ -241,7 +241,7 @@ public class WeightServiceTest {
 
         for (int i = 0; i <= 10; i++) {
 
-            Weight weight = new Weight(0L, currentWeight, datetimelogged, -1);
+            Weight weight = new Weight(0L, currentWeight, -1, datetimelogged);
             weights.add(weight);
 
             datetimelogged = datetimelogged.plusDays(1);
@@ -266,14 +266,14 @@ public class WeightServiceTest {
 
         for (int i = 0; i <= 10; i++) {
 
-            Weight weight = new Weight(0L, currentWeight, datetimelogged, -1);
+            Weight weight = new Weight(0L, currentWeight, -1, datetimelogged);
             weights.add(weight);
 
             datetimelogged = datetimelogged.plusDays(1);
             currentWeight--;
         }
 
-        Weight weight = new Weight(0L, 100.0, datetimelogged, -1);
+        Weight weight = new Weight(0L, 100.0, -1, datetimelogged);
         weights.add(weight);
 
 
@@ -295,7 +295,7 @@ public class WeightServiceTest {
 
         for (int i = 0; i <= 8; i++) {
 
-            Weight weight = new Weight(0L, currentWeight, datetimelogged, -1);
+            Weight weight = new Weight(0L, currentWeight, -1, datetimelogged);
             weights.add(weight);
 
             datetimelogged = datetimelogged.plusDays(1);
@@ -323,7 +323,7 @@ public class WeightServiceTest {
         for (int i = 0; i <10; i++) {
 
             System.out.println("Current Weight: " + currentWeight);
-            Weight weight = new Weight(0L, currentWeight, datetimelogged, -1);
+            Weight weight = new Weight(0L, currentWeight, -1, datetimelogged);
             weights.add(weight);
 
             datetimelogged = datetimelogged.plusDays(1);
@@ -343,13 +343,13 @@ public class WeightServiceTest {
     public void calculateWeightLoss_with_a_list_containing_a_null_Weight_object() {
         // Test how the method handles a list that contains a null Weight object, which may lead to a NullPointerException when getWeight() is called. [3, 9]
         ArrayList<Weight> weights = new ArrayList<>();
-        Weight weight = new Weight(100.0, -1);
+        Weight weight = new Weight(0L, 100.0, -1, LocalDateTime.now());
         weights.add(weight);
 
         Weight weight2 = null;
         weights.add(weight2);
 
-        Weight weight3 = new Weight(110.0, -1);
+        Weight weight3 = new Weight(0L, 110.0, -1, LocalDateTime.now());
         weights.add(weight3);
 
         WeightService weightService = new WeightService();
