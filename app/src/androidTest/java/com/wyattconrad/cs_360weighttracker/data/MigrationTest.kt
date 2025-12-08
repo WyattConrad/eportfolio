@@ -11,10 +11,11 @@ import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class MigrationTest {
-    private val TEST_DB = "migration-test"
+    private val TEST_DB = "migration-test.db"
 
     // Array of all migrations.
     private val ALL_MIGRATIONS = arrayOf(AppDatabase.MIGRATION_2_3)
+
 
     @get:Rule
     val helper: MigrationTestHelper = MigrationTestHelper(
@@ -22,6 +23,24 @@ class MigrationTest {
         AppDatabase::class.java
     )
 
+    @Test
+    @Throws(IOException::class)
+    fun migrate1To2() {
+        // Create earliest version of the database.
+        helper.createDatabase(TEST_DB, 1).apply {
+            execSQL("INSERT INTO users (id, first_name, last_name, username, password) VALUES (1, 'Guest', 'User', 'guest', 'password')")
+
+        // Prepare for the next version.
+            close()
+        }
+
+        // Re-open the database with version 2 and provide
+        // MIGRATION_1_2 as the migration process.
+        helper.runMigrationsAndValidate(TEST_DB, 2, true)
+
+        // MigrationTestHelper automatically verifies the schema changes,
+        // but you need to validate that the data was migrated properly.
+    }
 
     @Test
     @Throws(IOException::class)

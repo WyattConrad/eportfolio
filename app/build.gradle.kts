@@ -70,7 +70,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
@@ -85,9 +84,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.compose.runtime.livedata)
     implementation(libs.androidx.ui)
-    implementation(libs.androidx.compose.ui.test.junit4)
     implementation(libs.legacy.support.v4)
     implementation(libs.preference)
+    implementation(libs.androidx.room.testing)
 
     val roomVersion = "2.8.4"
     implementation("androidx.room:room-runtime:${roomVersion}")
@@ -112,10 +111,8 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
-    val composeBom = platform(libs.compose.bom)
-    implementation(composeBom)
+
     implementation(libs.runtime)
-    androidTestImplementation(composeBom)
     implementation(libs.androidx.compose.material3)
     implementation("androidx.compose.material:material-icons-extended:1.6.7")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0-RC.2")
@@ -127,6 +124,8 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.espresso.core)
     testImplementation(libs.core.testing)
     testImplementation(libs.awaitility)
@@ -139,21 +138,30 @@ dependencies {
     // Optional: For Android-specific integration
     androidTestImplementation("io.mockk:mockk-android:${mockkVersion}")
     androidTestImplementation("io.mockk:mockk-agent:${mockkVersion}")
-    androidTestImplementation("androidx.room:room-testing:$roomVersion")
+    androidTestImplementation(libs.androidx.room.testing)
     androidTestImplementation("com.google.truth:truth:1.1.5")
 
-    testImplementation(platform("org.jetbrains.kotlinx:kotlinx-serialization-bom:1.9.0"))
+//    val serializationVersion = "1.9.0"
+//    testImplementation(libs.kotlinx.serialization.core)
+//    testImplementation(libs.kotlinx.serialization.json)
+//    androidTestImplementation(libs.kotlinx.serialization.core)
+//    androidTestImplementation(libs.kotlinx.serialization.json)
 
-    // Test rules and transitive dependencies:
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 }
 
-kotlin {
-    sourceSets.all {
-        languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
+class RoomSchemaArgProvider(
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    val schemaDir: File
+) : CommandLineArgumentProvider {
+
+    override fun asArguments(): Iterable<String> {
+        // Note: If you're using KAPT and javac, change the line below to
+        // return listOf("-Aroom.schemaLocation=${schemaDir.path}").
+        return listOf("room.schemaLocation=${schemaDir.path}")
     }
 }
