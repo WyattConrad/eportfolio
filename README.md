@@ -66,6 +66,7 @@ GitHub was used to manage version control and project management throughout this
 
 ### Course Outcomes
 The following course outcomes were achieved during this phase of development:
+
 - Employ strategies for building collaborative environments that enable diverse audiences to support organizational decision-making in the field of computer science.
   - GitHub was instrumental in achieving this outcome, providing the collaborative environment and documentation necessary to enable multiple developers to update the application simultaneously.
 - Design, develop, and deliver professional-quality oral, written, and visual communications that are coherent, technically sound, and appropriately adapted to specific audiences and contexts.
@@ -79,9 +80,6 @@ This enhancement focused on adding a trend analysis algorithm based on the user'
 
 ### Trend Analysis
 The analysis forecasts the date a user should reach their goal weight to help set expectations and determine whether they are on track. The algorithm uses a linear regression to model the weight trends over time.
-
-### Test Data Algorithm
-To test and demonstrate trend analysis, I developed an algorithm that generates a realistic series of weight entries, allowing me to better test the trend analysis algorithm. My current test data is a very simple, linear set of weights that decreases by a set amount for each entry.
 
 The time complexity for this algorithm is O(n). Each weight will need to be analyzed once to calculate the necessary sums, then combined to determine the slope and intercept.
 
@@ -105,8 +103,39 @@ return (slope, intercept);
 }
 ```
 
+### Test Data Algorithm
+To test and demonstrate trend analysis, I developed an algorithm that generates a realistic series of weight entries, allowing me to better test the trend analysis algorithm. My current test data is a very simple, linear set of weights that decreases by a set amount for each entry.
+
+The following pseudocode demonstrates how the test data algorithm provides a variation of tracked weights:
+```
+val WEIGHTSTOCREATE = 200
+for (i in 0 until WEIGHTSTOCREATE) {
+        // set a slow decline in weight 
+        weight -= 0.25
+
+        // Set a min/max weight change during a week period + or - 6.8 pounds
+        val wave = kotlin.math.sin(i / 7.0) * 6.8
+
+        // Add some noise to the values for randomization + or - 1.2 pounds
+        val noise = (random.nextDouble() * 0.4) - 1.2
+
+        // Calculate the daily weight
+        val dailyWeight = weight + wave + noise
+		// Insert the weight into the database
+        weightDao.insertWeight(
+            Weight(
+                id = 0L,
+                weight = dailyWeight.roundTo2(),
+                dateTimeLogged = startDate.plusDays(i.toLong()),
+                userId = userId
+            )
+        )
+    }
+```
+
 ### Course Outcomes
 The following course outcomes were achieved during this phase of development:
+
 - Design and evaluate computing solutions that solve a given problem using algorithmic principles and computer science practices and standards appropriate to its solution while managing the trade-offs involved in design choices.
   - The trend analysis algorithm and the test data generation algorithm demonstrate using algorithmic principles to solve a given problem.
 - Demonstrate an ability to use well-founded and innovative techniques, skills, and tools in computing practices for the purpose of implementing computer solutions that deliver value and accomplish industry-specific goals.
