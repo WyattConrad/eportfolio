@@ -4,17 +4,42 @@ SNHU CS-499 Eportfolio
 This site showcases the culmination of my work from my Computer Science coursework at Southern New Hampshire University (SNHU).
 
 ## Introduction
-Welcome, my name is Wyatt Conrad. I have over 25 years of experience in the BPO/CX industry, and I have consistently embraced a "see a need, fill a need" approach to my work. Throughout my career, I have earned a reputation among my managers as the go-to person for finding or developing solutions to problems. I thrive on finding these solutions and taking ownership of tasks, ensuring they are completed efficiently and effectively.
+My name is Wyatt Conrad, and the completion of my Bachelor of Science in Computer Science at Southern New Hampshire University marks a significant milestone in both my academic and professional journey. With over 25 years of experience in the BPO/CX industry, I have always embraced a “see a need, fill a need” approach by identifying challenges, designing solutions, and taking full ownership of outcomes. Throughout the Computer Science program and the development of my capstone ePortfolio, I have strengthened this mindset through formal education, advanced technical skills, and practical experience, which together showcase my readiness to advance within the field of computer science.
 
-One aspect I take great pride in is my ability to self-teach and acquire new skills. I have proactively sought opportunities to expand my knowledge and expertise, resulting in a diverse skill set across the BPO/CX industry. This self-driven approach has allowed me to adapt and thrive in an ever-evolving work environment. In addition, I recently completed my bachelor's degree in computer science at SNHU to legitimize my self-taught skillset.
+## Growth Through Coursework and the ePortfolio Process
+Working through SNHU’s Computer Science coursework has sharpened my ability to analyze problems, design technical solutions, and apply industry-standard practices. Courses in algorithms, software engineering, full-stack development, databases, and artificial intelligence expanded my skill set from self-taught capability to academically validated competence. Developing this ePortfolio allowed me to intentionally reflect on these skills and present a curated collection of strengths that demonstrate not only technical proficiency but also creativity, adaptability, and a commitment to continuous learning.
 
-Throughout my professional career, I have progressed from an agent role to training and training development, to marketing operations, and most recently sales engineering within the BPO/CX space. This progression highlights my dedication to personal and professional growth and my ability to take on increasingly challenging responsibilities.
+The capstone project allowed me to showcase the skills I had self-learned, as well as the expanded knowledge I gained at SNHU, bringing together skills in architecture, development, testing, documentation, and user-centered design. This project reinforced my confidence in delivering complete, maintainable solutions that meet modern industry standards.
 
-In addition to my professional endeavors, I am passionate about giving back to the community. I volunteered for a swim league and took the initiative to develop a comprehensive web application to manage all aspects of the league. This system has been successfully utilized since 2016, earning praise from coaches and participants alike. The application manages approximately 800 swimmers and 30+ teams each year. I have also recently added a mobile app written in .NET Maui to support iOS and Android devices for swimmers, parents, coaches, and administrators.
+## Professional Values and Career Direction
+My experience in the BPO/CX industry has shaped my professional values of taking ownership, maintaining integrity, and striving for excellence. SNHU’s computer science program reinforced these values by emphasizing structured problem-solving, effective communication, and maintaining academic integrity. My goal is to leverage both my technical foundation and seasoned industry perspective to positively impact an organization, both technically and financially.
 
-Even though I am known for my expertise in BPO/CX and have a proven track record of delivering exceptional results, I am excited to explore new opportunities to leverage my skills and experience and drive meaningful impact for any organization.
+Outside of my formal coursework, I have continued to improve my skills through real-world application. One example is the comprehensive swim league management system I developed for a local community program. Since 2016, this application has supported approximately 800 swimmers and more than 30 teams each year. More recently, I extended the system with a cross-platform mobile app built in .NET MAUI for parents, athletes, coaches, and administrators. This project exemplifies my ability to independently architect, develop, and deploy solutions that meet real organizational needs.
 
-## Artifact 
+## Skills Across Key Computer Science Domains
+Throughout the program, I have gained experience across a range of essential disciplines:
+
+### Collaborating in a Team Environment
+Working on team projects, particularly during software engineering coursework and agile-focused classes, taught me how to collaborate effectively using version control, shared documentation, iterative development, and constructive feedback. These experiences reinforced my ability to contribute to a team environment much like the agile scrum practices I use professionally.
+
+### Communicating with Stakeholders
+My professional background naturally strengthened this skill, but the program honed and refined my technical communication. Writing design documents, preparing UML diagrams, presenting solutions, and translating user requirements into development tasks are skills I previously had not practiced. These experiences have already helped me communicate technical concepts clearly across both technical and non-technical audiences.
+
+### Data Structures and Algorithms
+The math courses that served as the foundation for many algorithms deepened my understanding of efficiency, complexity, and the importance of selecting the appropriate problem structure. Applying these concepts in projects has enabled me to design code that is both reliable and efficient.
+
+### Software Engineering and Databases
+The object-oriented courses focused on modular design, maintainability, testing, and documentation. I created a full-stack application using established design patterns, REST principles, databases, and secure coding practices. This advanced my ability to design systems that scale and integrate seamlessly in both professional and personal development projects.
+
+### Security
+Cybersecurity concepts such as encryption, secure authentication, and safe coding practices have strengthened my awareness of vulnerabilities and best practices. These principles are now critical concepts I use when designing software and handling sensitive data. This is especially true in applications that rely on user accounts, personal information, or cloud-based communication.
+
+### My ePortfolio Artifacts
+The weight-tracking mobile app in my ePortfolio demonstrates how my academic experience and professional background work together to form a complete computer science foundation. Each version of the application, the Java-based original version and the new Kotlin-based version, demonstrates my strengths in software development, algorithmic thinking, and database development. They also demonstrate my ability to quickly transition an application from one language to another using an iterative process while applying industry best practices.
+
+As a whole, my portfolio represents not only my competency but also my growth from a self-taught problem-solver to a formally trained computer science professional with a strong technical portfolio and a long history of delivering real solutions. I am excited to leverage these skills to create meaningful impact in my next role and continue evolving as a developer, engineer, and technology professional.
+
+## Artifact Details
 To showcase my software development capabilities, I chose my Android application, which I created during my CS-360 course at SNHU. It is a mobile app built initially using Java that lets users set a goal and track their weight. It also includes a login feature to manage multiple users and enables notifications via Toast and SMS when a user reaches their goal. The app for the course was created during the 2025 C-2 (March-April) term, which ran from March 3, 2025, to April 27, 2025. The completed app used for that course was uploaded to GitHub on April 20, 2025, which was the version submitted as the final project of CS-360.
 
 The original mobile app code can be viewed or cloned from here: :iphone: [Original Artifact](https://github.com/WyattConrad/eportfolio/tree/PreEnhancement)
