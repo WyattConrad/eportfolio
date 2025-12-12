@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wyattconrad.cs_360weighttracker.R
 import com.wyattconrad.cs_360weighttracker.ui.components.FilterButton
 import com.wyattconrad.cs_360weighttracker.ui.components.GoalSection
@@ -76,7 +77,7 @@ fun HomeScreen(
     val weightToGoal by viewModel.weightToGoal.collectAsState()
     val trendData by viewModel.trendData.collectAsState()
     val reachGoalDate by viewModel.estimatedGoalDate.collectAsState()
-    var filter by rememberSaveable { mutableStateOf(ChartFilter.Last30) }
+    val filter by viewModel.filter.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
 

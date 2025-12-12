@@ -19,4 +19,5 @@ package com.wyattconrad.cs_360weighttracker.service
 
 import kotlin.math.round
 
+// Extension function to round a double to 2 decimal places
 fun Double.roundTo2(): Double = round(this * 100) / 100

@@ -112,24 +112,28 @@ object AppModule {
         return WeightRepository(db.weightDao)
     }
 
+    // Singleton instances of SMS Manager
     @Provides
     @Singleton
     fun provideSmsManager(@ApplicationContext context: Context): SmsManager {
         return context.getSystemService(SmsManager::class.java)
     }
 
+    // Singleton instances of User Preferences Service
     @Provides
     @Singleton
     fun provideUserPreferenceService(@ApplicationContext context: Context): UserPreferencesService {
         return UserPreferencesService(context)
     }
 
+    // Singleton instances of Hashing Service
     @Provides
     @Singleton
     fun provideHashingService(): HashingService {
         return HashingService()
     }
 
+    // Singleton instances of SMS Service
     @Provides
     @Singleton
     fun provideSmsService(@ApplicationContext context: Context): SMSService {

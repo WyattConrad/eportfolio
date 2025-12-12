@@ -29,6 +29,7 @@ class WeightChangeCardTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    // Test Case: Weight Lost (change is positive)
     @Test
     fun weightChangeCard_displaysWeightLost_whenChangeIsPositive() {
         val positiveChange = 5.342
@@ -38,24 +39,22 @@ class WeightChangeCardTest {
             WeightChangeCard(weightChange = positiveChange)
         }
 
-        // 1. Assert the correct status text is displayed
+        // Assert the correct status text is displayed
         composeTestRule.onNodeWithText("Weight Lost:")
             .assertIsDisplayed()
 
-        // 2. Assert the correct absolute and rounded value is displayed
+        // Assert the correct absolute and rounded value is displayed
         val expectedValue = positiveChange.roundTo2().toString()
         composeTestRule.onNodeWithText(expectedValue, substring = true)
             .assertIsDisplayed()
 
-        // 3. Assert the unit is displayed
+        // Assert the unit is displayed
         composeTestRule.onNodeWithText("lbs.")
             .assertIsDisplayed()
 
-        // (Optional: Assert the color is Green)
-
-
     }
 
+    // Test Case: Weight Gained (change is negative)
     @Test
     fun weightChangeCard_displaysWeightGained_whenChangeIsNegative() {
         val negativeChange = -2.759
@@ -64,18 +63,18 @@ class WeightChangeCardTest {
             WeightChangeCard(weightChange = negativeChange)
         }
 
-        // 1. Assert the correct status text is displayed
+        // Assert the correct status text is displayed
         composeTestRule.onNodeWithText("Weight Gained:")
             .assertIsDisplayed()
 
-        // 2. Assert the absolute, rounded value is displayed
+        // Assert the absolute, rounded value is displayed
         val expectedAbsoluteValue = kotlin.math.abs(negativeChange).roundTo2().toString()
         composeTestRule.onNodeWithText(expectedAbsoluteValue, substring = true)
             .assertIsDisplayed()
 
-        // (Optional: Assert the color is Red)
     }
 
+    // Test Case: Net Change (change == 0.0)
     @Test
     fun weightChangeCard_displaysNetChange_whenChangeIsZero() {
         val zeroChange = 0.0
@@ -84,14 +83,13 @@ class WeightChangeCardTest {
             WeightChangeCard(weightChange = zeroChange)
         }
 
-        // 1. Assert the correct status text is displayed
+        // Assert the correct status text is displayed
         composeTestRule.onNodeWithText("Net Change:")
             .assertIsDisplayed()
 
-        // 2. Assert the zero value is displayed
-        composeTestRule.onNodeWithText("0.0") // Or "0.00" depending on roundTo2() implementation
+        // Assert the zero value is displayed
+        composeTestRule.onNodeWithText("0.0")
             .assertIsDisplayed()
 
-        // (Optional: Assert the color is White/Neutral)
     }
 }

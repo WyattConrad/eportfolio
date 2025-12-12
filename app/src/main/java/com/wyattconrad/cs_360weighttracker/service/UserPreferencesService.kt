@@ -44,22 +44,27 @@ class UserPreferencesService
         return globalPrefs.getString(key, defaultValue)
     }
 
+    // Put a string into the global preferences
     fun putGlobalString(key: String, value: String?) {
         globalPrefs.edit { putString(key, value) }
     }
 
+    // Put a long into the global preferences
     fun putGlobalLong(key: String, value: Long) {
         globalPrefs.edit { putLong(key, value) }
     }
 
+    // Get a long from the global preferences
     fun getGlobalLong(key: String, defaultValue: Long = -1L): Long {
         return globalPrefs.getLong(key, defaultValue)
     }
 
+    // Get a boolean from the global preferences
     fun getGlobalBoolean(key: String, defaultValue: Boolean = false): Boolean {
         return globalPrefs.getBoolean(key, defaultValue)
     }
 
+    // Put a boolean into the global preferences
     fun putGlobalBoolean(key: String, value: Boolean) {
         globalPrefs.edit { putBoolean(key, value) }
     }
@@ -74,10 +79,12 @@ class UserPreferencesService
         return context.getSharedPreferences(getPreferences(userId), Context.MODE_PRIVATE)
     }
 
+    // Method to get a string from the user preferences
     fun getString(userId: Long, key: String?, defaultValue: String?): String? {
         return getUserPreferences(userId)!!.getString(key, defaultValue)
     }
 
+    // Method to put a string into the user preferences
     fun putString(userId: Long, key: String?, value: String?) {
         getUserPreferences(userId)!!.edit { putString(key, value) }
     }

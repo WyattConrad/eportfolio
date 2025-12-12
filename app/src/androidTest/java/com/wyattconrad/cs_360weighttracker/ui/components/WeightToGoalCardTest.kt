@@ -29,12 +29,12 @@ class WeightToGoalCardTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    // --- Test Case 1: Remaining Goal (weightToGoal > 0.0) ---
+    // Test Case: Remaining Goal (weightToGoal > 0.0)
     @Test
     fun weightToGoalCard_displaysRemainingGoal_whenValueIsPositive() {
         // Arrange: Input value is positive (10.456 remaining)
         val remainingWeight = 10.456
-        val expectedDisplayValue = remainingWeight.roundTo2().toString() // Expected: "10.46"
+        val expectedDisplayValue = remainingWeight.roundTo2().toString()
 
         // Act: Set the composable content
         composeTestRule.setContent {
@@ -42,20 +42,20 @@ class WeightToGoalCardTest {
             WeightToGoalCard(weightToGoal = remainingWeight)
         }
 
-        // Assert 1: Check the status text
+        // Assert: Check the status text
         composeTestRule.onNodeWithText("Remaining Goal:")
             .assertIsDisplayed()
 
-        // Assert 2: Check the rounded numeric value
+        // Assert: Check the rounded numeric value
         composeTestRule.onNodeWithText(expectedDisplayValue, substring = true)
             .assertIsDisplayed()
 
-        // Assert 3: Check the unit text
+        // Assert: Check the unit text
         composeTestRule.onNodeWithText("lbs.")
             .assertIsDisplayed()
     }
 
-    // --- Test Case 2: Goal Exactly Reached (weightToGoal == 0.0) ---
+    // Test Case: Goal Exactly Reached (weightToGoal == 0.0)
     @Test
     fun weightToGoalCard_displaysGoalReached_whenValueIsZero() {
         // Arrange: Input value is exactly zero (Goal reached)
@@ -66,16 +66,16 @@ class WeightToGoalCardTest {
             WeightToGoalCard(weightToGoal = zeroWeight)
         }
 
-        // Assert 1: Check the status text changes to "Goal Reached!"
+        // Assert: Check the status text changes to "Goal Reached!"
         composeTestRule.onNodeWithText("Goal Reached!")
             .assertIsDisplayed()
 
-        // Assert 2: Check the display value is fixed at "0.00"
+        // Assert: Check the display value is fixed at "0.00"
         composeTestRule.onNodeWithText("0.0", substring = true)
             .assertIsDisplayed()
     }
 
-    // --- Test Case 3: Goal Exceeded (weightToGoal < 0.0) ---
+    // Test Case: Goal Exceeded (weightToGoal < 0.0)
     @Test
     fun weightToGoalCard_displaysGoalReached_whenValueIsNegative() {
         // Arrange: Input value is negative (Goal exceeded)
@@ -86,11 +86,11 @@ class WeightToGoalCardTest {
             WeightToGoalCard(weightToGoal = exceededWeight)
         }
 
-        // Assert 1: Check the status text changes to "Goal Reached!"
+        // Assert: Check the status text changes to "Goal Reached!"
         composeTestRule.onNodeWithText("Goal Reached!")
             .assertIsDisplayed()
 
-        // Assert 2: Check the display value is fixed at "0.00" (Not the negative value)
+        // Assert: Check the display value is fixed at "0.00" (Not the negative value)
         composeTestRule.onNodeWithText("0.0", substring = true)
             .assertIsDisplayed()
     }
