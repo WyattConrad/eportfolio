@@ -1,7 +1,4 @@
 # Wyatt Conrad's EPortfolio
-SNHU CS-499 Eportfolio
-
-This site showcases the culmination of my work from my Computer Science coursework at Southern New Hampshire University (SNHU).
 
 ## Introduction
 My name is Wyatt Conrad, and the completion of my Bachelor of Science in Computer Science at Southern New Hampshire University marks a significant milestone in both my academic and professional journey. With over 25 years of experience in the BPO/CX industry, I have always embraced a “see a need, fill a need” approach by identifying challenges, designing solutions, and taking full ownership of outcomes. Throughout the Computer Science program and the development of my capstone ePortfolio, I have strengthened this mindset through formal education, advanced technical skills, and practical experience, which together showcase my readiness to advance within the field of computer science.
