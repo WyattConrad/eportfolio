@@ -27,6 +27,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 
+/**
+ * Tests for database migrations.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 @RunWith(AndroidJUnit4::class)
 class MigrationTest {
     // Database name for testing

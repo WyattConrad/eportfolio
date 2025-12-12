@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2025 Wyatt Conrad. All rights reserved.
+ *
+ * This file is part of the CS-360 Weight Tracker project.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.wyattconrad.cs_360weighttracker.data
 
 import android.content.SharedPreferences
@@ -15,7 +32,12 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-
+/**
+ * Tests for the UserRepository class.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 class UserRepositoryTest {
     // Setup mock dependencies
     private lateinit var userDao: UserDao
@@ -24,6 +46,7 @@ class UserRepositoryTest {
 
     private lateinit var sharedPreferences: SharedPreferences
 
+    // Initialize the mocks
     @Before
     fun setup() {
         MockKAnnotations.init(this)
@@ -37,81 +60,7 @@ class UserRepositoryTest {
 
     }
 
-
-    @Test
-    fun login_with_valid_credentials() {
-        // Verify that a user can log in successfully with the correct username and password. 
-        // The returned LiveData<User> should emit a non-null User object.
-        // TODO implement test
-    }
-
-    @Test
-    fun login_with_incorrect_password() {
-        // Test login with a valid username but an incorrect password. 
-        // The returned LiveData<User> should emit a null value.
-        // TODO implement test
-    }
-
-    @Test
-    fun login_with_non_existent_username() {
-        // Attempt to log in with a username that does not exist in the database. 
-        // The returned LiveData<User> should emit a null value.
-        // TODO implement test
-    }
-
-    @Test
-    fun login_with_empty_credentials() {
-        // Test login with an empty string for both username and password. 
-        // The LiveData should emit null.
-        // TODO implement test
-    }
-
-    @Test
-    fun login_with_null_credentials() {
-        // Test login with null values for username and password. 
-        // This will likely test the underlying Dao's query handling for null parameters.
-        // TODO implement test
-    }
-
-    @Test
-    fun getUserId_for_existing_user() {
-        // Verify that providing an existing username returns a LiveData object that emits the correct user ID (a Long value).
-        // TODO implement test
-    }
-
-    @Test
-    fun getUserId_for_non_existent_user() {
-        // Test getting a user ID for a username that is not in the database. 
-        // The returned LiveData should emit a null value.
-        // TODO implement test
-    }
-
-    @Test
-    fun getUserId_with_null_username() {
-        // Call getUserId with a null username to check for null safety. 
-        // The LiveData should emit null.
-        // TODO implement test
-    }
-
-    @Test
-    fun getUserFirstName_for_existing_user_ID() {
-        // Verify that a valid and existing user ID returns a LiveData object that emits the correct first name string.
-        // TODO implement test
-    }
-
-    @Test
-    fun getUserFirstName_for_non_existent_user_ID() {
-        // Test with a user ID (e.g., -1L or a large number) that does not correspond to any user. 
-        // The returned LiveData should emit a null value.
-        // TODO implement test
-    }
-
-    @Test
-    fun userExists_for_an_existing_user() {
-        // Check that for an existing username, the returned LiveData emits the boolean value 'true'.
-        // TODO implement test
-    }
-
+    // Test the userExists method
     @Test
     fun userExists_for_a_non_existent_user() = runTest {
         val nonExistentUsername = "NonExistentUser"
@@ -127,76 +76,23 @@ class UserRepositoryTest {
         assertEquals(false, result)
     }
 
-    @Test
-    fun userExists_with_case_sensitive_username() {
-        // Test if 'Username' exists when 'username' is what's stored in the database to verify case sensitivity. 
-        // The result should be 'false' assuming the query is case-sensitive.
-        // TODO implement test
-    }
-
+    // Test the registerUser method
     @Test
     fun register_a_new_unique_user() = runTest {
-        // 1. Create a new user
+        // Create a new user
         val newUser = User(1L,"Mock", "User", "mock.user@email.com", "mockuser", "password")
 
-        // 2. Mock DAO insertUser to return an ID (e.g., 1L)
+        // Mock DAO insertUser to return an ID (e.g., 1L)
         coEvery { userDao.insertUser(newUser) } returns 1L
 
-        // 3. Call the repository method
+        // Call the repository method
         userRepository.registerUser(newUser)
 
-        // 4. Verify that insertUser was called
+        // Verify that insertUser was called
         coVerify(exactly = 1) { userDao.insertUser(newUser) }
 
-        // 5. Optionally assert that the user ID was set correctly
+        // Optionally assert that the user ID was set correctly
         assertEquals(1L, newUser.id)
     }
 
-
-    @Test
-    fun register_user_with_a_null_object() {
-        // Attempt to register a null User object. 
-        // This should be handled gracefully, likely throwing a NullPointerException or a similar error within the executor thread.
-        // TODO implement test
-    }
-
-    @Test
-    fun register_user_and_verify_thread_execution() {
-        // Verify that the userDao.insertUser method is called on a background thread managed by executorService.
-        // TODO implement test
-    }
-
-    @Test
-    fun checkForExistingUsername_with_an_existing_username() {
-        // Call the method with a username that is already in the database. 
-        // Verify that the callback's onUsernameExists method is invoked with 'true'.
-        // TODO implement test
-    }
-
-    @Test
-    fun checkForExistingUsername_with_a_new_username() {
-        // Call the method with a username that is not in the database. 
-        // Verify that the callback's onUsernameExists method is invoked with 'false'.
-        // TODO implement test
-    }
-
-    @Test
-    fun checkForExistingUsername_callback_execution_on_background_thread() {
-        // Verify that the database check and the callback invocation happen on the executorService's background thread.
-        // TODO implement test
-    }
-
-    @Test
-    fun deleteAll_with_a_populated_database() {
-        // Add multiple users to the database and then call deleteAll(). 
-        // Verify that the database is empty afterwards.
-        // TODO implement test
-    }
-
-    @Test
-    fun deleteAll_with_an_empty_database() {
-        // Call deleteAll() on an already empty database. 
-        // Verify that the operation completes without errors and the database remains empty.
-        // TODO implement test
-    }
 }

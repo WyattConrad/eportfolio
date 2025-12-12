@@ -24,6 +24,12 @@ import com.wyattconrad.cs_360weighttracker.service.roundTo2
 import org.junit.Rule
 import org.junit.Test
 
+/**
+ * Tests for the WeightToGoalCard component.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 class WeightToGoalCardTest {
 
     @get:Rule

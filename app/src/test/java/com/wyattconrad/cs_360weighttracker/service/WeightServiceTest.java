@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2025 Wyatt Conrad. All rights reserved.
+ *
+ * This file is part of the CS-360 Weight Tracker project.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.wyattconrad.cs_360weighttracker.service;
 
 import com.wyattconrad.cs_360weighttracker.model.Weight;
@@ -11,8 +28,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.NoSuchElementException;
 
+/**
+ * Tests for the WeightService class.
+ *
+ * @author Wyatt Conrad
+ * @version 1.0
+ */
 public class WeightServiceTest {
 
+    // Test the calculateWeightToGoal method with null weights
     @Test
     public void calculateWeightToGoal_with_a_null_weights_list() {
         // Test for NullPointerException when the input 'weights' list is null. [3, 9]
@@ -25,6 +49,7 @@ public class WeightServiceTest {
         });
     }
 
+    // Test the calculateWeightToGoal method with empty weights
     @Test
     public void calculateWeightToGoal_with_an_empty_weights_list() {
         // Test for NoSuchElementException when the input 'weights' list is empty. [7, 8]
@@ -37,6 +62,7 @@ public class WeightServiceTest {
 
     }
 
+    // Test the calculateWeightToGoal method with a single weight entry
     @Test
     public void calculateWeightToGoal_with_a_single_weight_entry() {
         // Test with a list containing a single Weight object to ensure it correctly retrieves the first and only element.
@@ -52,6 +78,7 @@ public class WeightServiceTest {
 
     }
 
+    // Test the calculateWeightToGoal method where the current weight is greater than the goal weight
     @Test
     public void calculateWeightToGoal_where_current_weight_is_greater_than_goal() {
         // Test with the latest weight being greater than the goal weight, expecting a positive result.
@@ -65,6 +92,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(10.0, result);
     }
 
+    // Test the calculateWeightToGoal method where the current weight is less than the goal weight
     @Test
     public void calculateWeightToGoal_where_current_weight_is_less_than_goal() {
         // Test with the latest weight being less than the goal weight, expecting a negative result.
@@ -78,6 +106,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(-10.0, result);
     }
 
+    // Test the calculateWeightToGoal method where the current weight equals the goal weight
     @Test
     public void calculateWeightToGoal_where_current_weight_equals_goal() {
         // Test with the latest weight being equal to the goal weight, expecting a result of 0.0.
@@ -104,6 +133,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(0.0, result);
     }
 
+    // Test the calculateWeightToGoal method with large weight and goal values
     @Test
     public void calculateWeightToGoal_with_large_weight_and_goal_values() {
         // Test with large double values for weight and goal to check for precision issues or overflow.
@@ -119,6 +149,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(998.0, result);
     }
 
+    // Test the calculateWeightToGoal method with floating-point precision check
     @Test
     public void calculateWeightToGoal_with_floating_point_precision_check() {
         // Test the rounding logic by using input values that result in more than two decimal places before rounding. [2, 18]
@@ -134,6 +165,7 @@ public class WeightServiceTest {
 
     }
 
+    // Test the calculateWeightToGoal method with multiple weight entries
     @Test
     public void calculateWeightToGoal_with_multiple_weight_entries() {
         // Test with a list of multiple weights to confirm the method incorrectly uses weights.get(0) instead of the latest weight.
@@ -159,6 +191,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(0.0, result);
     }
 
+    // Test the calculateWeightLoss method with null weights
     @Test
     public void calculateWeightLoss_with_a_null_weights_list() {
         // Test for NullPointerException when the input 'weights' list is null. [3, 9]
@@ -170,6 +203,7 @@ public class WeightServiceTest {
         });
     }
 
+    // Test the calculateWeightLoss method with empty weights
     @Test
     public void calculateWeightLoss_with_an_empty_weights_list() {
         // Test for NoSuchElementException as the code attempts to access elements from an empty list. [7, 8]
@@ -181,6 +215,7 @@ public class WeightServiceTest {
         });
     }
 
+    // Test the calculateWeightLoss method with a single weight entry
     @Test
     public void calculateWeightLoss_with_a_single_weight_entry() {
         // Test with a list containing only one Weight object, which should result in an IndexOutOfBoundsException due to weights.get(weights.size() - 1) logic if not handled.
@@ -194,6 +229,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(0.0, result);
     }
 
+    // Test the calculateWeightLoss method with two weight entries showing weight loss
     @Test
     public void calculateWeightLoss_with_two_weight_entries_showing_weight_loss() {
         // Test with a list of two weights where the first weight is greater than the last, expecting a positive result. 
@@ -213,6 +249,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(-10.0, result);
     }
 
+    // Test the calculateWeightLoss method with two weight entries showing weight gain
     @Test
     public void calculateWeightLoss_with_two_weight_entries_showing_weight_gain() {
         // Test with a list of two weights where the first weight is less than the last, expecting a negative result. 
@@ -231,6 +268,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(10.0, result);
     }
 
+    // Test the calculateWeightLoss method with multiple weight entries
     @Test
     public void calculateWeightLoss_with_multiple_weight_entries() {
         // Test with a list containing multiple weights to verify it correctly calculates the difference between the first and last recorded weights. 
@@ -257,6 +295,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(10.0, result);
     }
 
+    // Test the calculateWeightLoss method where the first and last weights are equal
     @Test
     public void calculateWeightLoss_where_first_and_last_weights_are_equal() {
         // Test with a list where the first and last weights are identical, expecting a result of 0.0.
@@ -286,6 +325,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(0.0, result);
     }
 
+    // Test the calculateWeightLoss method with large weight values
     @Test
     public void calculateWeightLoss_with_large_weight_values() {
         // Test with large double values for weights to check for potential floating-point precision issues or overflow.
@@ -311,6 +351,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(800.0, result);
     }
 
+    // Test the calculateWeightLoss method with floating-point precision check
     @Test
     public void calculateWeightLoss_with_floating_point_precision_check() {
         // Test the rounding logic by using weight values that result in a difference with more than two decimal places before rounding. [2, 18]
@@ -339,6 +380,7 @@ public class WeightServiceTest {
         Assertions.assertEquals(19.11, result);
     }
 
+    // Test the calculateWeightLoss method with a list containing a null Weight object
     @Test
     public void calculateWeightLoss_with_a_list_containing_a_null_Weight_object() {
         // Test how the method handles a list that contains a null Weight object, which may lead to a NullPointerException when getWeight() is called. [3, 9]
