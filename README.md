@@ -1,4 +1,4 @@
-# Wyatt Conrad's EPortfolio
+# Wyatt Conrad's ePortfolio
 
 ## Introduction
 My name is Wyatt Conrad, and the completion of my Bachelor of Science in Computer Science at Southern New Hampshire University marks a significant milestone in both my academic and professional journey. With over 25 years of experience in the BPO/CX industry, I have always embraced a “see a need, fill a need” approach by identifying challenges, designing solutions, and taking full ownership of outcomes. Throughout the Computer Science program and the development of my capstone ePortfolio, I have strengthened this mindset through formal education, advanced technical skills, and practical experience, which together showcase my readiness to advance within the field of computer science.
