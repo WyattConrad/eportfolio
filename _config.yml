@@ -1,5 +1,6 @@
 theme: jekyll-theme-architect
 title: "Wyatt Conrad's ePortfolio"
+description:
 show_downloads: false
 plugins:
   - jemoji
